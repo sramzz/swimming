@@ -16,7 +16,7 @@
 - Create: `src/styles/global.css`
 - Create: `src/layouts/BaseLayout.astro`
 
-- [ ] **Step 1: Create `src/styles/global.css` with exact Light & Dark tokens from `DESIGN.md`**
+- [x] **Step 1: Create `src/styles/global.css` with exact Light & Dark tokens from `DESIGN.md`**
 
 ```css
 @import "tailwindcss";
@@ -59,7 +59,7 @@
 }
 ```
 
-- [ ] **Step 2: Create `src/layouts/BaseLayout.astro` with Canonical URL, JSON-LD, and Speculation Rules**
+- [x] **Step 2: Create `src/layouts/BaseLayout.astro` with Canonical URL, JSON-LD, and Speculation Rules**
 
 ```astro
 ---
@@ -115,7 +115,7 @@ const canonicalUrl = new URL(canonicalPath, 'https://allezwembaden.nl').toString
 </html>
 ```
 
-- [ ] **Step 3: Commit layout and design tokens**
+- [x] **Step 3: Commit layout and design tokens**
 
 ```bash
 git add src/styles/global.css src/layouts/BaseLayout.astro
@@ -140,7 +140,7 @@ git commit -m "feat(ui): add Aquatic Discovery Light/Dark tokens and BaseLayout 
 - Create: `src/components/Header.astro`
 - Create: `src/components/Footer.astro`
 
-- [ ] **Step 1: Create `src/components/WaterTreatmentBadge.astro`, `AlertBanner.astro`, `LazyGoogleMapIframe.astro`, `VenueCard.astro`, `Header.astro`, and `Footer.astro`**
+- [x] **Step 1: Create `src/components/WaterTreatmentBadge.astro`, `AlertBanner.astro`, `LazyGoogleMapIframe.astro`, `VenueCard.astro`, `Header.astro`, and `Footer.astro`**
 
 Create `src/components/WaterTreatmentBadge.astro`:
 ```astro
@@ -339,7 +339,7 @@ Create `src/components/Header.astro` and `src/components/Footer.astro`:
 </footer>
 ```
 
-- [ ] **Step 2: Commit static design system components**
+- [x] **Step 2: Commit static design system components**
 
 ```bash
 git add src/components/
@@ -365,7 +365,7 @@ git commit -m "feat(ui): add static Aquatic Discovery Astro components"
 - Create: `src/pages/sitemap.xml.ts`
 - Test: `tests/pages/seo-build.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/pages/seo-build.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/pages/seo-build.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -401,12 +401,12 @@ describe('Static Page & Sitemap Data Generation', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/pages/seo-build.test.ts`
 Expected: FAIL (`Cannot find module '@/db/runtime-db'`).
 
-- [ ] **Step 3: Implement `src/db/runtime-db.ts` and the Astro pages (`index.astro`, `zwembad/[stad]/[slug].astro`, `steden/[stad]/index.astro`, `steden/[stad]/[intent].astro`, `sitemap.xml.ts`)**
+- [x] **Step 3: Implement `src/db/runtime-db.ts` and the Astro pages (`index.astro`, `zwembad/[stad]/[slug].astro`, `steden/[stad]/index.astro`, `steden/[stad]/[intent].astro`, `sitemap.xml.ts`)**
 
 Create `src/db/runtime-db.ts`:
 ```typescript
@@ -799,12 +799,12 @@ export const GET: APIRoute = () => {
 };
 ```
 
-- [ ] **Step 4: Run tests and Astro static build to verify output**
+- [x] **Step 4: Run tests and Astro static build to verify output**
 
 Run: `pnpm test && pnpm build`
 Expected: All tests PASS and `pnpm build` outputs static pages in `dist/zwembad/amsterdam/de-mirandabad/index.html`, `dist/steden/amsterdam/index.html`, and `dist/sitemap.xml`.
 
-- [ ] **Step 5: Commit SEO pages and sitemap**
+- [x] **Step 5: Commit SEO pages and sitemap**
 
 ```bash
 git add src/db/runtime-db.ts src/pages/ tests/pages/seo-build.test.ts
@@ -822,6 +822,6 @@ git commit -m "feat(seo): add static facility pages, Two-Tier city intent routes
 
 ## 🛑 Milestone 3 Verification Gate (Check All Before Starting Milestone 4!)
 
-- [ ] `pnpm test` passes 100% of unit and build tests.
-- [ ] `pnpm build` completes with exit code `0`.
-- [ ] `dist/zwembad/amsterdam/de-mirandabad/index.html` contains `<script type="application/ld+json">` with `"@type":"PublicSwimmingPool"` and `<link rel="canonical" href="https://allezwembaden.nl/zwembad/amsterdam/de-mirandabad">`.
+- [x] `pnpm test` passes 100% of unit and build tests.
+- [x] `pnpm build` completes with exit code `0`.
+- [x] `dist/zwembad/amsterdam/de-mirandabad/index.html` contains `<script type="application/ld+json">` with `"@type":"PublicSwimmingPool"` and `<link rel="canonical" href="https://allezwembaden.nl/zwembad/amsterdam/de-mirandabad">`.

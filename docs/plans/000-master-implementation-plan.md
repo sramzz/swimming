@@ -192,11 +192,11 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 - [x] **🛑 Milestone 2 Gate Verification:** All pure domain & FSM tests pass (`pnpm test tests/machines tests/domain`), verifying holiday overrides, KNMI Code Oranje alerts, price break-even math, and Soft-404 prevention.
 
 ### [Milestone 3: `Aquatic Discovery` Design System & Zero-JS SEO Pages](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-3-seo-frontend-and-design-system.md)
-- [ ] **Task 3.1:** Configure Tailwind CSS v4 `Aquatic Discovery` Tokens & `BaseLayout.astro` (with Speculation Rules)
-- [ ] **Task 3.2:** Build Static Design System Components (`Header`, `Footer`, `WaterTreatmentBadge`, `AlertBanner`, `VenueCard`, `LazyGoogleMapIframe`)
-- [ ] **Task 3.3:** Build Facility Detail Page (`src/pages/zwembad/[stad]/[slug].astro`)
-- [ ] **Task 3.4:** Build Homepage (`src/pages/index.astro`), Tier-1 City Intent Pages (`src/pages/steden/[stad]/...`), and True-Diff `sitemap.xml.ts`
-- [ ] **🛑 Milestone 3 Gate Verification:** `pnpm build` succeeds with 0 errors, generated HTML contains valid `JSON-LD` and `<link rel="canonical">`, and empty city-intent combinations are excluded by the Soft-404 gate.
+- [x] **Task 3.1:** Configure Tailwind CSS v4 `Aquatic Discovery` Tokens & `BaseLayout.astro` (with Speculation Rules)
+- [x] **Task 3.2:** Build Static Design System Components (`Header`, `Footer`, `WaterTreatmentBadge`, `AlertBanner`, `VenueCard`, `LazyGoogleMapIframe`)
+- [x] **Task 3.3:** Build Facility Detail Page (`src/pages/zwembad/[stad]/[slug].astro`)
+- [x] **Task 3.4:** Build Homepage (`src/pages/index.astro`), Tier-1 City Intent Pages (`src/pages/steden/[stad]/...`), and True-Diff `sitemap.xml.ts`
+- [x] **🛑 Milestone 3 Gate Verification:** `pnpm build` succeeds with 0 errors, generated HTML contains valid `JSON-LD` and `<link rel="canonical">`, and empty city-intent combinations are excluded by the Soft-404 gate.
 
 ### [Milestone 4: Interactive Preact Islands, Hybrid Maps & Edge APIs](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-4-interactive-islands-and-maps.md)
 - [ ] **Task 4.1:** Build Listing Split-View Map Island (`src/components/islands/ListingMapIsland.tsx` with MapLibre GL + OpenFreeMap/PDOK)
