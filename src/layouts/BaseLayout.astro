@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const { title, description, canonicalPath, jsonLd } = Astro.props;
+const canonicalUrl = new URL(canonicalPath, 'https://allezwembaden.nl').toString();
+---
+<!doctype html>
+<html lang="nl" class="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
+    <script type="speculationrules" is:inline>
+      {
+        "prerender": [
+          {
+            "where": { "href_matches": "/zwembad/*" },
+            "eagerness": "moderate"
+          }
+        ],
+        "prefetch": [
+          {
+            "where": { "href_matches": "/steden/*" },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body class="bg-surface-pure text-text-charcoal antialiased min-h-screen flex flex-col font-sans">
+    <slot />
+  </body>
+</html>

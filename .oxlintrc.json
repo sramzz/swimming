@@ -11,5 +11,5 @@
     "jsx-a11y/alt-text": "error",
     "jsx-a11y/anchor-is-valid": "error"
   },
-  "ignorePatterns": ["dist/**", ".astro/**", "node_modules/**"]
+  "ignorePatterns": ["dist/**", ".astro/**", "node_modules/**", "**/*.astro"]
 }

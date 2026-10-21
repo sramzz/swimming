@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Light Mode Aquatic Discovery Tokens */
+  --color-surface-pure: #ffffff;
+  --color-surface: #fcf9f8;
+  --color-surface-subtle: #f7f7f7;
+  --color-surface-container: #f0eded;
+  --color-border-hairline: #ebebeb;
+  --color-border-strong: #dddddd;
+  --color-text-charcoal: #222222;
+  --color-text-muted: #717171;
+  --color-primary: #00696d;
+  --color-primary-container: #008489;
+  --color-on-primary: #ffffff;
+  --color-secondary: #006398;
+  --color-accent-seasonal: #f97316;
+  --color-badge-teal-bg: #e6f4f5;
+  --color-badge-amber-bg: #fff7ed;
+}
+
+.dark {
+  --color-surface-pure: #0f172a;
+  --color-surface: #0b1326;
+  --color-surface-subtle: #1e293b;
+  --color-surface-container: #334155;
+  --color-border-hairline: #334155;
+  --color-border-strong: #475569;
+  --color-text-charcoal: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-primary: #06b6d4;
+  --color-primary-container: #0ea5e9;
+  --color-on-primary: #0f172a;
+  --color-badge-teal-bg: #164e63;
+  --color-badge-amber-bg: #431407;
+}
