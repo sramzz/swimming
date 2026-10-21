@@ -1,0 +1,26 @@
+---
+interface Props {
+  severity: 'NONE' | 'INFO' | 'WARNING' | 'CRITICAL';
+  messageNl: string | null;
+  wetsuitMessageNl?: string | null;
+}
+const { severity, messageNl, wetsuitMessageNl } = Astro.props;
+---
+{messageNl && severity !== 'NONE' && (
+  <div
+    role="status"
+    class:list={[
+      'p-4 rounded-xl border text-sm font-medium mb-4',
+      severity === 'CRITICAL' && 'bg-red-50 border-red-300 text-red-900',
+      severity === 'WARNING' && 'bg-badge-amber-bg border-accent-seasonal/40 text-text-charcoal',
+      severity === 'INFO' && 'bg-badge-teal-bg border-primary/30 text-primary',
+    ]}
+  >
+    {messageNl}
+  </div>
+)}
+{wetsuitMessageNl && (
+  <div class="p-4 rounded-xl border border-accent-seasonal/30 bg-badge-amber-bg text-accent-seasonal text-sm font-semibold mb-4">
+    {wetsuitMessageNl}
+  </div>
+)}

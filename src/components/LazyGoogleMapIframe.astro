@@ -1,0 +1,43 @@
+---
+interface Props {
+  venueName: string;
+  streetAddress: string | null;
+  embedUrl: string | null;
+  routeUrl: string | null;
+}
+const { venueName, streetAddress, embedUrl, routeUrl } = Astro.props;
+---
+<div class="w-full rounded-2xl border border-border-hairline overflow-hidden bg-surface-subtle p-4" data-lazy-map-container>
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+    <div>
+      <p class="font-bold text-text-charcoal">{venueName}</p>
+      {streetAddress && <p class="text-sm text-text-muted">{streetAddress}</p>}
+    </div>
+    {routeUrl && (
+      <a
+        href={routeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-4 py-2 rounded-full bg-primary text-on-primary text-xs font-bold hover:opacity-95"
+      >
+        Route openen in Google Maps ↗
+      </a>
+    )}
+  </div>
+  {embedUrl ? (
+    <div class="w-full h-64 rounded-xl overflow-hidden bg-surface-container">
+      <iframe
+        src={embedUrl}
+        title={`Kaart van ${venueName}`}
+        width="100%"
+        height="100%"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    </div>
+  ) : (
+    <p class="text-xs text-text-muted">Interactieve routekaart beschikbaar via Google Maps.</p>
+  )}
+</div>

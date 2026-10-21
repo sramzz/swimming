@@ -1,0 +1,29 @@
+---
+interface Props {
+  treatment: 'SALT_ELECTROLYSIS' | 'TRADITIONAL_CHLORINE' | 'UV_LOW_CHLORINE' | 'NATURAL_UNTREATED';
+}
+const { treatment } = Astro.props;
+
+const map = {
+  SALT_ELECTROLYSIS: {
+    label: 'Zoutelektrolyse (Zacht water)',
+    classes: 'bg-emerald-50 text-emerald-800 border-emerald-200/60',
+  },
+  TRADITIONAL_CHLORINE: {
+    label: 'Traditioneel chloor',
+    classes: 'bg-surface-subtle text-text-charcoal border-border-hairline',
+  },
+  UV_LOW_CHLORINE: {
+    label: 'UV & Laag chloor',
+    classes: 'bg-badge-teal-bg text-primary border-primary/20',
+  },
+  NATURAL_UNTREATED: {
+    label: 'Natuurwater (Onbehandeld / Schoon)',
+    classes: 'bg-cyan-50 text-cyan-800 border-cyan-200/60',
+  },
+};
+const item = map[treatment];
+---
+<span class={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${item.classes}`}>
+  {item.label}
+</span>
