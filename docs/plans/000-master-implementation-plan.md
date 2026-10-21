@@ -176,12 +176,12 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 ## Milestone Checklist & Gate Tracker
 
 ### [Milestone 1: Foundation, Logger, SQLite/D1 Schema & Seed Data](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-1-foundation-and-db.md)
-- [ ] **Task 1.1:** Initialize Project Dependencies, TypeScript, Astro 5, Tailwind v4 & Vitest
-- [ ] **Task 1.2:** Build Dual-Format Logger (`src/lib/logger.ts`) writing `.log` + `.jsonl` to `logs/runs/`
-- [ ] **Task 1.3:** Build SQLite/D1 Client & Schema Migration Runner (`src/db/client.ts`)
-- [ ] **Task 1.4:** Build Bounding-Box + Haversine Geospatial Search (`src/db/geo.ts`)
-- [ ] **Task 1.5:** Build Idempotent Seeder (`src/db/seed.ts`) & Data Access Queries (`src/db/queries.ts`)
-- [ ] **🛑 Milestone 1 Gate Verification:** `pnpm test` passes, local DB seeded with Randstad Gold-Standard venues (*De Mirandabad*, *Sportfondsenbad Oost*, *De Dolfijn*, *Gaasperplas*, *R&A Utrecht*, *Tongelreep Eindhoven*), and `logs/runs/` contains the seed log.
+- [x] **Task 1.1:** Initialize Project Dependencies, TypeScript, Astro 5, Tailwind v4 & Vitest
+- [x] **Task 1.2:** Build Dual-Format Logger (`src/lib/logger.ts`) writing `.log` + `.jsonl` to `logs/runs/`
+- [x] **Task 1.3:** Build SQLite/D1 Client & Schema Migration Runner (`src/db/client.ts`)
+- [x] **Task 1.4:** Build Bounding-Box + Haversine Geospatial Search (`src/db/geo.ts`)
+- [x] **Task 1.5:** Build Idempotent Seeder (`src/db/seed.ts`) & Data Access Queries (`src/db/queries.ts`)
+- [x] **🛑 Milestone 1 Gate Verification:** `pnpm test` passes, local DB seeded with Randstad Gold-Standard venues (*De Mirandabad*, *Sportfondsenbad Oost*, *De Dolfijn*, *Gaasperplas*, *R&A Utrecht*, *Tongelreep Eindhoven*), and `logs/runs/` contains the seed log.
 
 ### [Milestone 2: Core Domain Engines & Finite State Machines](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-2-core-domain-fsms-and-context.md)
 - [ ] **Task 2.1:** Build Dutch Context & Schedule Resolver FSM (`src/machines/schedule-resolver.ts`)

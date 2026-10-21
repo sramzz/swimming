@@ -23,7 +23,7 @@
 - Create: `cloudflare.config.ts`
 - Create: `.env.example`
 
-- [ ] **Step 1: Create `package.json` with exact scripts (including `cf` CLI, `oxlint`, and `astro check`) and dependencies**
+- [x] **Step 1: Create `package.json` with exact scripts (including `cf` CLI, `oxlint`, and `astro check`) and dependencies**
 
 ```json
 {
@@ -75,7 +75,7 @@
 }
 ```
 
-- [ ] **Step 2: Create `tsconfig.json`, `.oxlintrc.json`, `vitest.config.ts`, `astro.config.mjs`, `cloudflare.config.ts`, and `.env.example`**
+- [x] **Step 2: Create `tsconfig.json`, `.oxlintrc.json`, `vitest.config.ts`, `astro.config.mjs`, `cloudflare.config.ts`, and `.env.example`**
 
 Create `tsconfig.json`:
 ```json
@@ -187,12 +187,12 @@ ALERT_WEBHOOK_URL="https://ntfy.sh/allezwembaden-dev-test"
 BROWSER_CDP_URL="http://127.0.0.1:9222"
 ```
 
-- [ ] **Step 3: Copy `.env.example` to `.env`, install dependencies, and verify `oxlint`, Vitest + `cf` CLI**
+- [x] **Step 3: Copy `.env.example` to `.env`, install dependencies, and verify `oxlint`, Vitest + `cf` CLI**
 
 Run: `cp .env.example .env && pnpm install && pnpm lint && pnpm test --passWithNoTests && npx cf cli search "create D1 database"`
 Expected: `pnpm lint` (`oxlint`) exits `0` in `<50ms`, `pnpm test` exits `0`, and `cf cli search` prints the matching `cf d1 create` command.
 
-- [ ] **Step 4: Commit workspace setup**
+- [x] **Step 4: Commit workspace setup**
 
 ```bash
 git add package.json pnpm-lock.yaml tsconfig.json .oxlintrc.json vitest.config.ts astro.config.mjs cloudflare.config.ts .env.example
@@ -216,7 +216,7 @@ git commit -m "chore: initialize Astro 5, Tailwind v4, cf CLI, oxlint, and Vites
 - Create: `src/lib/logger.ts`
 - Test: `tests/lib/logger.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/lib/logger.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/lib/logger.test.ts`**
 
 ```typescript
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -273,12 +273,12 @@ describe('Dual-Format Run Logger', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/lib/logger.test.ts`
 Expected: FAIL (`Cannot find module '@/lib/logger'`).
 
-- [ ] **Step 3: Implement `src/lib/logger.ts`**
+- [x] **Step 3: Implement `src/lib/logger.ts`**
 
 ```typescript
 import fs from 'node:fs';
@@ -345,12 +345,12 @@ export function createRunLogger(options: RunLoggerOptions): RunLogger {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/lib/logger.test.ts`
 Expected: PASS (1 passed).
 
-- [ ] **Step 5: Commit logger**
+- [x] **Step 5: Commit logger**
 
 ```bash
 git add src/lib/logger.ts tests/lib/logger.test.ts
@@ -372,7 +372,7 @@ git commit -m "feat(logger): add dual human .log and .jsonl run logger"
 - Create: `src/db/client.ts`
 - Test: `tests/db/client.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/db/client.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/db/client.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -408,12 +408,12 @@ describe('SQLite / D1 Schema & Foreign Key Integrity', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/db/client.test.ts`
 Expected: FAIL (`Cannot find module '@/db/client'`).
 
-- [ ] **Step 3: Implement `src/db/client.ts`**
+- [x] **Step 3: Implement `src/db/client.ts`**
 
 ```typescript
 import Database from 'better-sqlite3';
@@ -441,12 +441,12 @@ export function applyDetailedSchema(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/db/client.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit database client**
+- [x] **Step 5: Commit database client**
 
 ```bash
 git add src/db/client.ts tests/db/client.test.ts
@@ -470,7 +470,7 @@ git commit -m "feat(db): add SQLite client and schema-detailed.sql runner"
 - Create: `src/db/geo.ts`
 - Test: `tests/db/geo.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/db/geo.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/db/geo.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -494,12 +494,12 @@ describe('Geospatial Bounding Box & Haversine Distance', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/db/geo.test.ts`
 Expected: FAIL (`Cannot find module '@/db/geo'`).
 
-- [ ] **Step 3: Implement `src/db/geo.ts`**
+- [x] **Step 3: Implement `src/db/geo.ts`**
 
 ```typescript
 const EARTH_RADIUS_KM = 6371.0;
@@ -549,12 +549,12 @@ export function computeBoundingBox(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/db/geo.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit geospatial helper**
+- [x] **Step 5: Commit geospatial helper**
 
 ```bash
 git add src/db/geo.ts tests/db/geo.test.ts
@@ -578,7 +578,7 @@ git commit -m "feat(db): add bounding-box and Haversine geospatial math"
 - Create: `src/cli/run-seed.ts`
 - Test: `tests/db/seed-and-queries.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/db/seed-and-queries.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/db/seed-and-queries.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -624,12 +624,12 @@ describe('Idempotent Seeder & Core Read Queries', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/db/seed-and-queries.test.ts`
 Expected: FAIL (`Cannot find module '@/db/seed'`).
 
-- [ ] **Step 3: Implement `src/db/seed.ts`, `src/db/queries.ts`, and `src/cli/run-seed.ts`**
+- [x] **Step 3: Implement `src/db/seed.ts`, `src/db/queries.ts`, and `src/cli/run-seed.ts`**
 
 Create `src/db/seed.ts`:
 ```typescript
@@ -1301,12 +1301,12 @@ logger.info('SEED_COMPLETE', 'Database seeded successfully', { venuesCount: coun
 db.close();
 ```
 
-- [ ] **Step 4: Run tests and seed script to verify everything passes**
+- [x] **Step 4: Run tests and seed script to verify everything passes**
 
 Run: `pnpm test && pnpm db:seed`
 Expected: All tests in `tests/lib/logger.test.ts`, `tests/db/client.test.ts`, `tests/db/geo.test.ts`, and `tests/db/seed-and-queries.test.ts` PASS, and `logs/runs/` contains the `*_seed.log` and `*_seed.jsonl` files.
 
-- [ ] **Step 5: Commit seeder and queries**
+- [x] **Step 5: Commit seeder and queries**
 
 ```bash
 git add src/db/seed.ts src/db/queries.ts src/cli/run-seed.ts tests/db/seed-and-queries.test.ts
@@ -1324,6 +1324,6 @@ git commit -m "feat(db): add idempotent flagship venue seeder and geospatial/wai
 
 ## 🛑 Milestone 1 Verification Gate (Check All Before Starting Milestone 2!)
 
-- [ ] `pnpm test` runs and passes 100% of Milestone 1 tests (`logger`, `client`, `geo`, `seed-and-queries`).
-- [ ] `pnpm db:seed` creates `data/allezwembaden.sqlite` and populates `logs/runs/*_seed.log` and `*_seed.jsonl`.
-- [ ] Running `pnpm db:seed` a second time succeeds with zero duplicate errors (idempotency verified).
+- [x] `pnpm test` runs and passes 100% of Milestone 1 tests (`logger`, `client`, `geo`, `seed-and-queries`).
+- [x] `pnpm db:seed` creates `data/allezwembaden.sqlite` and populates `logs/runs/*_seed.log` and `*_seed.jsonl`.
+- [x] Running `pnpm db:seed` a second time succeeds with zero duplicate errors (idempotency verified).
