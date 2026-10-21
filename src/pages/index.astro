@@ -1,0 +1,29 @@
+---
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import VenueCard from '../components/VenueCard.astro';
+import { getBuildDatabase } from '../db/runtime-db';
+import { listAllVenues } from '../db/queries';
+
+const db = getBuildDatabase();
+const venues = listAllVenues(db);
+db.close();
+---
+<BaseLayout
+  title="AlleZwembaden.nl - Vind, vergelijk en boek zwembaden & zwemles in Nederland"
+  description="Vergelijk binnenbaden, subtropische zwembaden, banenzwemmen tijden, zoutelektrolyse, Zwem-ABC wachttijden en natuurwater in Nederland."
+  canonicalPath="/"
+>
+  <Header />
+  <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
+    <h1 class="text-2xl font-extrabold text-text-charcoal mb-6">
+      Zwemlocaties & Zwemles in Nederland ({venues.length} uitgelichte locaties)
+    </h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {venues.map((venue) => <VenueCard venue={venue} />)}
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

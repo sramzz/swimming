@@ -1,0 +1,57 @@
+---
+// src/pages/steden/[stad]/[intent].astro
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import VenueCard from '../../../components/VenueCard.astro';
+import { getBuildDatabase } from '../../../db/runtime-db';
+import { listVenuesByCity } from '../../../db/queries';
+import { shouldGenerateIndexableFacetPage } from '../../../domain/seo-aggregator';
+
+export async function getStaticPaths() {
+  const db = getBuildDatabase();
+  const cities = db.prepare('SELECT slug, name FROM municipalities').all() as Array<{ slug: string; name: string }>;
+  const intents = ['banenzwemmen', 'zwemles', 'buitenwater'] as const;
+  const paths: Array<{ params: { stad: string; intent: string }; props: { cityName: string } }> = [];
+
+  for (const city of cities) {
+    const allVenues = listVenuesByCity(db, city.slug);
+    for (const intent of intents) {
+      const matching =
+        intent === 'buitenwater'
+          ? allVenues.filter((v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR')
+          : allVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
+      if (shouldGenerateIndexableFacetPage(matching.length)) {
+        paths.push({ params: { stad: city.slug, intent }, props: { cityName: city.name } });
+      }
+    }
+  }
+  db.close();
+  return paths;
+}
+
+const { stad, intent } = Astro.params;
+const { cityName } = Astro.props;
+const db = getBuildDatabase();
+const allVenues = listVenuesByCity(db, stad!);
+db.close();
+
+const venues =
+  intent === 'buitenwater'
+    ? allVenues.filter((v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR')
+    : allVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
+---
+<BaseLayout
+  title={`${intent} in ${cityName} | AlleZwembaden.nl`}
+  description={`Overzicht voor ${intent} in ${cityName}.`}
+  canonicalPath={`/steden/${stad}/${intent}`}
+>
+  <Header />
+  <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
+    <h1 class="text-3xl font-extrabold text-text-charcoal capitalize mb-6">{intent} in {cityName}</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {venues.map((v) => <VenueCard venue={v} />)}
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

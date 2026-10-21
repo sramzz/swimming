@@ -51,6 +51,7 @@ export interface VenueJsonLdInput {
 }
 
 export interface VenueJsonLdOutput {
+  [key: string]: unknown;
   '@context': string;
   '@type': string;
   name: string;

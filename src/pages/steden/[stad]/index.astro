@@ -1,0 +1,52 @@
+---
+// src/pages/steden/[stad]/index.astro
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import VenueCard from '../../../components/VenueCard.astro';
+import { getBuildDatabase } from '../../../db/runtime-db';
+import { listVenuesByCity } from '../../../db/queries';
+import { buildCitySeoSummaryNl } from '../../../domain/seo-aggregator';
+
+export async function getStaticPaths() {
+  const db = getBuildDatabase();
+  const cities = db.prepare('SELECT slug, name FROM municipalities').all() as Array<{ slug: string; name: string }>;
+  const paths = cities
+    .filter((c) => listVenuesByCity(db, c.slug).length >= 1)
+    .map((c) => ({ params: { stad: c.slug }, props: { cityName: c.name } }));
+  db.close();
+  return paths;
+}
+
+const { stad } = Astro.params;
+const { cityName } = Astro.props;
+const db = getBuildDatabase();
+const venues = listVenuesByCity(db, stad!);
+db.close();
+
+const paid = venues.filter((v) => v.min_single_price_cents && v.min_single_price_cents > 0);
+const cheapest = paid.sort((a, b) => (a.min_single_price_cents ?? 9999) - (b.min_single_price_cents ?? 9999))[0];
+const summaryNl = buildCitySeoSummaryNl({
+  cityName,
+  totalVenues: venues.length,
+  saltWaterCount: venues.filter((v) => v.primary_water_treatment === 'SALT_ELECTROLYSIS').length,
+  cheapestSinglePriceCents: cheapest?.min_single_price_cents ?? null,
+  cheapestVenueName: cheapest?.name ?? null,
+  shortestWaitlistWeeks: 4,
+});
+---
+<BaseLayout
+  title={`Zwembaden in ${cityName} - Prijzen, Banenzwemmen & Zwemles | AlleZwembaden.nl`}
+  description={summaryNl}
+  canonicalPath={`/steden/${stad}`}
+>
+  <Header />
+  <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
+    <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">Zwembaden in {cityName}</h1>
+    <p class="text-sm text-text-muted mb-6">{summaryNl}</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {venues.map((v) => <VenueCard venue={v} />)}
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
