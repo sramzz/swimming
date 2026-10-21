@@ -206,8 +206,8 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 - [x] **🛑 Milestone 4 Gate Verification:** All API & Island tests pass, `/api/health` returns `200 OK`, duplicate lead submissions with the same `idempotency_key` do not create duplicate rows.
 
 ### [Milestone 5: Portable Ingestion CLI, Lightpanda/Obscura CDP, Quarantine Gate & Alerts](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-5-ingestion-cli-and-observability.md)
-- [ ] **Task 5.1:** Build SHA-256 Content-Hash Diff & Zod Sanity Quarantine Gate (`src/ingestion/sanity-gate.ts`)
-- [ ] **Task 5.2:** Build 3-Step Escalation Fetcher (`fetch` $\rightarrow$ `Lightpanda`/`Obscura` CDP $\rightarrow$ Local Override) (`src/ingestion/fetcher.ts`)
-- [ ] **Task 5.3:** Build Dutch Open Data Syncers (Rijksoverheid Vakanties, KNMI, Rijkswaterstaat) (`src/ingestion/open-apis.ts`)
-- [ ] **Task 5.4:** Build Webhook Push Alert Dispatcher with 24h Cooldown (`src/ingestion/alert-dispatcher.ts`) & Portable CLI (`src/cli/sync.ts`)
-- [ ] **🛑 Milestone 5 Gate Verification:** Simulated broken pool scrape (`€ 0,00` ticket price) is blocked from touching live DB, raw HTML snapshot is saved to `logs/anomalies/`, and Webhook payload includes the exact `pnpm sync:venue --slug=...` Mac recovery command.
+- [x] **Task 5.1:** Build SHA-256 Content-Hash Diff & Zod Sanity Quarantine Gate (`src/ingestion/sanity-gate.ts`)
+- [x] **Task 5.2:** Build 3-Step Escalation Fetcher (`fetch` $\rightarrow$ `Lightpanda`/`Obscura` CDP $\rightarrow$ Local Override) (`src/ingestion/fetcher.ts`)
+- [x] **Task 5.3:** Build Dutch Open Data Syncers (Rijksoverheid Vakanties, KNMI, Rijkswaterstaat) (`src/ingestion/open-apis.ts`)
+- [x] **Task 5.4:** Build Webhook Push Alert Dispatcher with 24h Cooldown (`src/ingestion/alert-dispatcher.ts`) & Portable CLI (`src/cli/sync.ts`)
+- [x] **🛑 Milestone 5 Gate Verification:** Simulated broken pool scrape (`€ 0,00` ticket price) is blocked from touching live DB, raw HTML snapshot is saved to `logs/anomalies/`, and Webhook payload includes the exact `pnpm sync:venue --slug=...` Mac recovery command.

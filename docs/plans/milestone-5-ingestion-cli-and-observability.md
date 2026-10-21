@@ -340,7 +340,7 @@ git commit -m "feat(ingestion): add 3-step HTTP to Lightpanda/Obscura CDP escala
 - Create: `src/cli/sync.ts`
 - Test: `tests/ingestion/alert-dispatcher.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/ingestion/alert-dispatcher.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/ingestion/alert-dispatcher.test.ts`**
 
 ```typescript
 import { describe, it, expect, vi } from 'vitest';
@@ -392,12 +392,12 @@ describe('Quarantine Webhook Alert Dispatcher with 24h Cooldown FSM', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/ingestion/alert-dispatcher.test.ts`
 Expected: FAIL (`Cannot find module '@/ingestion/alert-dispatcher'`).
 
-- [ ] **Step 3: Implement `src/ingestion/alert-dispatcher.ts` and `src/cli/sync.ts`**
+- [x] **Step 3: Implement `src/ingestion/alert-dispatcher.ts` and `src/cli/sync.ts`**
 
 Create `src/ingestion/alert-dispatcher.ts`:
 ```typescript
@@ -524,12 +524,12 @@ logger.info('SYNC_DONE', 'Sync execution finished cleanly', {
 db.close();
 ```
 
-- [ ] **Step 4: Run full test suite and CLI sync check**
+- [x] **Step 4: Run full test suite and CLI sync check**
 
 Run: `pnpm test && pnpm sync:venue --slug=de-mirandabad`
 Expected: All tests across all 5 milestones PASS, and `logs/runs/` contains the sync log.
 
-- [ ] **Step 5: Commit Alert Dispatcher and Portable CLI**
+- [x] **Step 5: Commit Alert Dispatcher and Portable CLI**
 
 ```bash
 git add src/ingestion/alert-dispatcher.ts src/cli/sync.ts tests/ingestion/alert-dispatcher.test.ts
@@ -547,6 +547,6 @@ git commit -m "feat(ingestion): add 24h cooldown webhook alert dispatcher and po
 
 ## 🛑 Milestone 5 Final Verification Gate
 
-- [ ] `pnpm test` passes 100% of all test suites across Milestones 1–5 (`logger`, `client`, `geo`, `seed`, `schedule-resolver`, `open-status`, `sticky-widget-machine`, `seo-aggregator`, `affiliate-stub`, `api/handlers`, `sanity-gate`, `fetcher`, `alert-dispatcher`).
-- [ ] `pnpm build` generates the static Astro production bundle in `dist/` with zero errors.
-- [ ] `pnpm sync:venue --slug=de-mirandabad` writes both `.log` and `.jsonl` logs into `logs/runs/`.
+- [x] `pnpm test` passes 100% of all test suites across Milestones 1–5 (`logger`, `client`, `geo`, `seed`, `schedule-resolver`, `open-status`, `sticky-widget-machine`, `seo-aggregator`, `affiliate-stub`, `api/handlers`, `sanity-gate`, `fetcher`, `alert-dispatcher`).
+- [x] `pnpm build` generates the static Astro production bundle in `dist/` with zero errors.
+- [x] `pnpm sync:venue --slug=de-mirandabad` writes both `.log` and `.jsonl` logs into `logs/runs/`.
