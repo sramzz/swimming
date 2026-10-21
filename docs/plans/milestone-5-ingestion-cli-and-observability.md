@@ -18,7 +18,7 @@
 - Create: `src/ingestion/sanity-gate.ts`
 - Test: `tests/ingestion/sanity-gate.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/ingestion/sanity-gate.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/ingestion/sanity-gate.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -89,12 +89,12 @@ describe('SHA-256 Diff & Zod Sanity Quarantine Gate', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/ingestion/sanity-gate.test.ts`
 Expected: FAIL (`Cannot find module '@/ingestion/sanity-gate'`).
 
-- [ ] **Step 3: Implement `src/ingestion/sanity-gate.ts`**
+- [x] **Step 3: Implement `src/ingestion/sanity-gate.ts`**
 
 ```typescript
 import crypto from 'node:crypto';
@@ -174,12 +174,12 @@ export function evaluateScrapedVenueSanity(input: SanityCheckInput): SanityDecis
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/ingestion/sanity-gate.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit Sanity Gate**
+- [x] **Step 5: Commit Sanity Gate**
 
 ```bash
 git add src/ingestion/sanity-gate.ts tests/ingestion/sanity-gate.test.ts

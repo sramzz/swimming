@@ -183,8 +183,9 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             Ontvang direct de <strong>Top 3 zwemscholen met de kortste wachttijd</strong> rond jouw postcode (+ wachtlijst-alert).
           </p>
           <div>
-            <label class="block text-xs font-bold mb-1">4-Cijferige Postcode (PC4)</label>
+            <label htmlFor="waitlist-pc4" class="block text-xs font-bold mb-1">4-Cijferige Postcode (PC4)</label>
             <input
+              id="waitlist-pc4"
               type="text"
               maxLength={4}
               value={pc4}
@@ -193,8 +194,9 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             />
           </div>
           <div>
-            <label class="block text-xs font-bold mb-1">E-mailadres ouder</label>
+            <label htmlFor="waitlist-email" class="block text-xs font-bold mb-1">E-mailadres ouder</label>
             <input
+              id="waitlist-email"
               type="email"
               value={email}
               onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
@@ -202,8 +204,9 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
               class="w-full rounded-lg border border-border-strong px-3 py-2 text-sm"
             />
           </div>
-          <label class="flex items-center gap-2 text-xs">
+          <label htmlFor="waitlist-prefers-salt" class="flex items-center gap-2 text-xs">
             <input
+              id="waitlist-prefers-salt"
               type="checkbox"
               checked={prefersSalt}
               onChange={(e) => setPrefersSalt((e.target as HTMLInputElement).checked)}
