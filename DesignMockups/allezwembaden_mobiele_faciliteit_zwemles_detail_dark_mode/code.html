@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#060e20] text-on-surface antialiased dark" lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Zwemcentrum De Mirandabad | AlleZwembaden</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with custom Aquatic Discovery Dark theme -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface-variant": "#bcc9cd",
+            "surface-container-highest": "#2d3449",
+            "error": "#ffb4ab",
+            "on-error": "#690005",
+            "on-background": "#dae2fd",
+            "tertiary-container": "#1abaa8",
+            "secondary-fixed": "#c9e6ff",
+            "surface-container-low": "#131b2e",
+            "surface": "#0b1326",
+            "surface-tint": "#4cd7f6",
+            "surface-variant": "#2d3449",
+            "on-tertiary-fixed": "#00201c",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-surface": "#dae2fd",
+            "on-error-container": "#ffdad6",
+            "surface-container-lowest": "#060e20",
+            "inverse-primary": "#00687a",
+            "surface-container-high": "#222a3d",
+            "inverse-surface": "#dae2fd",
+            "on-secondary-fixed-variant": "#004c6e",
+            "surface-container": "#171f33",
+            "primary": "#4cd7f6",
+            "tertiary-fixed": "#71f8e4",
+            "on-secondary": "#00344d",
+            "on-secondary-fixed": "#001e2f",
+            "secondary": "#89ceff",
+            "surface-bright": "#31394d",
+            "secondary-container": "#00a2e6",
+            "primary-container": "#06b6d4",
+            "tertiary": "#4fdbc8",
+            "on-primary-fixed-variant": "#004e5c",
+            "surface-dim": "#0b1326",
+            "error-container": "#93000a",
+            "inverse-on-surface": "#283044",
+            "primary-fixed": "#acedff",
+            "background": "#0b1326",
+            "outline-variant": "#3d494c",
+            "on-tertiary-fixed-variant": "#005048",
+            "on-secondary-container": "#00344e",
+            "on-primary-fixed": "#001f26",
+            "on-tertiary": "#003731",
+            "tertiary-fixed-dim": "#4fdbc8",
+            "secondary-fixed-dim": "#89ceff",
+            "on-primary-container": "#00424f",
+            "on-tertiary-container": "#00443c",
+            "outline": "#869397",
+            "on-primary": "#003640",
+            "border-dark": "#334155"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "gutter-mobile": "1rem",
+            "space-lg": "1.5rem",
+            "margin": "2rem",
+            "gutter": "1.5rem",
+            "space-xl": "2.5rem",
+            "space-xs": "0.25rem",
+            "margin-mobile": "1rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "headline-xl": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "800"}],
+            "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+            "headline-xl-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+            "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+            "headline-lg-mobile": ["26px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .pulse-ring {
+      animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="flex justify-center bg-[#060e20] min-h-screen text-[#dae2fd]">
+<!-- Mobile Viewport Shell (Strict 390px Width Container for Authentic iOS Experience) -->
+<main class="w-full max-w-[390px] min-h-screen bg-[#0b1326] relative shadow-2xl overflow-x-hidden pb-32 flex flex-col border-x border-[#1e293b]">
+<!-- TOP FLOATING HEADER ACTIONS (Frosted Dark Glass PDP Style) -->
+<header class="fixed top-0 left-0 right-0 max-w-[390px] mx-auto z-40 px-4 py-3 flex items-center justify-between pointer-events-none transition-all duration-300" id="mobile-top-bar">
+<!-- Back Button -->
+<button aria-label="Terug naar overzicht" class="pointer-events-auto w-10 h-10 rounded-full bg-[#0b1326]/80 backdrop-blur-md border border-[#334155] shadow-md flex items-center justify-center text-[#F8FAFC] active:scale-95 transition-all" onclick="history.back()">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<!-- Trailing Action Cluster (Share & Heart) -->
+<div class="pointer-events-auto flex items-center gap-2">
+<button aria-label="Deel locatie" class="w-10 h-10 rounded-full bg-[#0b1326]/80 backdrop-blur-md border border-[#334155] shadow-md flex items-center justify-center text-[#F8FAFC] active:scale-95 transition-all" id="share-btn">
+<span class="material-symbols-outlined text-[19px]">share</span>
+</button>
+<button aria-label="Opslaan als favoriet" class="w-10 h-10 rounded-full bg-[#0b1326]/80 backdrop-blur-md border border-[#334155] shadow-md flex items-center justify-center text-[#F8FAFC] active:scale-95 transition-all" id="fav-btn">
+<span class="material-symbols-outlined text-[20px]" id="fav-icon">favorite_border</span>
+</button>
+</div>
+</header>
+<!-- OFFICIAL MUNICIPAL ACCREDITATION TOP RIBBON -->
+<section class="bg-[#131b2e] text-[#4cd7f6] px-4 pt-12 pb-2.5 flex items-center justify-between border-b border-[#334155]">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#4cd7f6]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm tracking-wide text-[#4cd7f6]">Gemeente Amsterdam Keurmerk</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-[#4cd7f6]">NRZ Erkend</span>
+</section>
+<!-- HERO PHOTO CAROUSEL -->
+<section class="relative w-full aspect-[4/3] bg-[#131b2e] overflow-hidden select-none">
+<!-- Main Visual Carousel Container -->
+<div class="w-full h-full relative" id="photo-slider">
+<img alt="De Mirandabad Glazen Koepel" class="w-full h-full object-cover transition-opacity duration-300" data-alt="An expansive, light-flooded architectural photograph of the iconic De Mirandabad subtropical glass dome indoor swimming pool in Amsterdam. Warm ambient daylight pours through curved steel glass trusses, illuminating turquoise pristine water with active wave currents, authentic lush green indoor palm trees, modern aquatic water slides, and clean ceramic tiling under a bright high-end Dutch morning sun." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmBsKv7VUO81lVnfwl6e6mmwWtFcTX0pvtPJ3pytQ81bD4kDh1cycHCR_FRk-QQTwUaVTg2W6lR_qu2-NGmD8YczJyqKlKKjIZccUkGaQT53el_qs9ldcPWI0nUR8Xma9GABPU8veY0hst1uvauD1iPT78VyadVAts3958Mfdis3_4sZWhbiGEv8tUoFU-rUjOm9AjqRyJjH5pxk9WBVzT7dXXLtpCzhQYRc45TedUAVqD8vFhHJuD"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#0b1326] via-transparent to-black/30 pointer-events-none"></div>
+<!-- Dynamic Visual Pill Overlays -->
+<div class="absolute top-4 left-4 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
+<span class="bg-[#0b1326]/90 backdrop-blur-md text-[#F8FAFC] font-label-sm text-label-sm px-2.5 py-1 rounded-full shadow-md flex items-center gap-1 border border-[#334155]">
+<span class="material-symbols-outlined text-[14px] text-[#4cd7f6]">waves</span>
+            Subtropisch Glazen Koepel
+          </span>
+<span class="bg-[#0b1326]/90 backdrop-blur-md text-[#4cd7f6] font-label-sm text-label-sm px-2.5 py-1 rounded-full shadow-md flex items-center gap-1 border border-[#334155]">
+<span class="material-symbols-outlined text-[14px]">water_drop</span>
+            Zoutelektrolyse (Zacht water)
+          </span>
+</div>
+<!-- Carousel Index Counter Badge -->
+<div class="absolute bottom-3 right-3 bg-[#0b1326]/85 backdrop-blur-md text-[#F8FAFC] border border-[#334155] font-label-sm text-label-sm px-2.5 py-0.5 rounded-full z-10 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#4cd7f6]">photo_camera</span>
+<span>1 / 28 foto's</span>
+</div>
+<!-- Swipe Indicator Dots -->
+<div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 z-10">
+<div class="w-2 h-2 rounded-full bg-[#4cd7f6]"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+</div>
+</div>
+</section>
+<!-- CONTENT BODY CONTAINER -->
+<div class="px-margin-mobile flex flex-col gap-space-lg pt-4">
+<!-- FACILITY TITLE & REVIEWS HEADER -->
+<section class="border-b border-[#334155] pb-4">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-[#F8FAFC] tracking-tight">
+          Zwemcentrum De Mirandabad
+        </h1>
+<p class="font-body-md text-body-md text-[#94A3B8] mt-1">
+          Subtropisch Recreatie- &amp; Wedstrijdbad • Amsterdam Zuid
+        </p>
+<!-- Review & Status Bar -->
+<div class="flex items-center flex-wrap gap-x-2 gap-y-1 mt-3">
+<div class="flex items-center gap-1 text-[#F8FAFC] font-semibold">
+<span class="material-symbols-outlined text-[18px] text-amber-400" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-lg text-label-lg">4.92</span>
+</div>
+<span class="text-[#94A3B8] text-xs">•</span>
+<button class="font-label-lg text-label-lg underline font-medium text-[#dae2fd] hover:text-[#4cd7f6] transition-colors">
+            312 beoordelingen
+          </button>
+<span class="text-[#94A3B8] text-xs">•</span>
+<span class="font-label-sm text-label-sm text-[#4cd7f6] font-semibold flex items-center gap-0.5 bg-[#131b2e] px-2 py-0.5 rounded-full border border-[#334155]">
+<span class="material-symbols-outlined text-[13px]">verified_user</span>
+            Gemeentelijk Keurmerk
+          </span>
+</div>
+</section>
+<!-- LIVE SENSORS & REALTIME WATER QUALITY MODULE -->
+<section class="bg-[#131b2e] p-3.5 rounded-2xl border border-[#334155]">
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-1.5">
+<div class="relative w-2.5 h-2.5">
+<span class="absolute inset-0 rounded-full bg-[#4fdbc8] pulse-ring opacity-75"></span>
+<span class="relative block w-2.5 h-2.5 rounded-full bg-[#4fdbc8]"></span>
+</div>
+<h2 class="font-label-sm text-label-sm text-[#F8FAFC] uppercase tracking-wider">Live Sensoren &amp; Zwemcondities</h2>
+</div>
+<span class="font-label-sm text-label-sm text-[#94A3B8]">Rapportage 09:40</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<!-- Sensor 1: Golfslagbad -->
+<div class="bg-[#171f33] p-2.5 rounded-xl border border-[#334155] flex flex-col items-center text-center">
+<span class="font-body-sm text-body-sm text-[#94A3B8]">Golfslagbad</span>
+<span class="font-headline-sm text-headline-sm text-[#4cd7f6] font-bold mt-0.5">31.0°C</span>
+<span class="text-[10px] text-[#4fdbc8] font-semibold bg-[#4fdbc8]/10 px-1.5 py-0.5 rounded mt-1 border border-[#4fdbc8]/30">Actieve golven</span>
+</div>
+<!-- Sensor 2: 50m Bad -->
+<div class="bg-[#171f33] p-2.5 rounded-xl border border-[#334155] flex flex-col items-center text-center">
+<span class="font-body-sm text-body-sm text-[#94A3B8]">Wedstrijdbad</span>
+<span class="font-headline-sm text-headline-sm text-[#89ceff] font-bold mt-0.5">27.5°C</span>
+<span class="text-[10px] text-[#94A3B8] font-medium bg-[#222a3d] px-1.5 py-0.5 rounded mt-1 border border-[#334155]">8 vrije banen</span>
+</div>
+<!-- Sensor 3: Filtratie -->
+<div class="bg-[#171f33] p-2.5 rounded-xl border border-[#334155] flex flex-col items-center text-center">
+<span class="font-body-sm text-body-sm text-[#94A3B8]">Waterzuiverheid</span>
+<span class="font-headline-sm text-headline-sm text-[#4fdbc8] font-bold mt-0.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</span>
+<span class="text-[10px] text-[#4fdbc8] font-semibold bg-[#4fdbc8]/10 px-1 rounded mt-1 border border-[#4fdbc8]/30">Zout + UV</span>
+</div>
+</div>
+<!-- Waterbehandeling Feature Note -->
+<div class="mt-2.5 pt-2 border-t border-[#334155] flex items-center gap-2 text-[#94A3B8] font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[18px] shrink-0">spa</span>
+<span>100% Zoutelektrolyse: Geen prikkende chloorogen &amp; zacht voor gevoelige kinderhuid.</span>
+</div>
+</section>
+<!-- HIGHLIGHTS & KEY ATTRIBUTES (2x2 Grid) -->
+<section>
+<h2 class="font-headline-sm text-headline-sm text-[#F8FAFC] mb-3">Faciliteiten &amp; Kenmerken</h2>
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Tile 1 -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#171f33] text-[#4cd7f6] border border-[#334155] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">pool</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-[#F8FAFC] leading-snug">25m &amp; 50m Banen</p>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">KNZB Wedstrijd gecertificeerd</p>
+</div>
+</div>
+<!-- Tile 2 -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#171f33] text-[#4cd7f6] border border-[#334155] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">tsunami</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-[#F8FAFC] leading-snug">Golfslagbad</p>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">31°C Tropische koepel &amp; stroomversnelling</p>
+</div>
+</div>
+<!-- Tile 3 -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#171f33] text-[#4cd7f6] border border-[#334155] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">school</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-[#F8FAFC] leading-snug">Zwemles A, B, C</p>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">NRZ diplomagarantie &amp; kleine groepen</p>
+</div>
+</div>
+<!-- Tile 4 -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-start gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#171f33] text-[#4cd7f6] border border-[#334155] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">accessible</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-[#F8FAFC] leading-snug">Drempelvrij</p>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">Invalidentoilet &amp; actieve waterlift</p>
+</div>
+</div>
+</div>
+</section>
+<!-- DIPLOMA TRAJECT A, B, C SECTION -->
+<section class="border-t border-[#334155] pt-5">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[22px] text-[#4cd7f6]">workspace_premium</span>
+<h2 class="font-headline-sm text-headline-sm text-[#F8FAFC]">Zwemles Diploma A, B &amp; C</h2>
+</div>
+<span class="font-label-sm text-label-sm text-[#4cd7f6] bg-[#131b2e] border border-[#334155] px-2 py-0.5 rounded-full font-bold">NRZ Licentie</span>
+</div>
+<p class="font-body-md text-body-md text-[#94A3B8] mb-4">
+          Officiële Nationale Zwemdiploma's volgens de beproefde pedagogische methode van KNZB &amp; NRZ. Veiligheid en watervreugde voor ieder kind.
+        </p>
+<!-- Vertical Timeline Journey -->
+<div class="relative pl-6 ml-2 border-l-2 border-[#4cd7f6]/40 flex flex-col gap-4 mb-5">
+<!-- Step 1 -->
+<div class="relative">
+<div class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-[#06b6d4] border-4 border-[#0b1326] shadow-sm"></div>
+<div class="flex items-baseline justify-between">
+<h3 class="font-label-lg text-label-lg text-[#F8FAFC]">Fase 1: Watergewenning (4-5 jr)</h3>
+<span class="font-label-sm text-label-sm text-[#94A3B8] bg-[#131b2e] px-1.5 py-0.5 rounded border border-[#334155]">± 8-12 wkn</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">Onder water kijken, drijven als een zeester en speelse angstvrije orientatie.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative">
+<div class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-[#06b6d4] border-4 border-[#0b1326] shadow-sm"></div>
+<div class="flex items-baseline justify-between">
+<h3 class="font-label-lg text-label-lg text-[#F8FAFC]">Fase 2: Diploma A (Basisvaardigheid)</h3>
+<span class="font-label-sm text-label-sm text-[#4cd7f6] bg-[#131b2e] border border-[#334155] px-1.5 py-0.5 rounded font-bold">Diplomagarantie</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">Schoolslag, rugcrawl, watertrappen en gekleed te water kunnen vallen.</p>
+</div>
+<!-- Step 3 -->
+<div class="relative">
+<div class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-[#06b6d4] border-4 border-[#0b1326] shadow-sm"></div>
+<div class="flex items-baseline justify-between">
+<h3 class="font-label-lg text-label-lg text-[#F8FAFC]">Fase 3: Diploma B (Conditie &amp; Kracht)</h3>
+<span class="font-label-sm text-label-sm text-[#94A3B8] bg-[#131b2e] px-1.5 py-0.5 rounded border border-[#334155]">± 12 wkn</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">Langere afstanden zwemmen, duiken onder vlotten en borstcrawl perfectioneren.</p>
+</div>
+<!-- Step 4 -->
+<div class="relative">
+<div class="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-[#06b6d4] border-4 border-[#0b1326] shadow-sm"></div>
+<div class="flex items-baseline justify-between">
+<h3 class="font-label-lg text-label-lg text-[#F8FAFC]">Fase 4: Diploma C (Zwemveiligheid)</h3>
+<span class="font-label-sm text-label-sm text-[#4fdbc8] bg-[#4fdbc8]/10 border border-[#4fdbc8]/30 px-1.5 py-0.5 rounded font-bold">100% Zwemveilig</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">Zwemmen in open water, bootscenario's en zware kledingcondities overleven.</p>
+</div>
+</div>
+<!-- Wachtlijst & Direct Instromen Box -->
+<div class="bg-gradient-to-br from-[#131b2e] to-[#171f33] p-3.5 rounded-2xl border border-[#334155] shadow-sm flex flex-col gap-2.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[20px]">timelapse</span>
+<span class="font-label-lg text-label-lg text-[#F8FAFC] font-bold">Wachttijdindicatie Amsterdam-Zuid</span>
+</div>
+<p class="font-body-md text-body-md text-[#dae2fd]">
+            Gemiddelde starttijd: <strong class="text-[#4cd7f6] font-bold">4 tot 6 weken</strong>
+</p>
+<div class="bg-[#0b1326]/70 border border-[#334155] p-2.5 rounded-xl flex items-start gap-2">
+<span class="material-symbols-outlined text-[#4fdbc8] text-[18px] shrink-0 mt-0.5">electric_bolt</span>
+<p class="font-body-sm text-body-sm text-[#dae2fd]">
+<strong>Direct instromen mogelijk:</strong> woensdagmiddag &amp; zaterdagochtend 
+              <span class="inline-block bg-[#F97316] text-white font-bold text-[10px] px-1.5 py-0.2 rounded-full ml-1">Nog 3 plekken!</span>
+</p>
+</div>
+<button class="w-full mt-1 bg-[#131b2e] border border-[#06b6d4] text-[#4cd7f6] hover:bg-[#06b6d4] hover:text-[#003640] transition-all duration-150 rounded-full py-2.5 font-label-lg text-label-lg flex items-center justify-center gap-1.5 active:scale-[0.98]">
+<span>Vraag vrijblijvende intake aan</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- TARIEVEN & ENTREE (CLEAN TABLE CARDS) -->
+<section class="border-t border-[#334155] pt-5">
+<div class="flex items-center justify-between mb-3">
+<h2 class="font-headline-sm text-headline-sm text-[#F8FAFC]">Tarieven &amp; Tickets</h2>
+<span class="font-label-sm text-label-sm text-[#94A3B8]">Seizoen 2025</span>
+</div>
+<!-- Price Cards Accordion List -->
+<div class="flex flex-col gap-2">
+<!-- Item 1: Losse entree -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-[#F8FAFC]">Losse entree Banen / Recreatief</span>
+<span class="font-body-sm text-body-sm text-[#94A3B8]">Vrije toegang tot subtropisch bad &amp; 50m</span>
+</div>
+<div class="text-right shrink-0 pl-2">
+<span class="font-headline-sm text-headline-sm text-[#F8FAFC] font-bold">€ 8,20</span>
+<span class="block text-[10px] text-[#94A3B8]">per sessie</span>
+</div>
+</div>
+<!-- Item 2: 10-Badenkaart -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-[#F8FAFC]">10-Badenkaart</span>
+<span class="font-body-sm text-body-sm text-[#94A3B8]">6 maanden geldig • Niet persoonsgebonden</span>
+</div>
+<div class="text-right shrink-0 pl-2">
+<span class="font-headline-sm text-headline-sm text-[#F8FAFC] font-bold">€ 74,00</span>
+<span class="block text-[10px] text-[#4fdbc8] font-semibold">10% besparing</span>
+</div>
+</div>
+<!-- Item 3: Maandabonnement -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-[#F8FAFC]">Maandabonnement Onbeperkt</span>
+<span class="font-body-sm text-body-sm text-[#94A3B8]">Elke dag banenzwemmen &amp; sauna</span>
+</div>
+<div class="text-right shrink-0 pl-2">
+<span class="font-headline-sm text-headline-sm text-[#F8FAFC] font-bold">€ 49,50</span>
+<span class="block text-[10px] text-[#94A3B8]">per maand</span>
+</div>
+</div>
+<!-- Item 4: Zwemles Pakket (Highlight) -->
+<div class="p-3 bg-[#171f33] border border-[#06b6d4] rounded-xl flex items-center justify-between relative overflow-hidden">
+<div class="absolute -right-5 -top-5 w-12 h-12 bg-[#06b6d4]/15 rounded-full"></div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg text-[#F8FAFC] font-bold">Zwemlespakket Diploma A</span>
+<span class="bg-[#06b6d4] text-[#003640] text-[10px] px-1.5 py-0.2 rounded-full font-bold">Meest gekozen</span>
+</div>
+<span class="font-body-sm text-body-sm text-[#94A3B8] mt-0.5">Incl. diplomagarantie &amp; gratis vrijzwemmen</span>
+</div>
+<div class="text-right shrink-0 pl-2">
+<span class="font-headline-sm text-headline-sm text-[#4cd7f6] font-bold">€ 68,00</span>
+<span class="block text-[10px] text-[#94A3B8]">per maand</span>
+</div>
+</div>
+<!-- Item 5: Verhuur -->
+<div class="p-3 bg-[#131b2e] border border-[#334155] rounded-xl flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-[#F8FAFC]">Huur wetsuit / thermo accessoires</span>
+<span class="font-body-sm text-body-sm text-[#94A3B8]">Professionele zwemkleding voor buitenbad</span>
+</div>
+<div class="text-right shrink-0 pl-2">
+<span class="font-headline-sm text-headline-sm text-[#F8FAFC] font-bold">€ 7,50</span>
+<span class="block text-[10px] text-[#94A3B8]">per dag</span>
+</div>
+</div>
+</div>
+<!-- Stadspas Discount Indicator -->
+<div class="mt-3 flex items-center gap-2 p-2.5 bg-[#131b2e] border border-[#334155] rounded-xl text-[#dae2fd]">
+<span class="material-symbols-outlined text-[#4fdbc8] text-[20px] shrink-0">check_circle</span>
+<p class="font-body-sm text-body-sm leading-snug text-[#dae2fd]">
+<strong class="text-[#F8FAFC]">Stadspas Amsterdam</strong> met groene stip geeft recht op tot wel <strong class="text-[#4cd7f6]">80% korting</strong> op losse entree en zwemlessen.
+          </p>
+</div>
+</section>
+<!-- OPENINGSTIJDEN & DRUKTE VANDAAG -->
+<section class="border-t border-[#334155] pt-5">
+<h2 class="font-headline-sm text-headline-sm text-[#F8FAFC] mb-3">Openingstijden Vandaag</h2>
+<div class="bg-[#131b2e] border border-[#334155] rounded-xl p-3.5 flex flex-col gap-2.5">
+<div class="flex items-center justify-between pb-2 border-b border-[#334155]">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#4fdbc8]"></span>
+<span class="font-label-lg text-label-lg text-[#F8FAFC]">Nu Open: Vandaag tot 22:00</span>
+</div>
+<span class="font-label-sm text-label-sm text-[#4fdbc8] bg-[#4fdbc8]/10 border border-[#4fdbc8]/30 px-2 py-0.5 rounded font-semibold">Rustig zwemtijdstip</span>
+</div>
+<div class="grid grid-cols-2 gap-2 text-[#94A3B8] font-body-sm text-body-sm">
+<div>
+<span class="block text-[#F8FAFC] font-medium">Vroege Vogel Banen:</span>
+<span>07:00 – 09:30</span>
+</div>
+<div>
+<span class="block text-[#F8FAFC] font-medium">Subtropisch Recreatie:</span>
+<span>10:00 – 18:30</span>
+</div>
+<div>
+<span class="block text-[#F8FAFC] font-medium">Zwemles A/B/C:</span>
+<span>15:30 – 18:00</span>
+</div>
+<div>
+<span class="block text-[#F8FAFC] font-medium">Avond Banenzwemmen:</span>
+<span>19:00 – 22:00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- LOCATIE, BEREIKBAARHEID & KAART -->
+<section class="border-t border-[#334155] pt-5 mb-4">
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-headline-sm text-headline-sm text-[#F8FAFC]">Locatie &amp; Bereikbaarheid</h2>
+<span class="font-label-sm text-label-sm text-[#94A3B8]">Amsterdam Zuid</span>
+</div>
+<p class="font-body-md text-body-md text-[#94A3B8] mb-3">
+          De Mirandalaan 9, 1079 PA Amsterdam
+        </p>
+<!-- Map Thumbnail Container (Styled Card Preview) -->
+<div class="w-full h-40 rounded-2xl overflow-hidden relative border border-[#334155] mb-3 group">
+<img alt="Kaartlocatie De Mirandabad" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80" data-alt="A clean, minimalist vector-style map snippet of Amsterdam Zuid surrounding De Mirandalaan with pastel road grids, green park corridors, and subtle teal waterways. A crisp modern red and teal location marker highlights Zwemcentrum De Mirandabad in authentic light UI mapping aesthetic." data-location="Amsterdam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbLFjG4Aoin-ejU8KCa0PFGCFK5Ny6UzzGjx7AaYQt0Ugi_X_w7YThogm8Tix4WPkQotOi0tNNJnK2OK5kRF5yq6qEDtI43JNKOIu5eMzVif5BTzrwswc22Ng_KT6EzH5FZ6ZdE_lQur_Xm-QlfDJA8nH7ospZBq-qMdgiMkMg1Iyf3cJWB4_X2iktiH17Lq2bVDnhnT036EAbnAVFLrHN8vaU_YPHJY6iRgdnwlScpph-7HC5QycR"/>
+<div class="absolute inset-0 bg-black/40"></div>
+<!-- Floating Map Marker -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-[#06b6d4] text-[#003640] font-label-sm text-label-sm px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1 border border-white font-bold">
+<span class="material-symbols-outlined text-[14px]">pool</span>
+<span>De Mirandabad</span>
+</div>
+<div class="w-2 h-2 bg-[#06b6d4] rotate-45 -mt-1 shadow-md"></div>
+</div>
+<!-- Open in Maps Button -->
+<a class="absolute bottom-2.5 right-2.5 bg-[#0b1326]/90 backdrop-blur-md text-[#F8FAFC] font-label-sm text-label-sm px-2.5 py-1.5 rounded-lg shadow-sm border border-[#334155] flex items-center gap-1 hover:text-[#4cd7f6]" href="https://maps.google.com" rel="noopener" target="_blank">
+<span>Route openen</span>
+<span class="material-symbols-outlined text-[13px]">open_in_new</span>
+</a>
+</div>
+<!-- OV & Transit Quick Chips -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2.5 p-2 bg-[#131b2e] border border-[#334155] rounded-lg">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[20px] shrink-0">tram</span>
+<div class="text-[#dae2fd] font-body-sm text-body-sm">
+<strong class="text-[#F8FAFC]">Tram 4 &amp; 12:</strong> Halte Dintelstraat (4 min lopen)
+            </div>
+</div>
+<div class="flex items-center gap-2.5 p-2 bg-[#131b2e] border border-[#334155] rounded-lg">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[20px] shrink-0">directions_subway</span>
+<div class="text-[#dae2fd] font-body-sm text-body-sm">
+<strong class="text-[#F8FAFC]">Noord/Zuidlijn (Metro 52):</strong> Station Europaplein / RAI (8 min)
+            </div>
+</div>
+<div class="flex items-center gap-2.5 p-2 bg-[#131b2e] border border-[#334155] rounded-lg">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[20px] shrink-0">local_parking</span>
+<div class="text-[#dae2fd] font-body-sm text-body-sm">
+<strong class="text-[#F8FAFC]">Parkeren:</strong> Eigen parkeerterrein (€ 1,60/uur) + 8 laadpalen
+            </div>
+</div>
+</div>
+</section>
+<!-- REPORT/HELP GHOST LINK -->
+<section class="py-2 text-center">
+<button class="text-[#94A3B8] hover:text-[#F8FAFC] font-body-sm text-body-sm inline-flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">flag</span>
+<span>Onjuiste faciliteitgegevens melden</span>
+</button>
+</section>
+</div>
+<!-- FOOTER NOTE FOR ACCREDITATION -->
+<footer class="mt-8 pt-4 pb-12 px-margin-mobile border-t border-[#334155] bg-[#131b2e] text-center text-[#94A3B8]">
+<p class="font-body-sm text-body-sm">
+        © 2025 AlleZwembaden B.V. Erkend platform voor KNZB en NRZ Zwemdiploma's.
+      </p>
+</footer>
+<!-- FIXED STICKY BOTTOM BOOKING BAR (AIRBNB PDP MOBILE STANDARD) -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto z-50 bg-[#131b2e] border-t border-[#334155] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] flex items-center justify-between">
+<!-- Price & Rating Preview -->
+<div class="flex flex-col">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-sm text-headline-sm text-[#F8FAFC] font-extrabold">€ 8,20</span>
+<span class="font-body-sm text-body-sm text-[#94A3B8]">/ ticket</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-amber-400" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-label-sm text-[#F8FAFC] font-semibold">4.92</span>
+<span class="text-[11px] text-[#94A3B8] underline">Vandaag vrij zwemmen</span>
+</div>
+</div>
+<!-- Primary Action CTA Button -->
+<button class="bg-[#06b6d4] hover:bg-[#4cd7f6] active:scale-95 text-[#003640] font-label-lg text-label-lg px-5 py-3 rounded-full shadow-lg font-bold flex items-center gap-2 transition-all duration-150" id="book-cta">
+<span>Reserveer Tijdslot</span>
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+</button>
+</div>
+<!-- INTERACTIVE MOBILE RESERVATION MODAL / BOTTOM SHEET -->
+<div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex-col justify-end transition-opacity duration-300" id="booking-sheet">
+<!-- Backdrop Clickout -->
+<div class="flex-1 w-full" id="sheet-backdrop"></div>
+<!-- Sheet Container -->
+<div class="w-full max-w-[390px] mx-auto bg-[#131b2e] border-t border-[#334155] rounded-t-3xl p-5 shadow-2xl flex flex-col gap-4 animate-in slide-in-from-bottom duration-200">
+<!-- Sheet Header Bar -->
+<div class="flex items-center justify-between border-b border-[#334155] pb-3">
+<div class="w-10 h-1 bg-[#334155] rounded-full mx-auto absolute top-2.5 left-1/2 -translate-x-1/2"></div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-[#F8FAFC]">Kies Tijdslot &amp; Activiteit</h3>
+<p class="font-body-sm text-body-sm text-[#94A3B8]">De Mirandabad • Directe bevestiging</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-[#171f33] border border-[#334155] flex items-center justify-center text-[#F8FAFC]" id="close-sheet">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Date Scroller -->
+<div>
+<label class="font-label-sm text-label-sm text-[#94A3B8] block mb-1.5 uppercase tracking-wide">Kies datum</label>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+<button class="px-3.5 py-2 rounded-xl bg-[#06b6d4] text-[#003640] font-label-md text-label-md shrink-0 text-center font-bold shadow">
+<span class="block text-[11px] opacity-90">VANDAAG</span>
+<span>24 Okt</span>
+</button>
+<button class="px-3.5 py-2 rounded-xl bg-[#171f33] border border-[#334155] text-[#dae2fd] font-label-md text-label-md shrink-0 text-center">
+<span class="block text-[11px] text-[#94A3B8]">MORGEN</span>
+<span class="font-bold">25 Okt</span>
+</button>
+<button class="px-3.5 py-2 rounded-xl bg-[#171f33] border border-[#334155] text-[#dae2fd] font-label-md text-label-md shrink-0 text-center">
+<span class="block text-[11px] text-[#94A3B8]">ZAT</span>
+<span class="font-bold">26 Okt</span>
+</button>
+<button class="px-3.5 py-2 rounded-xl bg-[#171f33] border border-[#334155] text-[#dae2fd] font-label-md text-label-md shrink-0 text-center">
+<span class="block text-[11px] text-[#94A3B8]">ZON</span>
+<span class="font-bold">27 Okt</span>
+</button>
+</div>
+</div>
+<!-- Slot Options -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-[#94A3B8] uppercase tracking-wide">Beschikbare Tijdsloten</label>
+<label class="flex items-center justify-between p-3 border-2 border-[#06b6d4] bg-[#06b6d4]/10 rounded-xl cursor-pointer">
+<div class="flex items-center gap-2.5">
+<input checked="" class="text-[#06b6d4] focus:ring-[#06b6d4] bg-[#171f33] border-[#334155]" name="slot" type="radio"/>
+<div>
+<p class="font-label-lg text-label-lg text-[#F8FAFC]">10:00 – 12:30 • Subtropisch &amp; Golven</p>
+<p class="font-body-sm text-body-sm text-[#94A3B8]">Vrij zwemmen voor familie &amp; recreant</p>
+</div>
+</div>
+<span class="font-label-lg text-label-lg text-[#4cd7f6] font-bold">€ 8,20</span>
+</label>
+<label class="flex items-center justify-between p-3 border border-[#334155] bg-[#171f33] rounded-xl cursor-pointer">
+<div class="flex items-center gap-2.5">
+<input class="text-[#06b6d4] focus:ring-[#06b6d4] bg-[#171f33] border-[#334155]" name="slot" type="radio"/>
+<div>
+<p class="font-label-lg text-label-lg text-[#F8FAFC]">13:00 – 15:30 • Subtropisch &amp; Golven</p>
+<p class="font-body-sm text-body-sm text-[#94A3B8]">Nog 14 plekken beschikbaar</p>
+</div>
+</div>
+<span class="font-label-lg text-label-lg text-[#F8FAFC] font-bold">€ 8,20</span>
+</label>
+<label class="flex items-center justify-between p-3 border border-[#334155] bg-[#171f33] rounded-xl cursor-pointer">
+<div class="flex items-center gap-2.5">
+<input class="text-[#06b6d4] focus:ring-[#06b6d4] bg-[#171f33] border-[#334155]" name="slot" type="radio"/>
+<div>
+<p class="font-label-lg text-label-lg text-[#F8FAFC]">19:30 – 21:30 • Banenzwemmen 50m</p>
+<p class="font-body-sm text-body-sm text-[#94A3B8]">Snelle &amp; trage banen ingedeeld</p>
+</div>
+</div>
+<span class="font-label-lg text-label-lg text-[#F8FAFC] font-bold">€ 7,50</span>
+</label>
+</div>
+<!-- Checkout Action Button in Sheet -->
+<button class="w-full bg-[#06b6d4] hover:bg-[#4cd7f6] text-[#003640] font-label-lg text-label-lg py-3.5 rounded-full shadow-lg font-bold flex items-center justify-center gap-2 active:scale-95 transition-all" id="confirm-sheet">
+<span>Verder naar Afrekenen (iDEAL / Stadspas)</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Interactive Micro-Interactions Script -->
+<script>
+    // Bottom Sheet Trigger Logic
+    const bookCta = document.getElementById('book-cta');
+    const bookingSheet = document.getElementById('booking-sheet');
+    const closeSheet = document.getElementById('close-sheet');
+    const sheetBackdrop = document.getElementById('sheet-backdrop');
+    const confirmSheet = document.getElementById('confirm-sheet');
+
+    function openModal() {
+      bookingSheet.classList.remove('hidden');
+      bookingSheet.classList.add('flex');
+    }
+
+    function closeModal() {
+      bookingSheet.classList.add('hidden');
+      bookingSheet.classList.remove('flex');
+    }
+
+    bookCta.addEventListener('click', openModal);
+    closeSheet.addEventListener('click', closeModal);
+    sheetBackdrop.addEventListener('click', closeModal);
+
+    confirmSheet.addEventListener('click', () => {
+      confirmSheet.innerHTML = `<span class="material-symbols-outlined animate-spin text-[18px]">progress_activity</span><span>Bezig met verwerken...</span>`;
+      setTimeout(() => {
+        alert('Tijdslot gereserveerd! Bevestiging en QR-toegangsticket zijn verzonden.');
+        closeModal();
+        confirmSheet.innerHTML = `<span>Verder naar Afrekenen (iDEAL / Stadspas)</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span>`;
+      }, 900);
+    });
+
+    // Favorite button toggle
+    const favBtn = document.getElementById('fav-btn');
+    const favIcon = document.getElementById('fav-icon');
+    let isFav = false;
+
+    favBtn.addEventListener('click', () => {
+      isFav = !isFav;
+      if (isFav) {
+        favIcon.innerText = 'favorite';
+        favIcon.classList.add('text-rose-500');
+        favIcon.style.fontVariationSettings = "'FILL' 1";
+      } else {
+        favIcon.innerText = 'favorite_border';
+        favIcon.classList.remove('text-rose-500');
+        favIcon.style.fontVariationSettings = "'FILL' 0";
+      }
+    });
+
+    // Share button Web Share API or copy
+    const shareBtn = document.getElementById('share-btn');
+    shareBtn.addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Zwemcentrum De Mirandabad',
+          text: 'Bekijk de subtropische faciliteiten en zwemlessen bij De Mirandabad in Amsterdam Zuid!',
+          url: window.location.href,
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link naar De Mirandabad gekopieerd naar klembord!');
+      }
+    });
+
+    // Dynamic Top Bar elevation on scroll
+    window.addEventListener('scroll', () => {
+      const topBar = document.getElementById('mobile-top-bar');
+      if (window.scrollY > 80) {
+        topBar.classList.add('bg-[#0b1326]/90', 'backdrop-blur-md', 'shadow-md');
+      } else {
+        topBar.classList.remove('bg-[#0b1326]/90', 'backdrop-blur-md', 'shadow-md');
+      }
+    });
+  </script>
+</body></html>

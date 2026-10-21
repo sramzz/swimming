@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build artifacts
+dist/
+.astro/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Databases & local sqlite files
+data/*.sqlite*
+data/*.db*
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# Operating system
+.DS_Store
+Thumbs.db

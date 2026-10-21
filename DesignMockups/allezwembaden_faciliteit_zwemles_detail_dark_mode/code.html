@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zwemcentrum De Mirandabad - AlleZwembaden.nl</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Plus Jakarta Sans Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-surface-variant": "#bcc9cd",
+          "surface-container-highest": "#2d3449",
+          "error": "#ffb4ab",
+          "on-error": "#690005",
+          "on-background": "#dae2fd",
+          "tertiary-container": "#1abaa8",
+          "secondary-fixed": "#c9e6ff",
+          "surface-container-low": "#131b2e",
+          "surface": "#0b1326",
+          "surface-tint": "#4cd7f6",
+          "surface-variant": "#2d3449",
+          "on-tertiary-fixed": "#00201c",
+          "primary-fixed-dim": "#4cd7f6",
+          "on-surface": "#dae2fd",
+          "on-error-container": "#ffdad6",
+          "surface-container-lowest": "#060e20",
+          "inverse-primary": "#00687a",
+          "surface-container-high": "#222a3d",
+          "inverse-surface": "#dae2fd",
+          "on-secondary-fixed-variant": "#004c6e",
+          "surface-container": "#171f33",
+          "primary": "#4cd7f6",
+          "tertiary-fixed": "#71f8e4",
+          "on-secondary": "#00344d",
+          "on-secondary-fixed": "#001e2f",
+          "secondary": "#89ceff",
+          "surface-bright": "#31394d",
+          "secondary-container": "#00a2e6",
+          "primary-container": "#06b6d4",
+          "tertiary": "#4fdbc8",
+          "on-primary-fixed-variant": "#004e5c",
+          "surface-dim": "#0b1326",
+          "error-container": "#93000a",
+          "inverse-on-surface": "#283044",
+          "primary-fixed": "#acedff",
+          "background": "#0b1326",
+          "outline-variant": "#3d494c",
+          "on-tertiary-fixed-variant": "#005048",
+          "on-secondary-container": "#00344e",
+          "on-primary-fixed": "#001f26",
+          "on-tertiary": "#003731",
+          "tertiary-fixed-dim": "#4fdbc8",
+          "secondary-fixed-dim": "#89ceff",
+          "on-primary-container": "#00424f",
+          "on-tertiary-container": "#00443c",
+          "outline": "#869397",
+          "on-primary": "#003640"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "2xl": "1rem",
+          "3xl": "1.5rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "gutter-mobile": "1rem",
+          "space-lg": "1.5rem",
+          "margin": "2rem",
+          "gutter": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-xs": "0.25rem",
+          "margin-mobile": "1rem"
+        },
+        "fontFamily": {
+          "label-lg": ["Plus Jakarta Sans"],
+          "label-md": ["Plus Jakarta Sans"],
+          "body-md": ["Plus Jakarta Sans"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "label-sm": ["Plus Jakarta Sans"],
+          "headline-xl-mobile": ["Plus Jakarta Sans"],
+          "headline-xl": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "body-sm": ["Plus Jakarta Sans"],
+          "headline-sm": ["Plus Jakarta Sans"],
+          "body-lg": ["Plus Jakarta Sans"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"]
+        },
+        "fontSize": {
+          "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+          "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+          "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }],
+          "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+          "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+          "headline-xl-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+          "headline-xl": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+          "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+          "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+          "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+          "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" }],
+          "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-surface text-slate-100 antialiased selection:bg-primary/20 selection:text-primary">
+<!-- TopNavBar (Shared Component JSON Blueprint) -->
+<header class="docked full-width top-0 sticky z-40 bg-surface/90 backdrop-blur-md border-b border-slate-800 shadow-sm">
+<div class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin flex items-center justify-between h-20">
+<!-- Brand & Mini Search Capsule -->
+<div class="flex items-center gap-space-lg">
+<a class="text-headline-md font-headline-md text-primary flex items-center gap-space-xs font-bold tracking-tight" href="#">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="waves" style="font-variation-settings: 'FILL' 1;">waves</span>
+          AlleZwembaden
+        </a>
+<!-- Minimized Search Capsule (Airbnb Aesthetic) -->
+<div class="hidden lg:flex items-center bg-surface-container-low border border-slate-700/80 rounded-full shadow-sm hover:border-slate-600 transition-all duration-150 pl-4 pr-2 py-2 gap-3 cursor-pointer">
+<span class="text-label-md font-label-md text-slate-200 font-semibold">Amsterdam</span>
+<span class="h-4 w-px bg-slate-700"></span>
+<span class="text-label-md font-label-md text-slate-400">Subtropisch &amp; Banen</span>
+<span class="h-4 w-px bg-slate-700"></span>
+<span class="text-label-md font-label-md text-slate-400">Elke datum</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-surface flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-base font-bold text-slate-950" data-icon="search">search</span>
+</div>
+</div>
+</div>
+<!-- Navigation Links (Active mapping: Zwemlocaties) -->
+<nav class="hidden xl:flex items-center gap-6">
+<a class="text-primary border-b-2 border-primary pb-1 text-label-lg font-label-lg transition-colors duration-150 font-semibold" href="#">Zwemlocaties</a>
+<a class="text-slate-400 font-medium text-label-lg font-label-lg hover:text-primary transition-colors duration-150" href="#">Zwemles A/B/C</a>
+<a class="text-slate-400 font-medium text-label-lg font-label-lg hover:text-primary transition-colors duration-150" href="#">Banenzwemmen</a>
+<a class="text-slate-400 font-medium text-label-lg font-label-lg hover:text-primary transition-colors duration-150" href="#">Subtropisch</a>
+<a class="text-slate-400 font-medium text-label-lg font-label-lg hover:text-primary transition-colors duration-150" href="#">Natuurwater</a>
+</nav>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-space-sm">
+<a class="hidden sm:inline-flex text-label-lg font-label-lg text-slate-200 hover:text-primary px-3 py-2 rounded-full transition-colors duration-150" href="#">
+          Word Aanbieder
+        </a>
+<button aria-label="Taalkeuze" class="p-2 rounded-full hover:bg-surface-container-high text-slate-300 flex items-center justify-center transition-colors duration-150">
+<span class="material-symbols-outlined text-xl" data-icon="language">language</span>
+</button>
+<div class="flex items-center gap-2 border border-slate-700 rounded-full px-3 py-1.5 hover:border-slate-500 transition-colors duration-150 cursor-pointer bg-surface-container-low">
+<span class="material-symbols-outlined text-xl text-slate-400" data-icon="menu">menu</span>
+<span class="material-symbols-outlined text-2xl text-slate-400" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Breadcrumbs & Facility Header Strip -->
+<main class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin pt-6 pb-16">
+<!-- Breadcrumb Pathway -->
+<nav aria-label="Broodkruimelpad" class="flex items-center gap-2 text-label-md font-label-md text-slate-400 mb-4 flex-wrap">
+<a class="hover:text-primary transition-colors" href="#">Nederland</a>
+<span class="text-slate-600">›</span>
+<a class="hover:text-primary transition-colors" href="#">Noord-Holland</a>
+<span class="text-slate-600">›</span>
+<a class="hover:text-primary transition-colors" href="#">Amsterdam</a>
+<span class="text-slate-600">›</span>
+<span class="text-slate-200 font-semibold">De Mirandabad</span>
+</nav>
+<!-- Facility Header & Action Group -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-slate-50 font-bold tracking-tight">
+          Zwemcentrum De Mirandabad - Subtropisch &amp; Wedstrijdbad
+        </h1>
+<div class="flex flex-wrap items-center gap-y-2 gap-x-3 mt-2 text-body-md font-body-md text-slate-400">
+<span class="flex items-center font-semibold text-slate-100">
+<span class="material-symbols-outlined text-amber-400 text-lg mr-1" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+            4.92
+          </span>
+<span class="underline cursor-pointer hover:text-slate-200">(312 reviews)</span>
+<span class="text-slate-700">•</span>
+<span class="inline-flex items-center text-primary font-medium">
+<span class="material-symbols-outlined text-base mr-1 text-primary" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+            Gemeente Amsterdam Keurmerk
+          </span>
+<span class="text-slate-700">•</span>
+<span class="text-slate-400">Officiële KNZB &amp; NRZ Zwemlesaanbieder</span>
+</div>
+</div>
+<!-- Delen & Opslaan Buttons -->
+<div class="flex items-center gap-3 shrink-0">
+<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-label-lg font-label-lg text-slate-200 hover:bg-surface-container-high transition-colors duration-150">
+<span class="material-symbols-outlined text-lg" data-icon="share">share</span>
+<span class="underline">Delen</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-label-lg font-label-lg text-slate-200 hover:bg-surface-container-high transition-colors duration-150">
+<span class="material-symbols-outlined text-lg text-rose-400" data-icon="favorite">favorite</span>
+<span class="underline">Opslaan</span>
+</button>
+</div>
+</div>
+<!-- 2. Airbnb 5-Photo Hero Grid -->
+<section class="relative grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-2 h-[340px] md:h-[480px] rounded-2xl overflow-hidden mb-10 border border-slate-800">
+<!-- 1 Huge Landscape Hero on Left (Spans 2 cols, 2 rows) -->
+<div class="relative md:col-span-2 md:row-span-2 overflow-hidden group cursor-pointer bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A grand architectural glass dome subtropical swimming pool pavilion filled with lush indoor palm trees, gentle aquamarine wave ripples, and a winding yellow waterslide illuminated by bright natural daylight streaming through huge triangular skylights. Families and swimmers relax in pristine sparkling turquoise water under a clean modern Dutch leisure aesthetic with minimalist architectural lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3ZRrcwKhbfx8g_399BbscVUva9XJEfCVy894nmg5qtLOnMB9s_dHLYHXU3gvNXskfvd79uTc0GTgj43sPm9xkpIPeh2MpOpCrZIqYStEV5kgVpaltpHBfhMepDvmQKeQPXBPSlAdyiecTEdlDVm4t31pwO2om0CtnJyaly9Ybkrx-iNUAFTWX8urPugx3yQjhm1ou8i_ZTRqTBEDKywOoBSgWE01ZPCuAECxQ2OD2Q8bJGoNx_xKE"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+<div class="absolute top-4 left-4 bg-surface-container-lowest/80 backdrop-blur-md px-3 py-1 rounded-full text-label-sm font-label-sm text-primary font-bold shadow-sm border border-slate-700/50">
+          Subtropische Glazen Koepel
+        </div>
+</div>
+<!-- Tile 1: 50m banenzwemmen pool -->
+<div class="relative overflow-hidden group cursor-pointer bg-surface-container-low hidden md:block">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A sleek Olympic-standard 50-meter indoor competition swimming pool with crisp navy lane ropes and sharp white lane lines reflecting bright overhead LED spotlights. Clear calm cyan water, sleek starting blocks numbered 1 to 8, in an architectural athletic swimming arena designed with high-key airy modern light aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQt6ZW8FK_ohDVX2FDZYc-8m6LtH8elIwEpMcVSPArmPAS6ss3RUi_Sh6P9WxxAEwjQ4_NuzqjkWgkFGSyl0KTd2IYD5Brl6-1muc4H3Sqs-my-2NOXFju-pwMC9EyuJ3RasrpWesynqiQ89PVh1mZllIUmUH9Ui4ifxJf4eNySA8timgS51FHxdkD5u7V8_t1xMJdm6hOzYuvU9pStwu3yad2Z-76iGGaX6pWQgiPTv2A0xj-OZY5"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+<span class="absolute bottom-2 left-2 bg-surface-container-lowest/80 backdrop-blur-sm px-2 py-0.5 rounded text-label-sm font-label-sm text-slate-200 border border-slate-700/50">50m Wedstrijdbad</span>
+</div>
+<!-- Tile 2: Toddler warm paddling pool (Peuterbad) -->
+<div class="relative overflow-hidden group cursor-pointer bg-surface-container-low hidden md:block">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A warm sunlit toddler paddling pool basin featuring gentle fountain mushrooms and mini aquatic play structures with soft rubber tile edging. Young children playing happily under the watchful eyes of parents in crystal clear shallow water warmed to 32 degrees Celsius, captured in a clean airy European leisure style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1YfA8qRj7ClTKU4Azrv9lgZDfCjd2a1xszbu62fLhH3rqCCjhSpHpBDMD9zQosmCtFybYTr7Ebg7kzjJrwOhLLA4ZVPFvKdOH43-_gNqqaZ4Pmpijs-8c0Z8fgyRoIQAICYIOSfQTFFfQpREmdW6mxbuxyn9daSPfST_q41yba1n6q_jXPvsC6bviehR-2atAUNNnc7MJPhwKx3vRld1EeqKYg5OMkDRF0vbclggZY37Aw-7Jnw-6"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+<span class="absolute bottom-2 left-2 bg-surface-container-lowest/80 backdrop-blur-sm px-2 py-0.5 rounded text-label-sm font-label-sm text-slate-200 border border-slate-700/50">Verwarmd Peuterbad</span>
+</div>
+<!-- Tile 3: Kids swim lessons with instructors -->
+<div class="relative overflow-hidden group cursor-pointer bg-surface-container-low hidden md:block">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A cheerful certified Dutch swimming instructor in a professional teal AlleZwembaden uniform guiding small children through Diploma A swimming techniques with colorful floating aids and kickboards. The indoor swimming pool is calm, clean, well-lit with high ceiling natural lighting, displaying a trustworthy educational swimming atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnIxrVrdU8Fb9GCLXCsTSLM0VGJPWF_P1z5NPIPgnxUrPOrGGBOYu58UW5gzI-09ZeG0-73nNcozg-SmI9jAR5wIZLb0c2Yzgmr07G-wXsxhE7RcCTCyLyX9RC8177E2rOragDLllzZYKUcLoZe_ooRDBsy_U_nbXNkxNSU8gBg5HJwHjOM_0lYTJ4t10AKQwLbdy3dIce0xh6uk9893Irx-ummcLSCMAw-S7-moAfj2jAwJtukvKF"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+<span class="absolute bottom-2 left-2 bg-surface-container-lowest/80 backdrop-blur-sm px-2 py-0.5 rounded text-label-sm font-label-sm text-slate-200 border border-slate-700/50">Zwemles A/B/C</span>
+</div>
+<!-- Tile 4: Outdoor heated lawn basin -->
+<div class="relative overflow-hidden group cursor-pointer bg-surface-container-low hidden md:block">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="An expansive heated outdoor recreational swimming pool surrounded by manicured green sunbathing lawns and modernist Dutch pool deck architecture under clear blue skies. Swimmers enjoying open-air aquatic leisure with sleek aluminum railings and ambient water jets reflecting bright natural sunlight in high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6HQYFJB3FB88oaU4dG8F_Bpm07Kp5n3pn-y0CDnV_0TrFOiwBlEWAtHfKpYY3j2p9TwwYXllRmESPcqVAa_6kKlilMSMmFHpww9Rhx4r0mf6evp8PvRXOtRFvHDbZYX6q0F3eEbzMLPY-xzakyTXdPE8nofAF4eSyoPLlJbksj0Rqq5WnxSdVjX9MVcODqKQIF639JVVSnV9gsVcd-rp29It6tXe8lOgkq9zJmU-aUKeeqZ4X7fF6"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+<!-- Floating Pill Button: "Toon alle 28 foto's" -->
+<button class="absolute bottom-4 right-4 bg-surface-container-low/90 backdrop-blur-md text-slate-100 text-label-md font-label-md px-3.5 py-2 rounded-full border border-slate-700 shadow-md hover:scale-105 hover:bg-surface-container-high transition-transform flex items-center gap-1.5 font-semibold">
+<span class="material-symbols-outlined text-base" data-icon="apps">apps</span>
+          Toon alle 28 foto's
+        </button>
+</div>
+</section>
+<!-- 3. Main Content Split: Left (65%) vs. Right (35% Sticky Booking Widget) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+<!-- ================= LEFT COLUMN (65% / 8 cols) ================= -->
+<div class="lg:col-span-8 flex flex-col gap-10 divide-y divide-slate-800">
+<!-- Host / Operator Header -->
+<div class="pt-2">
+<div class="flex items-center justify-between pb-6">
+<div>
+<h2 class="text-headline-md font-headline-md text-slate-50 font-bold">
+                Gemeentelijk Zwemcomplex met Binnen- &amp; Buitenbaden
+              </h2>
+<p class="text-body-md font-body-md text-slate-400 mt-1">
+                Beheerd door Gemeente Amsterdam Sportbedrijf • Erkend door NRZ (Nationale Raad Zwemveiligheid)
+              </p>
+</div>
+<!-- Operator Avatar -->
+<div class="relative w-14 h-14 rounded-full bg-surface-container-high flex items-center justify-center border border-slate-700 shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="pool" style="font-variation-settings: 'FILL' 1;">pool</span>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 bg-primary-container rounded-full text-surface-container-lowest flex items-center justify-center text-xs shadow-sm font-bold">
+<span class="material-symbols-outlined text-xs text-slate-950 font-bold" data-icon="check">check</span>
+</span>
+</div>
+</div>
+<!-- Key Highlights Strip -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+<div class="flex gap-3 items-start p-3 rounded-xl bg-surface-container-low/60 border border-slate-800">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+<span class="material-symbols-outlined" data-icon="straighten">straighten</span>
+</div>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-200 font-semibold">25m &amp; 50m Banen</h4>
+<p class="text-body-md font-body-md text-slate-400">Ideaal voor conditiezwemmen, borstcrawl en KNZB-training.</p>
+</div>
+</div>
+<div class="flex gap-3 items-start p-3 rounded-xl bg-surface-container-low/60 border border-slate-800">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+<span class="material-symbols-outlined" data-icon="tsunami">tsunami</span>
+</div>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-200 font-semibold">Subtropisch golfslagbad</h4>
+<p class="text-body-md font-body-md text-slate-400">Elk heel uur actieve golfslag en verwarmd tot 31.0°C.</p>
+</div>
+</div>
+<div class="flex gap-3 items-start p-3 rounded-xl bg-surface-container-low/60 border border-slate-800">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-200 font-semibold">Zwemles A/B/C</h4>
+<p class="text-body-md font-body-md text-slate-400">Gecertificeerde NRZ instructeurs met diplomagarantie.</p>
+</div>
+</div>
+<div class="flex gap-3 items-start p-3 rounded-xl bg-surface-container-low/60 border border-slate-800">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+<span class="material-symbols-outlined" data-icon="accessible">accessible</span>
+</div>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-200 font-semibold">Toegankelijkheid</h4>
+<p class="text-body-md font-body-md text-slate-400">Rolstoellift, invalidentoilet en drempelvrije kleedruimtes.</p>
+</div>
+</div>
+<div class="flex gap-3 items-start md:col-span-2 p-3 rounded-xl bg-surface-container-low/60 border border-slate-800">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+<span class="material-symbols-outlined text-primary" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-200 font-semibold">Zoutelektrolyse</h4>
+<p class="text-body-md font-body-md text-slate-400">Zacht zoutwater &amp; huidvriendelijk (ideaal voor gevoelige huid en allergieën).</p>
+</div>
+</div>
+</div>
+</div>
+<!-- DEDICATED SECTION: Zwemlessen & Diploma A, B & C -->
+<div class="pt-8">
+<div class="flex items-center justify-between mb-4">
+<div>
+<span class="text-label-sm font-label-sm text-primary uppercase tracking-wider font-bold">Opleiding &amp; Veiligheid</span>
+<h3 class="text-headline-md font-headline-md text-slate-50 font-bold mt-1">Zwemlessen &amp; Diploma A, B &amp; C</h3>
+</div>
+<span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-label-md font-label-md font-bold">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="verified_user">verified_user</span>
+              Licentie Nationale Zwemdiploma's
+            </span>
+</div>
+<p class="text-body-lg font-body-lg text-slate-300 mb-6 leading-relaxed">
+            Bij De Mirandabad leren kinderen op een veilige, speelse en pedagogisch verantwoorde wijze zwemmen volgens het officiële Zwem-ABC van de NRZ en KNZB. Met kleine groepen en vaste instructeurs waarborgen we continuïteit en zelfvertrouwen in het water.
+          </p>
+<!-- Timeline Pathway -->
+<div class="space-y-4 mb-8">
+<!-- Fase 1 -->
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="w-8 h-8 rounded-full bg-primary-container text-surface font-extrabold flex items-center justify-center text-label-md font-label-md shrink-0 text-slate-950">1</span>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-100 font-bold">Fase 1: Watergewenning &amp; Overleving (4-5 jaar)</h4>
+<p class="text-body-md font-body-md text-slate-400">Oriëntatie onder water, drijven op buik en rug, en zelfstandig uit het bad klimmen.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-1 bg-surface-container-high rounded-full border border-slate-700 text-slate-300 self-start md:self-auto">Duur: ~3 mnd</span>
+</div>
+<!-- Fase 2 -->
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="w-8 h-8 rounded-full bg-primary-container text-surface font-extrabold flex items-center justify-center text-label-md font-label-md shrink-0 text-slate-950">2</span>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-100 font-bold">Fase 2: Diploma A Basisvaardigheden</h4>
+<p class="text-body-md font-body-md text-slate-400">Schoolslag, enkelvoudige rugslag, borst- en rugcrawl, watertrappen en gekleed overlevingszwemmen.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-1 bg-surface-container-high rounded-full border border-slate-700 text-slate-300 self-start md:self-auto">Diplomagarantie</span>
+</div>
+<!-- Fase 3 -->
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="w-8 h-8 rounded-full bg-primary-container text-surface font-extrabold flex items-center justify-center text-label-md font-label-md shrink-0 text-slate-950">3</span>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-100 font-bold">Fase 3: Diploma B Conditie &amp; Diep Water</h4>
+<p class="text-body-md font-body-md text-slate-400">Grotere afstanden, duiken door een gat op 6 meter afstand, onder water oriëntatie en uithoudingsvermogen.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-1 bg-surface-container-high rounded-full border border-slate-700 text-slate-300 self-start md:self-auto">Vervolgles</span>
+</div>
+<!-- Fase 4 -->
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="w-8 h-8 rounded-full bg-primary-container text-surface font-extrabold flex items-center justify-center text-label-md font-label-md shrink-0 text-slate-950">4</span>
+<div>
+<h4 class="text-label-lg font-label-lg text-slate-100 font-bold">Fase 4: Diploma C Complete Zwemveiligheid</h4>
+<p class="text-body-md font-body-md text-slate-400">Complete zelfredzaamheid in golfslag, open water situaties en gekleed met regenjas en laarzen.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-1 bg-surface-container-high rounded-full border border-slate-700 text-slate-300 self-start md:self-auto">Mastery</span>
+</div>
+</div>
+<!-- Live Wachttijd & Beschikbaarheid Tracker Card -->
+<div class="p-6 rounded-2xl border border-primary/40 bg-surface-container-low flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-lg shadow-primary/5">
+<div class="space-y-2">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary text-slate-950 rounded-full text-label-sm font-label-sm font-bold shadow-sm">
+<span class="w-2 h-2 rounded-full bg-slate-950 animate-pulse"></span>
+                Direct instromen mogelijk voor woensdagmiddag &amp; zaterdagochtend (Nog 3 plekken)
+              </div>
+<h4 class="text-headline-sm font-headline-sm text-slate-50 font-bold">Wachttijdindicatie voor Amsterdam-Zuid</h4>
+<p class="text-body-md font-body-md text-slate-300">
+                Gemiddelde wachttijd Diploma A: <strong class="text-primary font-bold">4 tot 6 weken</strong> (regulier elders in Amsterdam: 18-24 weken).
+              </p>
+</div>
+<button class="shrink-0 bg-primary-container hover:bg-primary text-slate-950 font-bold text-label-lg font-label-lg px-6 py-3 rounded-full transition-all shadow-md hover:shadow-cyan-500/20 active:scale-95">
+              Vraag vrijblijvende intake aan
+            </button>
+</div>
+</div>
+<!-- DEDICATED SECTION: Prijzen & Abonnementen -->
+<div class="pt-8">
+<h3 class="text-headline-md font-headline-md text-slate-50 font-bold mb-2">Tarieven &amp; Abonnementen</h3>
+<p class="text-body-md font-body-md text-slate-400 mb-6">Officiële gemeentelijke tarieven 2025. Stadspas met groene stip geeft recht op korting.</p>
+<div class="border border-slate-800 rounded-2xl overflow-hidden divide-y divide-slate-800 bg-surface-container-low">
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div>
+<span class="text-label-lg font-label-lg text-slate-200 font-semibold">Losse entree Recreatief / Banen</span>
+<p class="text-body-sm font-body-sm text-slate-400">Toegang tot golfslagbad, 50m bad en stoomcabines</p>
+</div>
+<span class="text-headline-sm font-headline-sm text-slate-100 font-bold">€ 8,20</span>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div>
+<span class="text-label-lg font-label-lg text-slate-200 font-semibold">10-Badenkaart (6 maanden geldig)</span>
+<p class="text-body-sm font-body-sm text-slate-400">Voordelig zwemmen voor frequente bezoekers (€ 7,40 per bezoek)</p>
+</div>
+<span class="text-headline-sm font-headline-sm text-slate-100 font-bold">€ 74,00</span>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div>
+<span class="text-label-lg font-label-lg text-slate-200 font-semibold">Maandabonnement Onbeperkt Banenzwemmen</span>
+<p class="text-body-sm font-body-sm text-slate-400">Onbeperkt toegang op vroege ochtenden en avonduren</p>
+</div>
+<span class="text-headline-sm font-headline-sm text-slate-100 font-bold">€ 49,50 <span class="text-body-sm font-body-sm font-normal text-slate-400">/ mnd</span></span>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors bg-primary/5">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-lg font-label-lg text-slate-100 font-bold">Zwemlespakket Diploma A</span>
+<span class="text-label-sm font-label-sm bg-primary-container text-slate-950 px-2 py-0.5 rounded-full font-bold">Meest gekozen</span>
+</div>
+<p class="text-body-sm font-body-sm text-slate-400">Wekelijks 45 min les, incl. diplomagarantie, diplomakosten &amp; gratis vrijzwemmen</p>
+</div>
+<span class="text-headline-sm font-headline-sm text-primary font-bold">€ 68,00 <span class="text-body-sm font-body-sm font-normal text-slate-400">/ mnd</span></span>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-surface-container transition-colors">
+<div>
+<span class="text-label-lg font-label-lg text-slate-200 font-semibold">Huur wetsuit / thermo accessoires</span>
+<p class="text-body-sm font-body-sm text-slate-400">Voor buitenbassin in het voorseizoen en open water training</p>
+</div>
+<span class="text-headline-sm font-headline-sm text-slate-100 font-bold">€ 7,50</span>
+</div>
+</div>
+</div>
+<!-- DEDICATED SECTION: Faciliteiten & Watertemperatuur live -->
+<div class="pt-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-headline-md font-headline-md text-slate-50 font-bold">Faciliteiten &amp; Live Sensoren</h3>
+<span class="text-label-sm font-label-sm text-emerald-400 font-semibold flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-800">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              Live sensordata Rijkswaterstaat/Gemeente
+            </span>
+</div>
+<!-- Live Sensor Card Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low shadow-sm">
+<span class="text-label-sm font-label-sm text-slate-400 font-bold block mb-1">GOLFSLAG- &amp; RECREATIEBAD</span>
+<div class="text-headline-lg font-headline-lg font-extrabold text-primary flex items-baseline gap-1">31.2°C</div>
+<p class="text-body-sm font-body-sm text-slate-400 mt-1">Heerlijk warm voor gezinnen</p>
+</div>
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low shadow-sm">
+<span class="text-label-sm font-label-sm text-slate-400 font-bold block mb-1">50M WEDSTRIJDBAD</span>
+<div class="text-headline-lg font-headline-lg font-extrabold text-secondary flex items-baseline gap-1">27.8°C</div>
+<p class="text-body-sm font-body-sm text-slate-400 mt-1">Optimale sporttemperatuur</p>
+</div>
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low shadow-sm">
+<span class="text-label-sm font-label-sm text-slate-400 font-bold block mb-1">PEUTER- &amp; KLEUTERBAD</span>
+<div class="text-headline-lg font-headline-lg font-extrabold text-amber-400 flex items-baseline gap-1">32.5°C</div>
+<p class="text-body-sm font-body-sm text-slate-400 mt-1">Extra behaaglijk voor de allerkleinsten</p>
+</div>
+<div class="p-4 rounded-xl border border-slate-800 bg-surface-container-low shadow-sm">
+<div class="text-label-sm font-label-sm text-slate-400 font-bold flex items-center justify-between mb-1">
+<span>WATERBEHANDELING</span>
+<span class="material-symbols-outlined text-primary text-base">water_drop</span>
+</div>
+<div class="mt-1 text-headline-sm font-headline-sm font-bold text-slate-100 flex flex-wrap items-center gap-1.5">
+<span>Zoutelektrolyse</span>
+<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-700 text-emerald-300">Zacht zoutwater</span>
+</div>
+<p class="mt-1 text-body-sm font-body-sm text-slate-400">Geen rode ogen of chloorlucht. Huidvriendelijk membraansysteem.</p>
+</div>
+</div>
+<!-- Chloor & Filter Status -->
+<div class="p-4 rounded-xl bg-surface-container-low border border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="water_drop" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<div>
+<p class="text-label-lg font-label-lg text-slate-200 font-semibold">Chloorgehalte &amp; UV-filtratie status</p>
+<p class="text-body-sm font-body-sm text-slate-400">Geavanceerde Zoutelektrolyse &amp; UV-zuivering (0% vloeibaar chloordepot)</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm px-2.5 py-1 bg-emerald-950 border border-emerald-700 text-emerald-300 rounded-full font-bold">Optimaal</span>
+<p class="text-body-sm font-body-sm text-slate-500 mt-0.5">Geavanceerde Zoutelektrolyse &amp; UV-zuivering (0% vloeibaar chloordepot)</p>
+</div>
+</div>
+</div>
+<!-- SECTION: Locatie & Bereikbaarheid -->
+<div class="pt-8 pb-4">
+<h3 class="text-headline-md font-headline-md text-slate-50 font-bold mb-2">Locatie &amp; Bereikbaarheid</h3>
+<p class="text-body-md font-body-md text-slate-400 mb-4">De Mirandalaan 9, 1079 PA Amsterdam (Rivierenbuurt / Zorgvlied)</p>
+<!-- Interactive Map Container -->
+<div class="w-full h-64 rounded-2xl border border-slate-800 relative overflow-hidden bg-surface-container mb-4">
+<img class="w-full h-full object-cover filter brightness-90 contrast-105" data-alt="A clean minimalist transit and street map of Amsterdam South Rivierenbuurt indicating the location of Zwemcentrum De Mirandabad near Martin Luther King Park and Amstel River. Styled in an elegant light-mode cartography with subtle cyan points of interest." data-location="Amsterdam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWhmlmRZHjj_xvR3m1hERVHMNRWciNZIvxRPBNTu7JGkktj9o3eovtY6SqeTSYpCnAdFGgtE30jfpRKt5TnjfbZ5zLHWWIcnBMTGVccksf0VSRJ2euceI-G_pvSJiLGXEgoEMWhZxrxKKLmkctqL_y2Lyu0LlFDW9XY6HpBGR4rcxgZ5THq9Zo8VmFVOLTb4sje2OF_kkR-VqR7Ftmpyrvnj0quswaqSVTt5MVZn8_9mn4X3dtbVnF"/>
+<div class="absolute bottom-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg border border-slate-700 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="pin_drop" style="font-variation-settings: 'FILL' 1;">pin_drop</span>
+<span class="text-label-md font-label-md font-bold text-slate-200">De Mirandalaan 9, Amsterdam</span>
+</div>
+</div>
+<!-- Transit Chips -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<div class="p-3 bg-surface-container-low border border-slate-800 rounded-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="tram">tram</span>
+<div class="text-body-sm font-body-sm">
+<span class="font-bold text-slate-200 block">Tram 4 &amp; 12</span>
+<span class="text-slate-400">Halte Waalstraat (4 min lopen)</span>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low border border-slate-800 rounded-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="subway">subway</span>
+<div class="text-body-sm font-body-sm">
+<span class="font-bold text-slate-200 block">Metro 52 &amp; Station RAI</span>
+<span class="text-slate-400">Noord-Zuidlijn (8 min lopen)</span>
+</div>
+</div>
+<div class="p-3 bg-surface-container-low border border-slate-800 rounded-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="ev_station">ev_station</span>
+<div class="text-body-sm font-body-sm">
+<span class="font-bold text-slate-200 block">Parkeren &amp; Laadpalen</span>
+<span class="text-slate-400">Ruime parkeerplaats + 12 laadpalen</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= RIGHT COLUMN (35% / 4 cols STICKY BOOKING WIDGET) ================= -->
+<aside class="lg:col-span-4 sticky top-28">
+<div class="p-6 bg-surface-container-low rounded-2xl border border-slate-800 shadow-2xl">
+<!-- Pricing Header -->
+<div class="flex items-baseline justify-between pb-4 border-b border-slate-800">
+<div>
+<span class="text-headline-md font-headline-md text-slate-50 font-bold">Vanaf € 8,20</span>
+<span class="text-body-md font-body-md text-slate-400 block">per losse entree</span>
+</div>
+<div class="flex items-center text-label-md font-label-md">
+<span class="material-symbols-outlined text-amber-400 text-base mr-1" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-slate-200">4.92</span>
+<span class="text-slate-400 ml-1">(312)</span>
+</div>
+</div>
+<div class="mt-3 py-2 px-3 rounded-lg bg-primary/10 border border-primary/20 flex items-center gap-2 text-xs text-primary font-medium">
+<span class="material-symbols-outlined text-base text-primary shrink-0">water_drop</span>
+<span>Waterbehandeling: <strong class="font-bold">Zoutelektrolyse</strong> (ideaal voor gevoelige huid en allergieën)</span>
+</div>
+<!-- Segmented Tab Picker -->
+<div class="grid grid-cols-2 gap-1 p-1 bg-surface-container-lowest rounded-xl mt-4 text-center border border-slate-800">
+<button class="py-2 text-label-md font-label-md font-bold rounded-lg bg-surface-container text-primary shadow-sm transition-all border border-slate-700">
+              Vrijzwemmen / Banen
+            </button>
+<button class="py-2 text-label-md font-label-md font-semibold text-slate-400 hover:text-slate-200 rounded-lg transition-all">
+              Zwemles Aanvraag
+            </button>
+</div>
+<!-- Booking Selector Fields (Airbnb Style Segmented Box) -->
+<div class="mt-4 border border-slate-800 rounded-xl overflow-hidden divide-y divide-slate-800 bg-surface-container">
+<!-- Datum & Tijdslot Picker -->
+<div class="p-3 hover:bg-surface-container-high transition-colors cursor-pointer">
+<label class="block text-label-sm font-label-sm text-slate-300 uppercase font-bold tracking-wider">Datum &amp; Tijdslot</label>
+<div class="flex items-center justify-between mt-1">
+<span class="text-label-lg font-label-lg text-slate-100 font-medium">Vandaag, 14:00 - 16:30</span>
+<span class="material-symbols-outlined text-slate-400 text-base" data-icon="expand_more">expand_more</span>
+</div>
+<span class="text-body-sm font-body-sm text-primary font-medium">Golfslagbad &amp; 50m Banen</span>
+</div>
+<!-- Bezoekers Selector -->
+<div class="p-3 hover:bg-surface-container-high transition-colors cursor-pointer">
+<label class="block text-label-sm font-label-sm text-slate-300 uppercase font-bold tracking-wider">Bezoekers</label>
+<div class="flex items-center justify-between mt-1">
+<span class="text-label-lg font-label-lg text-slate-100 font-medium">1 Volwassene, 1 Kind (t/m 12 jr)</span>
+<span class="material-symbols-outlined text-slate-400 text-base" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Price Breakdown Calculator -->
+<div class="mt-5 space-y-2.5 text-body-md font-body-md text-slate-400 border-b border-slate-800 pb-4">
+<div class="flex justify-between">
+<span class="underline cursor-pointer hover:text-slate-200">1x Volwassene entree</span>
+<span class="text-slate-200 font-medium">€ 8,20</span>
+</div>
+<div class="flex justify-between">
+<span class="underline cursor-pointer hover:text-slate-200">1x Kind entree (t/m 12 jr)</span>
+<span class="text-slate-200 font-medium">€ 6,50</span>
+</div>
+<div class="flex justify-between">
+<span>Reserveringskosten</span>
+<span class="text-emerald-400 font-medium">€ 0,00 (Gratis)</span>
+</div>
+</div>
+<!-- Total Calculation -->
+<div class="flex justify-between items-baseline pt-4 pb-4">
+<span class="text-headline-sm font-headline-sm text-slate-200 font-bold">Totaalbedrag</span>
+<span class="text-headline-md font-headline-md text-slate-50 font-extrabold">€ 14,70</span>
+</div>
+<!-- High-Converting CTA Button -->
+<button class="w-full h-12 bg-primary-container hover:bg-primary text-slate-950 font-label-lg font-bold rounded-full transition-transform active:scale-95 shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
+<span>Reserveer Tijdslot &amp; Koop Tickets</span>
+<span class="material-symbols-outlined text-lg font-bold" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Secondary Subtle Action -->
+<button class="w-full mt-3 py-2 text-center text-label-md font-label-md text-slate-400 hover:text-slate-200 hover:underline">
+            Direct contact opnemen met zwembad
+          </button>
+<!-- Trust Badges -->
+<div class="mt-4 pt-4 border-t border-slate-800 space-y-2">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-slate-400">
+<span class="material-symbols-outlined text-primary text-base shrink-0" data-icon="verified">verified</span>
+<span>Geen annuleringskosten tot 2 uur voor aanvang</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-slate-400">
+<span class="material-symbols-outlined text-primary text-base shrink-0" data-icon="qr_code_2">qr_code_2</span>
+<span>Direct toegang met QR-code op je telefoon</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer (Shared Component JSON Blueprint) -->
+<footer class="docked full-width bottom-0 w-full bg-surface-container-lowest border-t border-slate-800">
+<div class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin py-space-xl flex flex-col md:flex-row justify-between items-center gap-space-lg">
+<!-- Logo & Copyright -->
+<div class="flex flex-col items-center md:items-start gap-1">
+<a class="text-headline-sm font-headline-sm text-primary font-bold" href="#">
+          AlleZwembaden
+        </a>
+<p class="text-body-sm font-body-sm text-slate-400 text-center md:text-left">
+          © 2025 AlleZwembaden B.V. Alle rechten voorbehouden. Erkend platform voor KNZB en NRZ Zwemdiploma's.
+        </p>
+</div>
+<!-- Footer Links (Literal strings from JSON) -->
+<div class="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-2 text-label-md font-label-md text-slate-400 hover:text-slate-200">
+<a class="hover:text-primary transition-colors duration-150" href="#">Over AlleZwembaden</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Zwemdiploma Richtlijnen</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Zwemwater.nl Live Condities</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Gemeenten &amp; Exploitanten</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Veiligheid &amp; Hygiëne</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Algemene Voorwaarden</a>
+<a class="hover:text-primary transition-colors duration-150" href="#">Privacy &amp; Cookies</a>
+</div>
+</div>
+</footer>
+</body></html>

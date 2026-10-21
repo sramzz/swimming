@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#0b1326] dark" lang="nl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>AlleZwembaden - Vind &amp; Boek Jouw Zwemplek</title>
+<!-- Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface-variant": "#bcc9cd",
+            "surface-container-highest": "#2d3449",
+            "error": "#ffb4ab",
+            "on-error": "#690005",
+            "on-background": "#dae2fd",
+            "tertiary-container": "#1abaa8",
+            "secondary-fixed": "#c9e6ff",
+            "surface-container-low": "#131b2e",
+            "surface": "#0b1326",
+            "surface-tint": "#4cd7f6",
+            "surface-variant": "#2d3449",
+            "on-tertiary-fixed": "#00201c",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-surface": "#dae2fd",
+            "on-error-container": "#ffdad6",
+            "surface-container-lowest": "#060e20",
+            "inverse-primary": "#00687a",
+            "surface-container-high": "#222a3d",
+            "inverse-surface": "#dae2fd",
+            "on-secondary-fixed-variant": "#004c6e",
+            "surface-container": "#171f33",
+            "primary": "#4cd7f6",
+            "tertiary-fixed": "#71f8e4",
+            "on-secondary": "#00344d",
+            "on-secondary-fixed": "#001e2f",
+            "secondary": "#89ceff",
+            "surface-bright": "#31394d",
+            "secondary-container": "#00a2e6",
+            "primary-container": "#06b6d4",
+            "tertiary": "#4fdbc8",
+            "on-primary-fixed-variant": "#004e5c",
+            "surface-dim": "#0b1326",
+            "error-container": "#93000a",
+            "inverse-on-surface": "#283044",
+            "primary-fixed": "#acedff",
+            "background": "#0b1326",
+            "outline-variant": "#3d494c",
+            "on-tertiary-fixed-variant": "#005048",
+            "on-secondary-container": "#00344e",
+            "on-primary-fixed": "#001f26",
+            "on-tertiary": "#003731",
+            "tertiary-fixed-dim": "#4fdbc8",
+            "secondary-fixed-dim": "#89ceff",
+            "on-primary-container": "#00424f",
+            "on-tertiary-container": "#00443c",
+            "outline": "#869397",
+            "on-primary": "#003640",
+            "border-hairline": "#334155"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1.5rem",
+            "margin": "3rem",
+            "space-md": "1rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-xl": "2.5rem",
+            "margin-mobile": "1.25rem",
+            "gutter": "1.5rem",
+            "gutter-mobile": "1rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-[#0b1326] text-[#dae2fd] antialiased min-h-screen flex justify-center selection:bg-primary-container selection:text-white">
+<!-- Mobile Viewport Container (Locked 390px iPhone Frame Style) -->
+<div class="w-full max-w-[390px] min-h-screen bg-[#0b1326] flex flex-col relative shadow-2xl border-x border-[#334155]/60 pb-28">
+<!-- TOP SECTION: Branding & Airbnb-style Capsule Search -->
+<header class="sticky top-0 z-30 bg-[#0b1326]/95 backdrop-blur-md pt-3 pb-2 px-margin-mobile border-b border-[#334155]/40 shadow-sm">
+<!-- Brand Micro Row -->
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-1.5 text-primary">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">waves</span>
+<span class="text-headline-sm font-headline-sm font-extrabold tracking-tight text-[#4cd7f6]">AlleZwembaden</span>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Taalkeuze" class="text-[#94a3b8] hover:text-[#f8fafc] p-1.5 rounded-full hover:bg-[#131b2e] transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">language</span>
+</button>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#06b6d4]/15 border border-[#06b6d4]/30 text-[#4cd7f6] font-semibold">
+            KNZB &amp; NRZ
+          </span>
+</div>
+</div>
+<!-- Airbnb-style Pill Search Bar Capsule -->
+<div class="w-full bg-[#131b2e] rounded-full p-2 pl-3.5 pr-2 border border-[#334155] shadow-[0_4px_16px_rgba(0,0,0,0.3)] flex items-center justify-between cursor-pointer active:scale-[0.99] transition-transform">
+<div class="flex items-center gap-3 overflow-hidden">
+<div class="w-8 h-8 rounded-full bg-[#171f33] border border-[#334155]/60 flex items-center justify-center text-[#4cd7f6] flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">search</span>
+</div>
+<div class="flex flex-col text-left truncate">
+<span class="text-label-lg font-label-lg text-[#f8fafc] font-semibold truncate">Waar wil je zwemmen?</span>
+<span class="text-body-sm font-body-sm text-[#94a3b8] truncate">Overal • Alle baden • Datum toevoegen</span>
+</div>
+</div>
+<!-- Filter Icon Button Pill End -->
+<button aria-label="Filters openen" class="w-9 h-9 rounded-full border border-[#334155] bg-[#171f33] flex items-center justify-center text-[#f8fafc] flex-shrink-0 hover:border-[#4cd7f6] transition-colors ml-2">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+<!-- HORIZONTAL CATEGORY SCROLL RAIL (Tabs) -->
+<div class="mt-3 -mx-margin-mobile px-margin-mobile flex items-center gap-5 overflow-x-auto no-scrollbar border-b border-[#334155]/60">
+<!-- Tab: Alle Baden (Active) -->
+<button class="flex flex-col items-center gap-1.5 pb-2.5 border-b-2 border-[#4cd7f6] text-[#4cd7f6] flex-shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">pool</span>
+<span class="text-label-md font-label-md font-bold whitespace-nowrap">Alle Baden</span>
+</button>
+<!-- Tab: Zwemles A/B/C -->
+<button class="flex flex-col items-center gap-1.5 pb-2.5 border-b-2 border-transparent text-[#94a3b8] hover:text-[#f8fafc] flex-shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[22px]">school</span>
+<span class="text-label-md font-label-md whitespace-nowrap">Zwemles A/B/C</span>
+</button>
+<!-- Tab: Banenzwemmen -->
+<button class="flex flex-col items-center gap-1.5 pb-2.5 border-b-2 border-transparent text-[#94a3b8] hover:text-[#f8fafc] flex-shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[22px]">timer</span>
+<span class="text-label-md font-label-md whitespace-nowrap">Banenzwemmen</span>
+</button>
+<!-- Tab: Subtropisch -->
+<button class="flex flex-col items-center gap-1.5 pb-2.5 border-b-2 border-transparent text-[#94a3b8] hover:text-[#f8fafc] flex-shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[22px]">tsunami</span>
+<span class="text-label-md font-label-md whitespace-nowrap">Subtropisch</span>
+</button>
+<!-- Tab: Buiten & Wetsuit (With Seasonal Autumn Badge) -->
+<button class="flex flex-col items-center gap-1.5 pb-2.5 border-b-2 border-transparent text-[#94a3b8] hover:text-[#f8fafc] flex-shrink-0 transition-colors relative">
+<div class="relative">
+<span class="material-symbols-outlined text-[22px]">kayaking</span>
+<span class="absolute -top-1 -right-4 px-1 py-[1px] bg-amber-500 text-slate-950 text-[9px] font-bold rounded-full uppercase leading-none">Herfst</span>
+</div>
+<span class="text-label-md font-label-md whitespace-nowrap">Buiten &amp; Wetsuit</span>
+</button>
+<!-- Tab: Binnenbaden -->
+<button class="flex flex-col items-center gap-1.5 pb-2.5 border-b-2 border-transparent text-[#94a3b8] hover:text-[#f8fafc] flex-shrink-0 transition-colors pr-2">
+<span class="material-symbols-outlined text-[22px]">roofing</span>
+<span class="text-label-md font-label-md whitespace-nowrap">Binnenbaden</span>
+</button>
+</div>
+</header>
+<!-- MAIN SCROLL FEED -->
+<main class="flex-1 px-margin-mobile pt-3 pb-6 flex flex-col gap-5">
+<!-- Status Strip & Quick Sort Pills -->
+<section class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-[#94a3b8]">
+<span class="flex items-center gap-1.5 font-medium text-[#f8fafc]">
+<span class="w-2 h-2 rounded-full bg-[#4cd7f6] inline-block animate-pulse shadow-[0_0_8px_#4cd7f6]"></span>
+            480+ zwemlocaties
+          </span>
+<span class="text-[#94a3b8]">Amsterdam &amp; Randstad</span>
+</div>
+<!-- Quick filter chips rail -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-margin-mobile px-margin-mobile">
+<button class="px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-[#4cd7f6] text-[#003640] font-bold whitespace-nowrap flex items-center gap-1 shadow-sm">
+<span class="">Aanbevolen</span>
+<span class="material-symbols-outlined text-[14px]">expand_more</span>
+</button>
+<button class="px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-[#131b2e] text-[#f8fafc] border border-[#334155] whitespace-nowrap hover:border-[#4cd7f6] hover:bg-[#171f33] transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-amber-400">star</span>
+<span class="">Hoogste rating</span>
+</button>
+<button class="px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-[#131b2e] text-[#f8fafc] border border-[#334155] whitespace-nowrap hover:border-[#4cd7f6] hover:bg-[#171f33] transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-[#4cd7f6]">speed</span>
+<span class="">Kortste wachttijd</span>
+</button>
+<button class="px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-[#131b2e] text-[#f8fafc] border border-[#334155] whitespace-nowrap hover:border-[#4cd7f6] hover:bg-[#171f33] transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-[#4cd7f6]">thermostat</span>
+<span class="">&gt; 30°C Water</span>
+</button>
+<button class="px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-[#131b2e] text-[#f8fafc] border border-[#334155] whitespace-nowrap hover:border-[#4cd7f6] hover:bg-[#171f33] transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-[#4cd7f6]">water_drop</span>
+<span class="">Zoutelektrolyse (Zoutwater)</span>
+</button>
+<button class="px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-[#131b2e] text-[#f8fafc] border border-[#334155] whitespace-nowrap hover:border-[#4cd7f6] hover:bg-[#171f33] transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-[#4cd7f6]">science</span>
+<span class="">Klassiek Chloor</span>
+</button>
+</div>
+</section>
+<!-- LISTING CARD 1: Sportfondsenbad Oost -->
+<article class="flex flex-col group cursor-pointer bg-[#131b2e] p-2.5 rounded-3xl border border-[#334155]/70 shadow-lg">
+<!-- Media Visual Carousel Container -->
+<div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[#171f33] mb-2.5">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="An expansive modern Dutch indoor 25 meter lap pool facility in Amsterdam with turquoise reflective water, lane markers, high glass architectural ceiling, soft ambient natural sunlight streaming in, high-key clean light mode aesthetic, crisp architecture and swimmers doing morning training in crisp blue hues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFr9DXw5IyVpyMl-Roe-NKAsIvufaN_UFmYn0hl6ObcztrOBxfCKYMTZzTXxy5AgHU7Khh1rcBVPRRg8MmeemkQwuBu4aGAD3JFCu-SNUdDj0ec_edRuYUkeScYdLMy4-kn8jy6_HKXQaY__Xd1kibNBF7TmIrlI1HgO0qKJLkRYX8EHB4D5fEN5FVl6uItlCJHKjq96WpNQoOB2c2pa_RuRg2PSLTsID6PplLmNpaaaK9VeEWTPc3"/>
+<!-- Favorite Floating Icon -->
+<button aria-label="Bewaar Sportfondsenbad Oost" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-[#0b1326]/80 backdrop-blur-md border border-[#334155]/60 flex items-center justify-center text-[#f8fafc] hover:text-error transition-colors shadow-sm active:scale-90">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<!-- Top-Left Water Temp & Status Pill -->
+<div class="absolute top-3 left-3 flex flex-col gap-1.5">
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0b1326]/85 backdrop-blur-md text-[#f8fafc] shadow-md border border-[#334155]">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[15px]">thermostat</span>
+<span class="text-label-sm font-label-sm font-bold text-[#4cd7f6]">28.5°C</span>
+<span class="text-[#94a3b8] text-[10px]">• Binnen open</span>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#0b1326]/85 backdrop-blur-md text-[#f8fafc] shadow-md border border-[#334155]">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[13px]">science</span>
+<span class="text-[11px] font-medium text-[#dae2fd]">Traditioneel chloor</span>
+</div>
+</div>
+<!-- Bottom Micro Pagination Dots -->
+<div class="absolute bottom-3 left-0 right-0 flex justify-center items-center gap-1.5 pointer-events-none">
+<span class="w-2 h-2 rounded-full bg-[#4cd7f6] shadow-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+</div>
+</div>
+<!-- Meta Content Section -->
+<div class="flex flex-col px-1 pb-1">
+<div class="flex items-baseline justify-between">
+<h2 class="text-headline-sm font-headline-sm text-[#f8fafc] font-bold tracking-tight">Sportfondsenbad Oost</h2>
+<div class="flex items-center gap-1 text-label-lg font-label-lg text-[#f8fafc]">
+<span class="material-symbols-outlined text-[15px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">4.86</span>
+<span class="text-[#94a3b8] text-body-sm font-body-sm">(128)</span>
+</div>
+</div>
+<p class="text-body-md font-body-md text-[#94a3b8] mt-0.5">25m Wedstrijdbad &amp; Peuterbad • Amsterdam Oost</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center text-label-sm font-label-sm px-2 py-0.5 rounded bg-[#171f33] text-[#4cd7f6] border border-[#06b6d4]/30 font-medium">Banenzwemmen slots</span>
+<span class="text-body-sm font-body-sm text-[#94a3b8]">Vrije inloop</span>
+</div>
+<div class="mt-2 text-label-lg font-label-lg text-[#f8fafc]">
+<span class="font-extrabold text-[#4cd7f6]">Vanaf € 6,50</span> <span class="font-normal text-[#94a3b8]">per losse entree</span>
+</div>
+</div>
+</article>
+<!-- LISTING CARD 2: Zwemcentrum De Mirandabad (Featured Badge) -->
+<article class="flex flex-col group cursor-pointer bg-[#131b2e] p-2.5 rounded-3xl border border-[#334155]/70 shadow-lg">
+<!-- Media Visual Carousel Container -->
+<div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[#171f33] mb-2.5">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A vibrant subtropical wave indoor pool with majestic curved glass dome, crystal clear cyan blue water with gentle waves, lush tropical indoor palms, kids waterslide in background, bright Dutch natural skylight, clean light mode architectural composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYY4TjI5b5I8eq35BsMdG31zZ_6lOgQI_71sKpwziel9VsiD3HVkZLr0s8Ap1zcxpRS9cmI9E1SEiR2Yc25q-OT421PoDTCY5-mkD8v3_hI2DTikXubZsNGx_edTaami4gG-N0Nxkov9xpP2vnJLtpV_Rb3GwaNHrzNH8Dlpj0x1bX8-mRsFEFPGZ1i7LggftJB9d1jrNLH5ftAd3cPxtbYuKYuVqq2nJJBNc1joBEmyIUkuQCPoFo"/>
+<!-- Top Left Populairste Keuze Badge -->
+<div class="absolute top-3 left-3 flex flex-col gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#06b6d4] text-[#002026] text-label-sm font-label-sm font-bold shadow-md">
+<span class="material-symbols-outlined text-[14px] text-amber-950" style="font-variation-settings: 'FILL' 1;">bolt</span>
+              Populairste Keuze
+            </span>
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0b1326]/85 backdrop-blur-md text-[#f8fafc] shadow-md border border-[#334155]">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[15px]">waves</span>
+<span class="text-label-sm font-label-sm font-bold text-[#4cd7f6]">31.0°C</span>
+<span class="text-[#94a3b8] text-[10px]">• Golfslag actief</span>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#0b1326]/85 backdrop-blur-md text-[#f8fafc] shadow-md border border-[#334155]">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[13px]">water_drop</span>
+<span class="text-[11px] font-medium text-[#dae2fd]">Zoutelektrolyse (Zacht water)</span>
+</div>
+</div>
+<!-- Favorite Button -->
+<button aria-label="Bewaar De Mirandabad" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-[#0b1326]/80 backdrop-blur-md border border-[#334155]/60 flex items-center justify-center text-[#f8fafc] hover:text-error transition-colors shadow-sm active:scale-90">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<!-- Bottom Micro Pagination Dots -->
+<div class="absolute bottom-3 left-0 right-0 flex justify-center items-center gap-1.5 pointer-events-none">
+<span class="w-2 h-2 rounded-full bg-[#4cd7f6] shadow-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+</div>
+</div>
+<!-- Meta Content Section -->
+<div class="flex flex-col px-1 pb-1">
+<div class="flex items-baseline justify-between">
+<h2 class="text-headline-sm font-headline-sm text-[#f8fafc] font-bold tracking-tight">Zwemcentrum De Mirandabad</h2>
+<div class="flex items-center gap-1 text-label-lg font-label-lg text-[#f8fafc]">
+<span class="material-symbols-outlined text-[15px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">4.92</span>
+<span class="text-[#94a3b8] text-body-sm font-body-sm">(312)</span>
+</div>
+</div>
+<p class="text-body-md font-body-md text-[#94a3b8] mt-0.5">Subtropisch golfslagbad &amp; Buitenbad • Amsterdam Zuid</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center text-label-sm font-label-sm px-2 py-0.5 rounded bg-[#06b6d4]/15 border border-[#06b6d4]/30 text-[#4cd7f6] font-medium">Familie &amp; Recreatie</span>
+<span class="text-body-sm font-body-sm text-amber-400 font-medium">Warm water dag</span>
+</div>
+<div class="mt-2 text-label-lg font-label-lg text-[#f8fafc]">
+<span class="font-extrabold text-[#4cd7f6]">Vanaf € 8,20</span> <span class="font-normal text-[#94a3b8]">per sessie</span>
+</div>
+</div>
+</article>
+<!-- SEASONAL EDITORIAL CALLOUT CARD: Buitenzwemmen in de herfst -->
+<section class="my-1 rounded-3xl bg-gradient-to-br from-[#1b263b] via-[#131b2e] to-[#1e2238] border border-amber-500/30 p-4 shadow-lg relative overflow-hidden">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0">
+<span class="material-symbols-outlined text-[24px]">thermostat_auto</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase tracking-wider font-bold">KNZB Richtlijn</span>
+<span class="text-body-sm font-body-sm text-[#94a3b8]">Zwemwater.nl Live</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-[#f8fafc] font-bold mt-1.5 leading-snug">
+              Buitenzwemmen stopt niet in de herfst
+            </h3>
+<p class="text-body-sm font-body-sm text-[#94a3b8] mt-1 leading-relaxed">
+              Open water condities rond de 15.4°C. Veiligheidstip: zwem altijd met een buddy, draag een neopreen cap en felgekleurde zwemboei.
+            </p>
+<div class="mt-3 flex items-center gap-3">
+<button class="px-3.5 py-1.5 rounded-full bg-amber-500 text-slate-950 text-label-sm font-label-sm font-bold shadow-md hover:bg-amber-400 transition-colors">
+                Bekijk wetsuits &amp; caps
+              </button>
+<button class="text-label-sm font-label-sm text-[#dae2fd] underline underline-offset-2 hover:text-[#4cd7f6]">
+                Veiligheidsadvies
+              </button>
+</div>
+</div>
+</div>
+</section>
+<!-- LISTING CARD 3: Zwemschool De Dolfijn (Diploma A/B/C Track) -->
+<article class="flex flex-col group cursor-pointer bg-[#131b2e] p-2.5 rounded-3xl border border-[#334155]/70 shadow-lg">
+<!-- Media Visual Container -->
+<div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[#171f33] mb-2.5">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A dedicated modern Dutch swimming school lesson session with certified swimming instructor guiding young children with swimming safety aids in shallow warm water, bright inviting indoor natatorium, crystal clear water, official KNZB training banners in modern crisp architectural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYcbDGzmqhz4vyap_ZRUXraHBCe7OIx4lyu2oXc12DRF5Y30jP2_L0pPOv5v-0IMMDajeU0wuu52fM-f-KvSeTkUQisrfw8p3s7JrxVFoO2CzS33bOurM2pBCQVeiK14PwEEoAfGcp_o9EVi-DUnkZwGEjThAwmlxbdMnP8RjISkwfQP0sxj9YzJ8tdGcXrFFKapKDyJ37ORkOtcdUswzd7DkIoV79ueijp2yELPDhriPBGg5Gns20"/>
+<!-- Diploma Quality Badge -->
+<div class="absolute top-3 left-3 flex flex-col gap-1.5">
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#06b6d4]/90 backdrop-blur-md text-[#002026] font-bold shadow-md border border-[#06b6d4]">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-label-sm font-label-sm">NRZ Licentiehouder</span>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#0b1326]/85 backdrop-blur-md text-[#f8fafc] shadow-md border border-[#334155]">
+<span class="material-symbols-outlined text-[#4cd7f6] text-[13px]">water_drop</span>
+<span class="text-[11px] font-medium text-[#dae2fd]">Zoutelektrolyse (Huidvriendelijk)</span>
+</div>
+</div>
+<!-- Favorite Button -->
+<button aria-label="Bewaar Zwemschool De Dolfijn" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-[#0b1326]/80 backdrop-blur-md border border-[#334155]/60 flex items-center justify-center text-[#f8fafc] hover:text-error transition-colors shadow-sm active:scale-90">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<!-- Bottom Micro Pagination Dots -->
+<div class="absolute bottom-3 left-0 right-0 flex justify-center items-center gap-1.5 pointer-events-none">
+<span class="w-2 h-2 rounded-full bg-[#4cd7f6] shadow-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm"></span>
+</div>
+</div>
+<!-- Meta Content Section -->
+<div class="flex flex-col px-1 pb-1">
+<div class="flex items-baseline justify-between">
+<h2 class="text-headline-sm font-headline-sm text-[#f8fafc] font-bold tracking-tight">Zwemschool De Dolfijn</h2>
+<div class="flex items-center gap-1 text-label-lg font-label-lg text-[#f8fafc]">
+<span class="material-symbols-outlined text-[15px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">4.95</span>
+<span class="text-[#94a3b8] text-body-sm font-body-sm">(84)</span>
+</div>
+</div>
+<p class="text-body-md font-body-md text-[#94a3b8] mt-0.5">Zwemles A/B/C Garantie • Sloterparkbad Locatie</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center text-label-sm font-label-sm px-2 py-0.5 rounded bg-[#06b6d4]/15 border border-[#06b6d4]/30 text-[#4cd7f6] font-medium">Zwemles A</span>
+<span class="text-body-sm font-body-sm text-[#dae2fd] font-medium">Wachttijd: ~6 weken</span>
+</div>
+<div class="mt-2 text-label-lg font-label-lg text-[#f8fafc]">
+<span class="font-extrabold text-[#4cd7f6]">Vanaf € 64,50</span> <span class="font-normal text-[#94a3b8]">/ mnd all-in</span>
+</div>
+</div>
+</article>
+<!-- Editorial Footer Micro Assurance -->
+<footer class="pt-6 pb-2 text-center border-t border-[#334155]/60 flex flex-col items-center gap-2">
+<p class="text-body-sm font-body-sm text-[#94a3b8] leading-relaxed">
+          © 2025 AlleZwembaden B.V. Alle rechten voorbehouden. Erkend platform voor KNZB en NRZ Zwemdiploma's.
+        </p>
+<div class="flex flex-wrap justify-center gap-x-4 gap-y-1 text-label-sm font-label-sm text-[#94a3b8]">
+<a class="hover:text-[#4cd7f6] transition-colors" href="#">Zwemwater.nl Live</a>
+<a class="hover:text-[#4cd7f6] transition-colors" href="#">Diploma Richtlijnen</a>
+<a class="hover:text-[#4cd7f6] transition-colors" href="#">Veiligheid &amp; Hygiëne</a>
+</div>
+</footer>
+</main>
+<!-- FLOATING MAP PILL BUTTON (Airbnb style, floating above the bottom tab bar) -->
+<div class="fixed bottom-20 left-0 right-0 max-w-[390px] mx-auto z-40 pointer-events-none flex justify-center pb-1">
+<button class="pointer-events-auto px-4 py-2.5 rounded-full bg-[#131b2e] hover:bg-[#1e293b] text-[#f8fafc] flex items-center gap-2 shadow-[0_6px_20px_rgba(0,0,0,0.5)] active:scale-95 transition-all cursor-pointer border border-[#334155]">
+<span class="text-label-lg font-label-lg font-bold">Kaart tonen</span>
+<span class="material-symbols-outlined text-[19px] text-[#4cd7f6]">map</span>
+</button>
+</div>
+<!-- MOBILE BOTTOM NAVIGATION TAB BAR (Docked full-width, 390px locked container) -->
+<nav aria-label="Hoofdnavigatie" class="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto z-50 bg-[#0b1326]/95 backdrop-blur-lg border-t border-[#334155] h-16 px-4 flex items-center justify-around">
+<!-- Tab 1: Ontdekken (Active) -->
+<a class="flex flex-col items-center justify-center flex-1 py-1 text-[#4cd7f6] cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-label-sm font-label-sm font-bold mt-0.5">Ontdekken</span>
+</a>
+<!-- Tab 2: Favorieten -->
+<a class="flex flex-col items-center justify-center flex-1 py-1 text-[#94a3b8] hover:text-[#f8fafc] cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+<span class="text-label-sm font-label-sm font-medium mt-0.5">Favorieten</span>
+</a>
+<!-- Tab 3: Mijn Zwemles -->
+<a class="flex flex-col items-center justify-center flex-1 py-1 text-[#94a3b8] hover:text-[#f8fafc] cursor-pointer active:scale-95 transition-transform" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-[24px]">school</span>
+<span class="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-amber-500"></span>
+</div>
+<span class="text-label-sm font-label-sm font-medium mt-0.5">Mijn Zwemles</span>
+</a>
+<!-- Tab 4: Profiel -->
+<a class="flex flex-col items-center justify-center flex-1 py-1 text-[#94a3b8] hover:text-[#f8fafc] cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">account_circle</span>
+<span class="text-label-sm font-label-sm font-medium mt-0.5">Profiel</span>
+</a>
+</nav>
+</div>
+</body></html>
