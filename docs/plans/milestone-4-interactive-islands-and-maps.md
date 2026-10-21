@@ -18,7 +18,7 @@
 - Create: `src/api/handlers.ts`
 - Test: `tests/api/handlers.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/api/handlers.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/api/handlers.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -98,12 +98,12 @@ describe('Edge API Handlers: Health, Idempotent Leads & Click Telemetry', () => 
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/api/handlers.test.ts`
 Expected: FAIL (`Cannot find module '@/api/handlers'`).
 
-- [ ] **Step 3: Implement `src/api/handlers.ts`**
+- [x] **Step 3: Implement `src/api/handlers.ts`**
 
 ```typescript
 import crypto from 'node:crypto';
@@ -224,12 +224,12 @@ export function handleRecordOutboundClickCommand(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/api/handlers.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit Edge API handlers**
+- [x] **Step 5: Commit Edge API handlers**
 
 ```bash
 git add src/api/handlers.ts tests/api/handlers.test.ts
@@ -249,7 +249,7 @@ git commit -m "feat(api): add health check query, idempotent waitlist lead comma
 **Files:**
 - Create: `src/components/islands/StickyBookingWidgetIsland.tsx`
 
-- [ ] **Step 1: Create `src/components/islands/StickyBookingWidgetIsland.tsx` wired to `stickyWidgetMachine`**
+- [x] **Step 1: Create `src/components/islands/StickyBookingWidgetIsland.tsx` wired to `stickyWidgetMachine`**
 
 ```tsx
 import { useState } from 'preact/hooks';
@@ -488,7 +488,7 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
 }
 ```
 
-- [ ] **Step 2: Commit Sticky Booking Widget Island**
+- [x] **Step 2: Commit Sticky Booking Widget Island**
 
 ```bash
 git add src/components/islands/StickyBookingWidgetIsland.tsx
@@ -511,7 +511,7 @@ git commit -m "feat(islands): add StickyBookingWidgetIsland with calculator and 
 - Create: `src/components/islands/ListingMapIsland.tsx`
 - Create: `src/components/islands/SearchAndFilterIsland.tsx`
 
-- [ ] **Step 1: Create `src/components/islands/ListingMapIsland.tsx` and `src/components/islands/SearchAndFilterIsland.tsx`**
+- [x] **Step 1: Create `src/components/islands/ListingMapIsland.tsx` and `src/components/islands/SearchAndFilterIsland.tsx`**
 
 Create `src/components/islands/ListingMapIsland.tsx`:
 ```tsx
@@ -686,12 +686,12 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
 }
 ```
 
-- [ ] **Step 2: Run `pnpm test && pnpm build` to verify islands compile cleanly**
+- [x] **Step 2: Run `pnpm test && pnpm build` to verify islands compile cleanly**
 
 Run: `pnpm test && pnpm build`
 Expected: PASS and `pnpm build` succeeds.
 
-- [ ] **Step 3: Commit MapLibre and Filter Islands**
+- [x] **Step 3: Commit MapLibre and Filter Islands**
 
 ```bash
 git add src/components/islands/ListingMapIsland.tsx src/components/islands/SearchAndFilterIsland.tsx
@@ -709,5 +709,5 @@ git commit -m "feat(islands): add ListingMapIsland (MapLibre GL) and SearchAndFi
 
 ## 🛑 Milestone 4 Verification Gate (Check All Before Starting Milestone 5!)
 
-- [ ] `pnpm test` passes all unit and API handler tests (`tests/api/handlers.test.ts`).
-- [ ] `pnpm build` compiles all Preact islands and static pages with 0 TypeScript or bundle errors.
+- [x] `pnpm test` passes all unit and API handler tests (`tests/api/handlers.test.ts`).
+- [x] `pnpm build` compiles all Preact islands and static pages with 0 TypeScript or bundle errors.

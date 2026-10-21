@@ -199,11 +199,11 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 - [x] **🛑 Milestone 3 Gate Verification:** `pnpm build` succeeds with 0 errors, generated HTML contains valid `JSON-LD` and `<link rel="canonical">`, and empty city-intent combinations are excluded by the Soft-404 gate.
 
 ### [Milestone 4: Interactive Preact Islands, Hybrid Maps & Edge APIs](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-4-interactive-islands-and-maps.md)
-- [ ] **Task 4.1:** Build Listing Split-View Map Island (`src/components/islands/ListingMapIsland.tsx` with MapLibre GL + OpenFreeMap/PDOK)
-- [ ] **Task 4.2:** Build 3-Segment Search & Canonicalized Micro-Filter Island (`src/components/islands/SearchAndFilterIsland.tsx`)
-- [ ] **Task 4.3:** Build Sticky Price Calculator & *Kortste Wachttijd* Lead Widget Island (`src/components/islands/StickyBookingWidgetIsland.tsx`)
-- [ ] **Task 4.4:** Build Edge API Endpoints (`/api/health`, `/api/leads`, `/api/clicks`) with Turnstile, Zod & Idempotency
-- [ ] **🛑 Milestone 4 Gate Verification:** All API & Island tests pass, `/api/health` returns `200 OK`, duplicate lead submissions with the same `idempotency_key` do not create duplicate rows.
+- [x] **Task 4.1:** Build Listing Split-View Map Island (`src/components/islands/ListingMapIsland.tsx` with MapLibre GL + OpenFreeMap/PDOK)
+- [x] **Task 4.2:** Build 3-Segment Search & Canonicalized Micro-Filter Island (`src/components/islands/SearchAndFilterIsland.tsx`)
+- [x] **Task 4.3:** Build Sticky Price Calculator & *Kortste Wachttijd* Lead Widget Island (`src/components/islands/StickyBookingWidgetIsland.tsx`)
+- [x] **Task 4.4:** Build Edge API Endpoints (`/api/health`, `/api/leads`, `/api/clicks`) with Turnstile, Zod & Idempotency
+- [x] **🛑 Milestone 4 Gate Verification:** All API & Island tests pass, `/api/health` returns `200 OK`, duplicate lead submissions with the same `idempotency_key` do not create duplicate rows.
 
 ### [Milestone 5: Portable Ingestion CLI, Lightpanda/Obscura CDP, Quarantine Gate & Alerts](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-5-ingestion-cli-and-observability.md)
 - [ ] **Task 5.1:** Build SHA-256 Content-Hash Diff & Zod Sanity Quarantine Gate (`src/ingestion/sanity-gate.ts`)
