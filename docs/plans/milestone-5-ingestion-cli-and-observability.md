@@ -202,7 +202,7 @@ git commit -m "feat(ingestion): add SHA-256 content diff and Sanity Quarantine G
 - Create: `src/ingestion/fetcher.ts`
 - Test: `tests/ingestion/fetcher.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/ingestion/fetcher.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/ingestion/fetcher.test.ts`**
 
 ```typescript
 import { describe, it, expect, vi } from 'vitest';
@@ -239,12 +239,12 @@ describe('3-Step Escalation Fetcher (HTTP -> Lightpanda/Obscura CDP -> Local Ove
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/ingestion/fetcher.test.ts`
 Expected: FAIL (`Cannot find module '@/ingestion/fetcher'`).
 
-- [ ] **Step 3: Implement `src/ingestion/fetcher.ts`**
+- [x] **Step 3: Implement `src/ingestion/fetcher.ts`**
 
 ```typescript
 export interface EscalationFetchOptions {
@@ -313,12 +313,12 @@ export async function fetchWithEscalationLadder(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/ingestion/fetcher.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit 3-Step Escalation Fetcher**
+- [x] **Step 5: Commit 3-Step Escalation Fetcher**
 
 ```bash
 git add src/ingestion/fetcher.ts tests/ingestion/fetcher.test.ts
