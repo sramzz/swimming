@@ -184,12 +184,12 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 - [x] **🛑 Milestone 1 Gate Verification:** `pnpm test` passes, local DB seeded with Randstad Gold-Standard venues (*De Mirandabad*, *Sportfondsenbad Oost*, *De Dolfijn*, *Gaasperplas*, *R&A Utrecht*, *Tongelreep Eindhoven*), and `logs/runs/` contains the seed log.
 
 ### [Milestone 2: Core Domain Engines & Finite State Machines](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-2-core-domain-fsms-and-context.md)
-- [ ] **Task 2.1:** Build Dutch Context & Schedule Resolver FSM (`src/machines/schedule-resolver.ts`)
-- [ ] **Task 2.2:** Build Zero-Request Client Clock & "Nu Open" Evaluator (`src/domain/open-status.ts`)
-- [ ] **Task 2.3:** Build Sticky Price Calculator & Lead Capture FSM (`src/machines/sticky-widget-machine.ts`)
-- [ ] **Task 2.4:** Build SEO Quality Gate, City Summary Generator & JSON-LD Builder (`src/domain/seo-aggregator.ts`)
-- [ ] **Task 2.5:** Build Security-Hardened Affiliate Gear Stub (`src/domain/affiliate-stub.ts`)
-- [ ] **🛑 Milestone 2 Gate Verification:** All pure domain & FSM tests pass (`pnpm test tests/machines tests/domain`), verifying holiday overrides, KNMI Code Oranje alerts, price break-even math, and Soft-404 prevention.
+- [x] **Task 2.1:** Build Dutch Context & Schedule Resolver FSM (`src/machines/schedule-resolver.ts`)
+- [x] **Task 2.2:** Build Zero-Request Client Clock & "Nu Open" Evaluator (`src/domain/open-status.ts`)
+- [x] **Task 2.3:** Build Sticky Price Calculator & Lead Capture FSM (`src/machines/sticky-widget-machine.ts`)
+- [x] **Task 2.4:** Build SEO Quality Gate, City Summary Generator & JSON-LD Builder (`src/domain/seo-aggregator.ts`)
+- [x] **Task 2.5:** Build Security-Hardened Affiliate Gear Stub (`src/domain/affiliate-stub.ts`)
+- [x] **🛑 Milestone 2 Gate Verification:** All pure domain & FSM tests pass (`pnpm test tests/machines tests/domain`), verifying holiday overrides, KNMI Code Oranje alerts, price break-even math, and Soft-404 prevention.
 
 ### [Milestone 3: `Aquatic Discovery` Design System & Zero-JS SEO Pages](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-3-seo-frontend-and-design-system.md)
 - [ ] **Task 3.1:** Configure Tailwind CSS v4 `Aquatic Discovery` Tokens & `BaseLayout.astro` (with Speculation Rules)

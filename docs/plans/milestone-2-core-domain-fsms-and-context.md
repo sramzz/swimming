@@ -18,7 +18,7 @@
 - Create: `src/machines/schedule-resolver.ts`
 - Test: `tests/machines/schedule-resolver.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/machines/schedule-resolver.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/machines/schedule-resolver.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -111,12 +111,12 @@ describe('Dutch Calendar, School Vacation & KNMI Schedule Resolver FSM', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/machines/schedule-resolver.test.ts`
 Expected: FAIL (`Cannot find module '@/machines/schedule-resolver'`).
 
-- [ ] **Step 3: Implement `src/machines/schedule-resolver.ts`**
+- [x] **Step 3: Implement `src/machines/schedule-resolver.ts`**
 
 ```typescript
 export type ScheduleVerificationState =
@@ -294,12 +294,12 @@ export function resolveVenueScheduleAndAlerts(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/machines/schedule-resolver.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit schedule resolver FSM**
+- [x] **Step 5: Commit schedule resolver FSM**
 
 ```bash
 git add src/machines/schedule-resolver.ts tests/machines/schedule-resolver.test.ts
@@ -320,7 +320,7 @@ git commit -m "feat(machines): add Dutch holiday, school vacation, and KNMI sche
 - Create: `src/domain/open-status.ts`
 - Test: `tests/domain/open-status.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/domain/open-status.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/domain/open-status.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -353,12 +353,12 @@ describe('Zero-Request Client Clock Open Status Evaluator', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/domain/open-status.test.ts`
 Expected: FAIL (`Cannot find module '@/domain/open-status'`).
 
-- [ ] **Step 3: Implement `src/domain/open-status.ts`**
+- [x] **Step 3: Implement `src/domain/open-status.ts`**
 
 ```typescript
 export interface SimpleSlot {
@@ -446,12 +446,12 @@ export function evaluateCurrentOpenStatus(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/domain/open-status.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit open-status evaluator**
+- [x] **Step 5: Commit open-status evaluator**
 
 ```bash
 git add src/domain/open-status.ts tests/domain/open-status.test.ts
@@ -475,7 +475,7 @@ git commit -m "feat(domain): add zero-request Europe/Amsterdam open status evalu
 - Create: `src/machines/sticky-widget-machine.ts`
 - Test: `tests/machines/sticky-widget-machine.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/machines/sticky-widget-machine.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/machines/sticky-widget-machine.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -543,12 +543,12 @@ describe('Sticky Price Calculator & Lead Capture FSM', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/machines/sticky-widget-machine.test.ts`
 Expected: FAIL (`Cannot find module '@/machines/sticky-widget-machine'`).
 
-- [ ] **Step 3: Implement `src/machines/sticky-widget-machine.ts`**
+- [x] **Step 3: Implement `src/machines/sticky-widget-machine.ts`**
 
 ```typescript
 import crypto from 'node:crypto';
@@ -716,12 +716,12 @@ export function transitionStickyWidget(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/machines/sticky-widget-machine.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit sticky widget FSM**
+- [x] **Step 5: Commit sticky widget FSM**
 
 ```bash
 git add src/machines/sticky-widget-machine.ts tests/machines/sticky-widget-machine.test.ts
@@ -742,7 +742,7 @@ git commit -m "feat(machines): add sticky price calculator and waitlist lead FSM
 - Create: `src/domain/seo-aggregator.ts`
 - Test: `tests/domain/seo-aggregator.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/domain/seo-aggregator.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/domain/seo-aggregator.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -796,12 +796,12 @@ describe('Programmatic SEO Quality Gate & Structured Data Builder', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/domain/seo-aggregator.test.ts`
 Expected: FAIL (`Cannot find module '@/domain/seo-aggregator'`).
 
-- [ ] **Step 3: Implement `src/domain/seo-aggregator.ts`**
+- [x] **Step 3: Implement `src/domain/seo-aggregator.ts`**
 
 ```typescript
 export function shouldGenerateIndexableFacetPage(matchingVenuesCount: number): boolean {
@@ -904,12 +904,12 @@ export function buildVenueJsonLd(input: VenueJsonLdInput) {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/domain/seo-aggregator.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit SEO aggregator**
+- [x] **Step 5: Commit SEO aggregator**
 
 ```bash
 git add src/domain/seo-aggregator.ts tests/domain/seo-aggregator.test.ts
@@ -932,7 +932,7 @@ git commit -m "feat(domain): add Soft-404 quality gate, Dutch city summaries, an
 - Create: `src/domain/affiliate-stub.ts`
 - Test: `tests/domain/affiliate-stub.test.ts`
 
-- [ ] **Step 1: Write the failing test in `tests/domain/affiliate-stub.test.ts`**
+- [x] **Step 1: Write the failing test in `tests/domain/affiliate-stub.test.ts`**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -961,12 +961,12 @@ describe('Security-Hardened Affiliate Stub', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/domain/affiliate-stub.test.ts`
 Expected: FAIL (`Cannot find module '@/domain/affiliate-stub'`).
 
-- [ ] **Step 3: Implement `src/domain/affiliate-stub.ts`**
+- [x] **Step 3: Implement `src/domain/affiliate-stub.ts`**
 
 ```typescript
 import type { SqliteDatabase } from '../db/client';
@@ -998,12 +998,12 @@ export function resolveSafeAffiliateStubRedirect(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `pnpm test tests/domain/affiliate-stub.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit affiliate stub**
+- [x] **Step 5: Commit affiliate stub**
 
 ```bash
 git add src/domain/affiliate-stub.ts tests/domain/affiliate-stub.test.ts
@@ -1020,5 +1020,5 @@ git commit -m "feat(domain): add allowlist-only disabled-by-default affiliate st
 
 ## 🛑 Milestone 2 Verification Gate (Check All Before Starting Milestone 3!)
 
-- [ ] `pnpm test` passes 100% of Milestone 1 + Milestone 2 unit tests (`schedule-resolver`, `open-status`, `sticky-widget-machine`, `seo-aggregator`, `affiliate-stub`).
-- [ ] Every FSM rejects invalid transitions and produces deterministic outputs.
+- [x] `pnpm test` passes 100% of Milestone 1 + Milestone 2 unit tests (`schedule-resolver`, `open-status`, `sticky-widget-machine`, `seo-aggregator`, `affiliate-stub`).
+- [x] Every FSM rejects invalid transitions and produces deterministic outputs.
