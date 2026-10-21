@@ -1,0 +1,47 @@
+{
+  "name": "allezwembaden-nl",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "cf:dev": "cf dev",
+    "cf:build": "cf build",
+    "cf:deploy": "cf deploy",
+    "lint": "oxlint --deny-warnings src tests",
+    "typecheck": "astro check",
+    "check": "pnpm lint && pnpm typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:seed": "tsx src/cli/run-seed.ts",
+    "sync:venue": "tsx src/cli/sync.ts venue",
+    "sync:scheduled": "tsx src/cli/sync.ts scheduled",
+    "sync:overrides": "tsx src/cli/sync.ts overrides"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.0.0",
+    "@astrojs/preact": "^4.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "astro": "^5.1.0",
+    "better-sqlite3": "^11.7.0",
+    "cheerio": "^1.0.0",
+    "maplibre-gl": "^5.0.0",
+    "playwright-core": "^1.49.0",
+    "preact": "^10.25.0",
+    "tailwindcss": "^4.0.0",
+    "unpdf": "^0.12.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.0",
+    "cf": "latest",
+    "oxlint": "^0.15.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
