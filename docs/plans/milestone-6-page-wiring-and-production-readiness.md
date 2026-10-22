@@ -930,7 +930,7 @@ git commit -m "feat(pages): wire StickyBookingWidgetIsland, AlertBanner, schedul
 - Create: `.github/workflows/daily-sync.yml`
 - Modify: `tests/pages/seo-build.test.ts`
 
-- [ ] **Step 1: Add failing test in `tests/pages/seo-build.test.ts` for `/api/health.json`**
+- [x] **Step 1: Add failing test in `tests/pages/seo-build.test.ts` for `/api/health.json`**
 
 Add to `tests/pages/seo-build.test.ts`:
 ```typescript
@@ -944,12 +944,12 @@ Add to `tests/pages/seo-build.test.ts`:
   });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/pages/seo-build.test.ts`
 Expected: FAIL (`expected false to be true`).
 
-- [ ] **Step 3: Create `src/pages/api/health.json.ts`, `.github/workflows/ci.yml`, and `.github/workflows/daily-sync.yml`**
+- [x] **Step 3: Create `src/pages/api/health.json.ts`, `.github/workflows/ci.yml`, and `.github/workflows/daily-sync.yml`**
 
 Create `src/pages/api/health.json.ts`:
 ```typescript
@@ -1044,12 +1044,12 @@ jobs:
         run: pnpm sync:scheduled
 ```
 
-- [ ] **Step 4: Run `pnpm check && pnpm test && pnpm build` to verify `/api/health.json` builds into `dist/api/health.json`**
+- [x] **Step 4: Run `pnpm check && pnpm test && pnpm build` to verify `/api/health.json` builds into `dist/api/health.json`**
 
 Run: `pnpm check && pnpm test && pnpm build`
 Expected: PASS, and `dist/api/health.json` is generated alongside the 17 HTML/XML routes.
 
-- [ ] **Step 5: Commit Task 6.4**
+- [x] **Step 5: Commit Task 6.4**
 
 ```bash
 git add src/pages/api/health.json.ts .github/workflows/ci.yml .github/workflows/daily-sync.yml tests/pages/seo-build.test.ts
@@ -1066,7 +1066,7 @@ git commit -m "feat(ci): add /api/health.json endpoint and GitHub Actions CI + d
 
 ## 🛑 Milestone 6 Final Verification Gate
 
-- [ ] `pnpm check` (`oxlint` + `astro check`) passes with `0` warnings and `0` errors.
-- [ ] `pnpm test` passes 100% of test suites across Milestones 1–6.
-- [ ] `pnpm build` outputs 18 static routes (including `/api/health.json`, `/sitemap.xml`, `/index.html`, `/steden/*`, and `/zwembad/*`) with mounted Preact islands.
-- [ ] `pnpm cf:profile:check` blocks accidental deployment to the `default` Cloudflare account until `cf auth create allezwembaden && cf auth activate allezwembaden .` is completed by the Project Owner.
+- [x] `pnpm check` (`oxlint` + `astro check`) passes with `0` warnings and `0` errors.
+- [x] `pnpm test` passes 100% of test suites across Milestones 1–6.
+- [x] `pnpm build` outputs 18 static routes (including `/api/health.json`, `/sitemap.xml`, `/index.html`, `/steden/*`, and `/zwembad/*`) with mounted Preact islands.
+- [x] `pnpm cf:profile:check` blocks accidental deployment to the `default` Cloudflare account until `cf auth create allezwembaden && cf auth activate allezwembaden .` is completed by the Project Owner.

@@ -1,0 +1,36 @@
+name: CI — Lint, Typecheck, TDD & Astro Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22.18+
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.18.0'
+
+      - name: Enable Corepack & pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Oxlint & Astro Check
+        run: pnpm check
+
+      - name: Run Vitest TDD Suite
+        run: pnpm test
+
+      - name: Build Static Production Site
+        run: pnpm build

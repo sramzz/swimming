@@ -53,4 +53,13 @@ describe('Static Page & Sitemap Data Generation', () => {
     expect(detailAstro).toContain('Banenzwemmen & Openingstijden');
     expect(detailAstro).toContain('transitChips');
   });
+
+  it('exposes /api/health.json route and GitHub Actions CI workflow', () => {
+    expect(
+      fs.existsSync(path.resolve(process.cwd(), 'src/pages/api/health.json.ts'))
+    ).toBe(true);
+    expect(
+      fs.existsSync(path.resolve(process.cwd(), '.github/workflows/ci.yml'))
+    ).toBe(true);
+  });
 });
