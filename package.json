@@ -5,14 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && tsx src/cli/prepare-cf-output.ts",
     "preview": "astro preview",
     "cf:profile:check": "tsx src/cli/verify-cf-profile.ts",
     "cf:whoami": "cf auth whoami --profile allezwembaden",
     "cf:d1:sync": "tsx src/cli/sync-remote-d1.ts",
     "cf:dev": "cf dev --profile allezwembaden",
-    "cf:build": "cf build --profile allezwembaden",
-    "cf:deploy": "tsx src/cli/verify-cf-profile.ts && cf deploy --profile allezwembaden",
+    "cf:build": "astro build && tsx src/cli/prepare-cf-output.ts",
+    "cf:deploy": "tsx src/cli/verify-cf-profile.ts && pnpm build && cf deploy --prebuilt --profile allezwembaden",
     "lint": "oxlint --deny-warnings src tests",
     "typecheck": "astro check",
     "check": "pnpm lint && pnpm typecheck",
@@ -41,10 +41,11 @@
     "@astrojs/check": "^0.9.4",
     "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^22.10.0",
-    "cf": "latest",
+    "cf": "1.0.0-beta.20",
     "oxlint": "^0.15.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
-  }
+  },
+  "packageManager": "pnpm@12.14.0"
 }
