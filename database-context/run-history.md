@@ -34,3 +34,4 @@ pnpm sync:venue --slug=<venue-slug> --push-d1
 | Run ID | Timestamp (UTC) | Runner | Job Type | Checked | Updated | Quarantined | Log File |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `2026-10-22_seed` | 2026-10-22T00:10:05.493Z | `LOCAL_MAC` | `SEED_INITIAL` | 6 | 6 | 0 | `logs/runs/2026-10-22_seed.log` |
+| `2026-10-22_sync_venue` | 2026-10-22T00:17:21.705Z | `LOCAL_MAC` | `SYNC_VENUE` | 1 | 1 | 0 | `logs/runs/2026-10-22_sync_venue.log` |
