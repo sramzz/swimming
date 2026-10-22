@@ -1007,6 +1007,13 @@ jobs:
 
       - name: Build Static Production Site
         run: pnpm build
+
+      - name: Deploy to Cloudflare (on push to main when token is configured)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != ''
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: '974cf738d84477d95d11ec01739e67bd'
+        run: npx cf deploy
 ```
 
 Create `.github/workflows/daily-sync.yml`:
@@ -1041,6 +1048,7 @@ jobs:
       - name: Run Quarantined Scheduled Sync
         env:
           ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+          UPTIME_KUMA_PUSH_URL: ${{ secrets.UPTIME_KUMA_PUSH_URL }}
         run: pnpm sync:scheduled
 ```
 

@@ -81,3 +81,52 @@ export async function recordAndDispatchAnomalyAlert(
     formattedMessage,
   };
 }
+
+export interface MultiChannelAlertOptions {
+  telegramOrWebhookUrl?: string;
+  uptimeKumaPushUrl?: string;
+  fetcher?: (url: string, init?: RequestInit) => Promise<{ ok: boolean }>;
+}
+
+export function createMultiChannelAlertSender(
+  options: MultiChannelAlertOptions
+): (message: string) => Promise<{ ok: boolean }> {
+  const fetcher = options.fetcher ?? ((url, init) => fetch(url, init));
+
+  return async (message: string): Promise<{ ok: boolean }> => {
+    let allOk = true;
+
+    // 1. Telegram Bot API (`https://api.telegram.org/bot<TOKEN>/sendMessage?chat_id=<ID>`) or Generic Webhook
+    if (options.telegramOrWebhookUrl && options.telegramOrWebhookUrl.trim() !== '') {
+      const targetUrl = options.telegramOrWebhookUrl.trim();
+      if (targetUrl.includes('api.telegram.org/bot')) {
+        const parsedUrl = new URL(targetUrl);
+        const chatId = parsedUrl.searchParams.get('chat_id') ?? '';
+        const res = await fetcher(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId, text: message }),
+        });
+        if (!res.ok) allOk = false;
+      } else {
+        const res = await fetcher(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: message, content: message }),
+        });
+        if (!res.ok) allOk = false;
+      }
+    }
+
+    // 2. Self-Hosted Uptime Kuma Push Monitor (`https://kuma.yourdomain.com/api/push/<SLUG>`)
+    if (options.uptimeKumaPushUrl && options.uptimeKumaPushUrl.trim() !== '') {
+      const baseKumaUrl = options.uptimeKumaPushUrl.trim().split('?')[0];
+      const shortMsg = encodeURIComponent(message.split('\n')[0].slice(0, 120));
+      const kumaUrl = `${baseKumaUrl}?status=down&msg=${shortMsg}`;
+      const res = await fetcher(kumaUrl, { method: 'GET' });
+      if (!res.ok) allOk = false;
+    }
+
+    return { ok: allOk };
+  };
+}

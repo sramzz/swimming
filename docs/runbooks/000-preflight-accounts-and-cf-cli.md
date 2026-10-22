@@ -179,6 +179,38 @@ Because `npx cf auth list` on this PC currently has `"default"` bound to your ot
 Your Git remote is already configured (`origin -> https://github.com/sramzz/swimming.git`). Once Milestone 6 is committed:
 - [ ] **1. Push `main` to GitHub:** `git push -u origin main`
 - [ ] **2. Add Repository Secrets (`Settings -> Secrets and variables -> Actions`):**
-  - `CLOUDFLARE_API_TOKEN` *(Scoped strictly to the AlleZwembaden Cloudflare account)*
-  - `CLOUDFLARE_ACCOUNT_ID` *(The Account ID printed by `npx cf auth whoami --profile allezwembaden`)*
-  - `ALERT_WEBHOOK_URL` *(Your Telegram / Discord / Slack / `ntfy.sh` webhook URL for Quarantine Gate alerts)*
+  - **`CLOUDFLARE_API_TOKEN`** *(Required for automatic Cloudflare deployments — must be named `CLOUDFLARE_API_TOKEN`)*
+  - **`ALERT_WEBHOOK_URL`** *(Optional — for Telegram Bot alerts, paste `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage?chat_id=<YOUR_CHAT_ID>`)*
+  - **`UPTIME_KUMA_PUSH_URL`** *(Optional — for your self-hosted Uptime Kuma "Push" monitor, paste the base Push URL `https://kuma.yourdomain.com/api/push/<SLUG>`)*
+
+---
+
+## 6. How to Connect Telegram & Your Self-Hosted Uptime Kuma
+
+We support **both** your self-hosted Uptime Kuma and Telegram natively:
+
+### 1. Self-Hosted Uptime Kuma — Website & DB Readiness Monitor (`/api/health.json`)
+In your Uptime Kuma dashboard, click **Add New Monitor**:
+* **Monitor Type:** `HTTP(s) - Keyword`
+* **Friendly Name:** `AlleZwembaden.nl — Production Health`
+* **URL:** `https://allezwembaden.nl/api/health.json`
+* **Keyword:** `"ok": true`
+* **Heartbeat Interval:** `60` seconds
+* **Notifications:** Enable your Telegram notification inside Uptime Kuma!
+
+### 2. Self-Hosted Uptime Kuma — Daily Scraper Push Monitor (`UPTIME_KUMA_PUSH_URL`)
+To track the daily `05:15 UTC` scraper cron job inside Uptime Kuma:
+* In Uptime Kuma, click **Add New Monitor** $\rightarrow$ **Monitor Type:** `Push`
+* **Heartbeat Interval:** `86400` seconds (24 hours)
+* Copy the Push URL (e.g., `https://kuma.yourdomain.com/api/push/abc123xyz`) and save it as the GitHub Actions secret **`UPTIME_KUMA_PUSH_URL`**.
+* When a scrape is quarantined, our `createMultiChannelAlertSender` automatically pings your Uptime Kuma Push URL with `?status=down&msg=...` (which also triggers Uptime Kuma's Telegram alert!).
+
+### 3. Direct Telegram Bot Alert (`ALERT_WEBHOOK_URL`)
+If you also want the full multi-line Quarantine report (including the exact Mac recovery command `pnpm sync:venue --slug=... --inspect`) sent straight to a Telegram chat:
+1. Message `@BotFather` on Telegram $\rightarrow$ `/newbot` to get your `<BOT_TOKEN>`.
+2. Get your `<CHAT_ID>` (e.g., via `@userinfobot`).
+3. Set the GitHub Actions secret **`ALERT_WEBHOOK_URL`** to:
+   ```text
+   https://api.telegram.org/bot<BOT_TOKEN>/sendMessage?chat_id=<CHAT_ID>
+   ```
+   Our `createMultiChannelAlertSender` in `src/ingestion/alert-dispatcher.ts` automatically detects `api.telegram.org/bot` and formats the JSON body `{ chat_id, text }` for Telegram!

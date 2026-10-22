@@ -28,4 +28,5 @@ jobs:
       - name: Run Quarantined Scheduled Sync
         env:
           ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+          UPTIME_KUMA_PUSH_URL: ${{ secrets.UPTIME_KUMA_PUSH_URL }}
         run: pnpm sync:scheduled

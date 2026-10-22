@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import { z } from 'zod';
 
 export const WaitlistLeadInputSchema = z.object({
@@ -86,7 +85,18 @@ export function buildLeadIdempotencyKey(
   dateBucket = '2026-10-21'
 ): string {
   const normalized = `${email.trim().toLowerCase()}|${pc4.trim()}|${diplomaTrack}|${dateBucket}`;
-  return crypto.createHash('sha256').update(normalized).digest('hex');
+  let h1 = 0xdeadbeef ^ normalized.length;
+  let h2 = 0x41c6ce57 ^ normalized.length;
+  for (let i = 0; i < normalized.length; i++) {
+    const ch = normalized.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  const hex =
+    (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
+  return `idem-${dateBucket}-${pc4.trim()}-${hex}`;
 }
 
 export function createInitialStickyWidgetState(): StickyWidgetState {

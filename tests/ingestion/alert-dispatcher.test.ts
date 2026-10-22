@@ -1,6 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createDatabase, applyDetailedSchema } from '@/db/client';
-import { recordAndDispatchAnomalyAlert } from '@/ingestion/alert-dispatcher';
+import {
+  recordAndDispatchAnomalyAlert,
+  createMultiChannelAlertSender,
+} from '@/ingestion/alert-dispatcher';
 
 describe('Quarantine Webhook Alert Dispatcher with 24h Cooldown FSM', () => {
   it('sends webhook alert on first anomaly and suppresses duplicate alert within 24 hours', async () => {
@@ -43,5 +46,32 @@ describe('Quarantine Webhook Alert Dispatcher with 24h Cooldown FSM', () => {
     expect(first.formattedMessage).toContain('pnpm sync:venue --slug=de-mirandabad --inspect');
 
     db.close();
+  });
+
+  it('formats payload for Telegram sendMessage API and pings Self-Hosted Uptime Kuma Push URL when configured', async () => {
+    const fetchCalls: Array<{ url: string; init?: RequestInit }> = [];
+    const mockFetch = vi.fn(async (url: string, init?: RequestInit) => {
+      fetchCalls.push({ url, init });
+      return { ok: true } as Response;
+    });
+
+    const sender = createMultiChannelAlertSender({
+      telegramOrWebhookUrl:
+        'https://api.telegram.org/bot12345:ABCDEF/sendMessage?chat_id=987654',
+      uptimeKumaPushUrl: 'https://kuma.example.nl/api/push/abc123xyz',
+      fetcher: mockFetch,
+    });
+
+    const res = await sender('⚠️ [AlleZwembaden Quarantaine] venue=de-mirandabad');
+    expect(res.ok).toBe(true);
+    expect(fetchCalls).toHaveLength(2);
+    expect(fetchCalls[0].url).toContain('api.telegram.org/bot12345:ABCDEF/sendMessage');
+    expect(JSON.parse(String(fetchCalls[0].init?.body))).toEqual({
+      chat_id: '987654',
+      text: '⚠️ [AlleZwembaden Quarantaine] venue=de-mirandabad',
+    });
+    expect(fetchCalls[1].url).toContain(
+      'https://kuma.example.nl/api/push/abc123xyz?status=down&msg='
+    );
   });
 });
