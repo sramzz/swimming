@@ -338,7 +338,7 @@ git commit -m "feat(cli): add multi-account cf profile guardrail, .gitignore, an
 - Modify: `src/pages/index.astro`
 - Modify: `tests/pages/seo-build.test.ts`
 
-- [ ] **Step 1: Add failing test in `tests/pages/seo-build.test.ts` verifying homepage mounts `SearchAndFilterIsland` and `ListingMapIsland`**
+- [x] **Step 1: Add failing test in `tests/pages/seo-build.test.ts` verifying homepage mounts `SearchAndFilterIsland` and `ListingMapIsland`**
 
 Add to `tests/pages/seo-build.test.ts`:
 ```typescript
@@ -354,12 +354,12 @@ Add to `tests/pages/seo-build.test.ts`:
   });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/pages/seo-build.test.ts`
 Expected: FAIL (`expected ... to contain 'SearchAndFilterIsland'`).
 
-- [ ] **Step 3: Update `src/components/islands/SearchAndFilterIsland.tsx` and `src/pages/index.astro`**
+- [x] **Step 3: Update `src/components/islands/SearchAndFilterIsland.tsx` and `src/pages/index.astro`**
 
 Update `src/components/islands/SearchAndFilterIsland.tsx` so it renders the interactive filter pills AND filters the visible cards dynamically:
 ```tsx
@@ -565,12 +565,12 @@ db.close();
 </BaseLayout>
 ```
 
-- [ ] **Step 4: Run `pnpm check && pnpm test && pnpm build` to verify**
+- [x] **Step 4: Run `pnpm check && pnpm test && pnpm build` to verify**
 
 Run: `pnpm check && pnpm test && pnpm build`
 Expected: PASS.
 
-- [ ] **Step 5: Commit Task 6.2**
+- [x] **Step 5: Commit Task 6.2**
 
 ```bash
 git add src/components/islands/SearchAndFilterIsland.tsx src/pages/index.astro tests/pages/seo-build.test.ts

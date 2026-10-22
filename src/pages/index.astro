@@ -1,9 +1,9 @@
 ---
-// src/pages/index.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import VenueCard from '../components/VenueCard.astro';
+import SearchAndFilterIsland from '../components/islands/SearchAndFilterIsland';
+import ListingMapIsland from '../components/islands/ListingMapIsland';
 import { getBuildDatabase } from '../db/runtime-db';
 import { listAllVenues } from '../db/queries';
 
@@ -17,12 +17,30 @@ db.close();
   canonicalPath="/"
 >
   <Header />
-  <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
-    <h1 class="text-2xl font-extrabold text-text-charcoal mb-6">
-      Zwemlocaties & Zwemles in Nederland ({venues.length} uitgelichte locaties)
-    </h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {venues.map((venue) => <VenueCard venue={venue} />)}
+  <div class="bg-badge-teal-bg/60 border-b border-primary/10 py-2.5 px-4 md:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs font-medium text-primary">
+      <span>✓ Officiële KNZB / NRZ Zwem-ABC Wachttijd Vergelijker & Rijkswaterstaat Waterdata</span>
+      <span>Laatste rooster- & tariefcontrole: Oktober 2026</span>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 md:px-8 py-6 flex-1 w-full">
+    <div class="mb-6">
+      <h1 class="text-2xl md:text-3xl font-extrabold text-text-charcoal tracking-tight">
+        Zwembaden, Banenzwemmen & Zwemles in Nederland
+      </h1>
+      <p class="text-sm text-text-muted mt-1">
+        Vergelijk direct losse entree, 10-badenkaarten, zoutelektrolyse en actuele Zwem-ABC wachtlijsten.
+      </p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
+      <div class="w-full lg:w-[58%]">
+        <SearchAndFilterIsland client:load venues={venues} />
+      </div>
+      <aside class="w-full lg:w-[42%] lg:sticky lg:top-24">
+        <ListingMapIsland client:visible venues={venues} />
+      </aside>
     </div>
   </main>
   <Footer />
