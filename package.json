@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "cf:profile:check": "tsx src/cli/verify-cf-profile.ts",
     "cf:whoami": "cf auth whoami --profile allezwembaden",
+    "cf:d1:sync": "tsx src/cli/sync-remote-d1.ts",
     "cf:dev": "cf dev --profile allezwembaden",
     "cf:build": "cf build --profile allezwembaden",
     "cf:deploy": "tsx src/cli/verify-cf-profile.ts && cf deploy --profile allezwembaden",
