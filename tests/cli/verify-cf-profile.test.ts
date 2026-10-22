@@ -55,7 +55,7 @@ describe('Multi-Account cf CLI Profile Guardrail & Run History', () => {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'az-cf-out-'));
     const distDir = path.join(tmpDir, 'dist');
     fs.mkdirSync(distDir, { recursive: true });
-    fs.writeFileSync(path.join(distDir, 'index.html'), '<h1>AlleZwembaden</h1>', 'utf-8');
+    fs.writeFileSync(path.join(distDir, 'index.html'), '<h1>Zwemkaart</h1>', 'utf-8');
 
     prepareCloudflareBuildOutput(tmpDir);
 
@@ -82,7 +82,7 @@ describe('Multi-Account cf CLI Profile Guardrail & Run History', () => {
 
     expect(fs.existsSync(rootConfigPath)).toBe(true);
     expect(fs.existsSync(workerConfigPath)).toBe(true);
-    expect(fs.readFileSync(copiedIndex, 'utf-8')).toContain('AlleZwembaden');
+    expect(fs.readFileSync(copiedIndex, 'utf-8')).toContain('Zwemkaart');
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 });

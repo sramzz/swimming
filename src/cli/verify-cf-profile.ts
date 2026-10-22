@@ -29,7 +29,7 @@ export function validateCfProfileConfig(
       errorMessage: [
         `❌ [CF MULTI-ACCOUNT GUARD] Profile "${REQUIRED_CF_PROFILE}" was not found!`,
         `This PC uses the "default" profile for another Cloudflare account.`,
-        `To authenticate the correct Cloudflare account for AlleZwembaden.nl, run:`,
+        `To authenticate the correct Cloudflare account for Zwemkaart.nl, run:`,
         `  1. npx cf auth create ${REQUIRED_CF_PROFILE}`,
         `  2. npx cf auth activate ${REQUIRED_CF_PROFILE} .`,
         `  3. npx cf auth whoami --profile ${REQUIRED_CF_PROFILE}`,

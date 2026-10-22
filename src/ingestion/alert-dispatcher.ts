@@ -42,7 +42,7 @@ export async function recordAndDispatchAnomalyAlert(
   const alertState = isWithinCooldown ? 'SUPPRESSED_COOLDOWN' : 'WEBHOOK_ALERT_SENT';
 
   const formattedMessage = [
-    `⚠️ [AlleZwembaden Quarantaine] venue=${input.venueSlug}`,
+    `⚠️ [Zwemkaart Quarantaine] venue=${input.venueSlug}`,
     `Reden: ${input.errorCode} (${input.errorDetail})`,
     input.snapshotFilePath ? `Snapshot: ${input.snapshotFilePath}` : null,
     `👉 Lokaal herstellen op Mac: ${localFixCommand}`,

@@ -1,0 +1,4 @@
+{"timestamp":"2026-10-22T00:10:05.447Z","level":"INFO","runId":"2026-10-22_seed","event":"SEED_INIT","message":"Applying schema and seeding baseline dataset","context":{"dbPath":"/Users/sramzzs4d/Projects-sramzz/swimming/data/allezwembaden.sqlite"}}
+{"timestamp":"2026-10-22T00:10:05.463Z","level":"INFO","runId":"2026-10-22_seed","event":"SEED_COMPLETE","message":"Database seeded successfully","context":{"venuesCount":6}}
+{"timestamp":"2026-10-22T00:17:21.362Z","level":"INFO","runId":"2026-10-22_seed","event":"SEED_INIT","message":"Applying schema and seeding baseline dataset","context":{"dbPath":"/Users/sramzzs4d/Projects-sramzz/swimming/data/allezwembaden.sqlite"}}
+{"timestamp":"2026-10-22T00:17:21.374Z","level":"INFO","runId":"2026-10-22_seed","event":"SEED_COMPLETE","message":"Database seeded successfully","context":{"venuesCount":6}}

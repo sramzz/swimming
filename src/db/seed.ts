@@ -404,8 +404,8 @@ export function seedInitialDataset(db: SqliteDatabase): void {
     db.prepare(`
       INSERT INTO affiliate_product_stubs (slug, context_rule, title_nl, target_url, is_enabled)
       VALUES
-        ('neopreen-wetsuit-4mm', 'COLD_OPEN_WATER', 'Getest 4/3mm Open-Water Wetsuit', 'https://allezwembaden.nl/#wetsuit-stub', 0),
-        ('anti-chloor-shampoo', 'CHLORINE_CARE', 'Verzorgende Anti-Chloor Shampoo', 'https://allezwembaden.nl/#shampoo-stub', 0)
+        ('neopreen-wetsuit-4mm', 'COLD_OPEN_WATER', 'Getest 4/3mm Open-Water Wetsuit', 'https://zwemkaart.nl/#wetsuit-stub', 0),
+        ('anti-chloor-shampoo', 'CHLORINE_CARE', 'Verzorgende Anti-Chloor Shampoo', 'https://zwemkaart.nl/#shampoo-stub', 0)
       ON CONFLICT(slug) DO NOTHING
     `).run();
   });

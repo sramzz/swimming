@@ -17,7 +17,7 @@ describe('Security-Hardened Affiliate Stub', () => {
     // Enable the stub explicitly and verify safe resolution
     db.prepare("UPDATE affiliate_product_stubs SET is_enabled = 1 WHERE slug = 'neopreen-wetsuit-4mm'").run();
     const resolved = resolveSafeAffiliateStubRedirect(db, 'neopreen-wetsuit-4mm');
-    expect(resolved?.target_url).toBe('https://allezwembaden.nl/#wetsuit-stub');
+    expect(resolved?.target_url).toBe('https://zwemkaart.nl/#wetsuit-stub');
 
     db.close();
   });

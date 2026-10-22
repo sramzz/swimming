@@ -91,7 +91,7 @@ export function buildVenueJsonLd(input: VenueJsonLdInput): VenueJsonLdOutput {
     '@context': 'https://schema.org',
     '@type': 'PublicSwimmingPool',
     name: input.name,
-    url: `https://allezwembaden.nl/zwembad/${input.citySlug}/${input.slug}`,
+    url: `https://zwemkaart.nl/zwembad/${input.citySlug}/${input.slug}`,
     address: {
       '@type': 'PostalAddress',
       addressLocality: input.cityName,

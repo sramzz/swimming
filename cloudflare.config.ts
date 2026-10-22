@@ -3,7 +3,7 @@ import { bindings, defineConfig } from 'cf/config';
 export default defineConfig({
   accountId: '974cf738d84477d95d11ec01739e67bd',
   worker: {
-    name: 'allezwembaden-nl',
+    name: 'zwemkaart-nl',
     compatibilityDate: '2026-10-01',
     workersDev: true,
     assets: {

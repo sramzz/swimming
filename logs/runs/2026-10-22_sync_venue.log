@@ -1,0 +1,2 @@
+[2026-10-22T00:17:21.704Z] [INFO] [RUN:2026-10-22_sync_venue] [SYNC_START] Running portable sync CLI in mode=venue | mode="venue" slug="de-mirandabad"
+[2026-10-22T00:17:21.705Z] [INFO] [RUN:2026-10-22_sync_venue] [SYNC_DONE] Sync execution finished cleanly | humanLog="/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-22_sync_venue.log" jsonlLog="/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-22_sync_venue.jsonl"

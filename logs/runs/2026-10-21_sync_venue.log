@@ -1,0 +1,4 @@
+[2026-10-21T23:44:51.052Z] [INFO] [RUN:2026-10-21_sync_venue] [SYNC_START] Running portable sync CLI in mode=venue | mode="venue" slug="de-mirandabad"
+[2026-10-21T23:44:51.053Z] [INFO] [RUN:2026-10-21_sync_venue] [SYNC_DONE] Sync execution finished cleanly | humanLog="/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-21_sync_venue.log" jsonlLog="/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-21_sync_venue.jsonl"
+[2026-10-21T23:45:54.010Z] [INFO] [RUN:2026-10-21_sync_venue] [SYNC_START] Running portable sync CLI in mode=venue | mode="venue" slug="de-mirandabad"
+[2026-10-21T23:45:54.011Z] [INFO] [RUN:2026-10-21_sync_venue] [SYNC_DONE] Sync execution finished cleanly | humanLog="/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-21_sync_venue.log" jsonlLog="/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-21_sync_venue.jsonl"

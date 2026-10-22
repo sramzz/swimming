@@ -1,0 +1,2 @@
+{"timestamp":"2026-10-22T00:17:21.704Z","level":"INFO","runId":"2026-10-22_sync_venue","event":"SYNC_START","message":"Running portable sync CLI in mode=venue","context":{"mode":"venue","slug":"de-mirandabad"}}
+{"timestamp":"2026-10-22T00:17:21.705Z","level":"INFO","runId":"2026-10-22_sync_venue","event":"SYNC_DONE","message":"Sync execution finished cleanly","context":{"humanLog":"/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-22_sync_venue.log","jsonlLog":"/Users/sramzzs4d/Projects-sramzz/swimming/logs/runs/2026-10-22_sync_venue.jsonl"}}

@@ -1,0 +1,4 @@
+[2026-10-22T00:10:05.447Z] [INFO] [RUN:2026-10-22_seed] [SEED_INIT] Applying schema and seeding baseline dataset | dbPath="/Users/sramzzs4d/Projects-sramzz/swimming/data/allezwembaden.sqlite"
+[2026-10-22T00:10:05.463Z] [INFO] [RUN:2026-10-22_seed] [SEED_COMPLETE] Database seeded successfully | venuesCount=6
+[2026-10-22T00:17:21.362Z] [INFO] [RUN:2026-10-22_seed] [SEED_INIT] Applying schema and seeding baseline dataset | dbPath="/Users/sramzzs4d/Projects-sramzz/swimming/data/allezwembaden.sqlite"
+[2026-10-22T00:17:21.374Z] [INFO] [RUN:2026-10-22_seed] [SEED_COMPLETE] Database seeded successfully | venuesCount=6

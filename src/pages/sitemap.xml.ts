@@ -9,10 +9,10 @@ export const GET: APIRoute = () => {
   db.close();
 
   const urls = [
-    `<url><loc>https://allezwembaden.nl/</loc></url>`,
+    `<url><loc>https://zwemkaart.nl/</loc></url>`,
     ...venues.map(
       (v) =>
-        `<url><loc>https://allezwembaden.nl/zwembad/${v.municipality_slug}/${v.slug}</loc><lastmod>${v.lastmod_at}</lastmod></url>`
+        `<url><loc>https://zwemkaart.nl/zwembad/${v.municipality_slug}/${v.slug}</loc><lastmod>${v.lastmod_at}</lastmod></url>`
     ),
   ];
 

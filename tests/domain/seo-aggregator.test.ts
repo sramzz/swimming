@@ -43,7 +43,7 @@ describe('Programmatic SEO Quality Gate & Structured Data Builder', () => {
     });
 
     expect(ld['@type']).toBe('PublicSwimmingPool');
-    expect(ld.url).toBe('https://allezwembaden.nl/zwembad/amsterdam/de-mirandabad');
+    expect(ld.url).toBe('https://zwemkaart.nl/zwembad/amsterdam/de-mirandabad');
     expect(ld.aggregateRating?.ratingValue).toBe(4.92);
   });
 });

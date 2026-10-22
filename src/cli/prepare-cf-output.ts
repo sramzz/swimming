@@ -28,7 +28,7 @@ export function prepareCloudflareBuildOutput(rootDir = process.cwd()): void {
   };
 
   const workerConfig = {
-    name: 'allezwembaden-nl',
+    name: 'zwemkaart-nl',
     compatibilityDate: '2026-10-01',
     workersDev: true,
     assets: {

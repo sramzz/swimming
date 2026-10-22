@@ -14,7 +14,7 @@ export interface EscalationFetchResult {
 async function defaultHttpFetcher(url: string): Promise<{ status: number; body: string }> {
   const response = await fetch(url, {
     headers: {
-      'User-Agent': 'AlleZwembaden-SyncBot/1.0 (+https://allezwembaden.nl)',
+      'User-Agent': 'Zwemkaart-SyncBot/1.0 (+https://zwemkaart.nl)',
       Accept: 'text/html,application/xhtml+xml,application/json',
     },
   });

@@ -27,7 +27,7 @@ describe('Static Page & Sitemap Data Generation', () => {
       minPriceCents: miranda!.min_single_price_cents,
       waterTreatment: miranda!.primary_water_treatment,
     });
-    expect(jsonLd.url).toBe('https://allezwembaden.nl/zwembad/amsterdam/de-mirandabad');
+    expect(jsonLd.url).toBe('https://zwemkaart.nl/zwembad/amsterdam/de-mirandabad');
     db.close();
   });
 

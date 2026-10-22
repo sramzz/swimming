@@ -63,13 +63,13 @@ describe('Quarantine Webhook Alert Dispatcher with 24h Cooldown FSM', () => {
       fetcher: mockFetch,
     });
 
-    const res = await sender('⚠️ [AlleZwembaden Quarantaine] venue=de-mirandabad');
+    const res = await sender('⚠️ [Zwemkaart Quarantaine] venue=de-mirandabad');
     expect(res.ok).toBe(true);
     expect(fetchCalls).toHaveLength(2);
     expect(fetchCalls[0].url).toContain('api.telegram.org/bot12345:ABCDEF/sendMessage');
     expect(JSON.parse(String(fetchCalls[0].init?.body))).toEqual({
       chat_id: '987654',
-      text: '⚠️ [AlleZwembaden Quarantaine] venue=de-mirandabad',
+      text: '⚠️ [Zwemkaart Quarantaine] venue=de-mirandabad',
     });
     expect(fetchCalls[1].url).toContain(
       'https://kuma.example.nl/api/push/abc123xyz?status=down&msg='

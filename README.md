@@ -1,4 +1,4 @@
-# AlleZwembaden.nl 🏊‍♂️🇳🇱
+# Zwemkaart.nl 🏊‍♂️🇳🇱
 
 > **The Netherlands' fastest, most transparent directory for swimming pools, lane-swimming (*banenzwemmen*) schedules, *Zwem-ABC* lesson waitlists, and open-water conditions.**
 
@@ -6,7 +6,7 @@
 
 ## What is this project? (2-Minute Overview)
 
-**AlleZwembaden.nl** is a read-heavy, SEO-first Dutch aggregator and lead-generation platform built to solve four everyday problems for swimmers and parents in the Netherlands:
+**Zwemkaart.nl** is a read-heavy, SEO-first Dutch aggregator and lead-generation platform built to solve four everyday problems for swimmers and parents in the Netherlands:
 
 1. **Directory, Water Treatment & Pricing Clarity:** Find indoor/outdoor pools (*binnenbaden*, *subtropische zwembaden*, *50m wedstrijdbaden*), compare admission tariffs (*losse entree*, *10-badenkaart*, *maandabonnement*, municipal discount passes like *Stadspas*), and filter by skin-friendly **water disinfection** (`Zoutelektrolyse` vs. `Klassiek Chloor`).
 2. **Reliable *Banenzwemmen* & Holiday Schedules:** Know when lanes are actually open today—with automatic awareness of **Dutch public holidays (*Feestdagen*)**, regional **school vacations (*Schoolvakanties Regio Noord, Midden, Zuid*)**, and **KNMI weather warnings (*Code Oranje / Rood*)**.

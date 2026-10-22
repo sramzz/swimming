@@ -3,7 +3,7 @@ import preact from '@astrojs/preact';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://allezwembaden.nl',
+  site: 'https://zwemkaart.nl',
   output: 'static',
   integrations: [preact()],
   vite: {
