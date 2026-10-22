@@ -27,3 +27,10 @@ pnpm db:seed:venues
 # 4. Replay or fix a single quarantined venue locally on Mac and push to D1
 pnpm sync:venue --slug=<venue-slug> --push-d1
 ```
+---
+
+## Automated Seed & Ingestion Runs
+
+| Run ID | Timestamp (UTC) | Runner | Job Type | Checked | Updated | Quarantined | Log File |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `2026-10-22_seed` | 2026-10-22T00:10:05.493Z | `LOCAL_MAC` | `SEED_INITIAL` | 6 | 6 | 0 | `logs/runs/2026-10-22_seed.log` |

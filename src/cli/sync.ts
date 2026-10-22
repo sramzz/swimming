@@ -2,6 +2,7 @@ import path from 'node:path';
 import { createDatabase, applyDetailedSchema } from '../db/client';
 import { seedInitialDataset } from '../db/seed';
 import { createRunLogger } from '../lib/logger';
+import { appendRunHistoryRow } from './verify-cf-profile';
 
 const args = process.argv.slice(2);
 const mode = args[0] ?? 'scheduled';
@@ -25,6 +26,17 @@ db.prepare(
    VALUES (?, 'LOCAL_MAC', 'POOL_SCRAPE', 'COMPLETED_CLEAN', 1, ?)
    ON CONFLICT(run_id) DO NOTHING`
 ).run(runId, logger.jsonlLogPath);
+
+appendRunHistoryRow(path.resolve(process.cwd(), 'database-context/run-history.md'), {
+  runId,
+  timestampUtc: new Date().toISOString(),
+  runner: 'LOCAL_MAC',
+  jobType: `SYNC_${mode.toUpperCase()}`,
+  checked: 1,
+  updated: 1,
+  quarantined: 0,
+  logFile: `logs/runs/${runId}.log`,
+});
 
 logger.info('SYNC_DONE', 'Sync execution finished cleanly', {
   humanLog: logger.humanLogPath,

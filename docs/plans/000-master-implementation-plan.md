@@ -211,3 +211,10 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 - [x] **Task 5.3:** Build Dutch Open Data Syncers (Rijksoverheid Vakanties, KNMI, Rijkswaterstaat) (`src/ingestion/open-apis.ts`)
 - [x] **Task 5.4:** Build Webhook Push Alert Dispatcher with 24h Cooldown (`src/ingestion/alert-dispatcher.ts`) & Portable CLI (`src/cli/sync.ts`)
 - [x] **🛑 Milestone 5 Gate Verification:** Simulated broken pool scrape (`€ 0,00` ticket price) is blocked from touching live DB, raw HTML snapshot is saved to `logs/anomalies/`, and Webhook payload includes the exact `pnpm sync:venue --slug=...` Mac recovery command.
+
+### [Milestone 6: Full Page Wiring, Mockup Polish, Multi-Account `cf` CLI Guardrail & CI/CD](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-6-page-wiring-and-production-readiness.md)
+- [x] **Task 6.1:** Git Hygiene (`.gitignore`), Run-History Updater (`database-context/run-history.md`), and Multi-Account `cf` CLI Profile Guardrail (`src/cli/verify-cf-profile.ts` enforcing `--profile allezwembaden`)
+- [ ] **Task 6.2:** Wire Homepage Split-View (`58%` Cards / `42%` Sticky Map) & Interactive Filter Bar (`src/pages/index.astro`)
+- [ ] **Task 6.3:** Wire Facility Detail Page (`src/pages/zwembad/[stad]/[slug].astro`) with `StickyBookingWidgetIsland`, `<AlertBanner />`, *Banenzwemmen* Timetable & Transit Chips
+- [ ] **Task 6.4:** Expose `/api/health.json` Endpoint & GitHub Actions CI + Daily Sync Workflows (`.github/workflows/ci.yml` & `.github/workflows/daily-sync.yml`)
+- [ ] **🛑 Milestone 6 Gate Verification:** `pnpm check && pnpm test && pnpm build` passes with 18 generated routes, islands are mounted on `/` and `/zwembad/[stad]/[slug]`, and `pnpm cf:profile:check` prevents accidental deployment to the `default` Cloudflare account.

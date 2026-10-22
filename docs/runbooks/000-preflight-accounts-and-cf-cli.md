@@ -61,35 +61,44 @@ cf cli search "create turnstile widget"
 cf cli search "list zones"
 ```
 
-### Step 2.3: Authenticate with the Team Cloudflare Account
-*(Only needed when provisioning cloud D1 resources or running `cf deploy`)*:
+### Step 2.3: ⚠️ CRITICAL — Multi-Account Isolation on This PC (`--profile allezwembaden`)
+
+> [!CAUTION]
+> **This PC already has a `"default"` profile in the `cf` CLI logged into a DIFFERENT Cloudflare account!**
+> **NEVER run `cf auth login` or `cf deploy` without `--profile allezwembaden`**, or you will overwrite or deploy into the wrong Cloudflare account.
+
+Instead, we use `cf` CLI's **Named Directory-Bound Auth Profiles**:
 
 ```bash
-# Opens browser SSO to log in
-cf auth login
+# 1. Inspect existing profiles on this PC (you will see "default" is already used)
+npx cf auth list
 
-# Or if working inside a remote SSH / headless container:
-cf auth login --no-browser
+# 2. Create a dedicated named profile ONLY for AlleZwembaden.nl (opens browser to log into the AlleZwembaden Cloudflare account)
+npx cf auth create allezwembaden
 
-# Verify which Cloudflare account you are connected to:
-cf auth whoami
+# 3. Bind the "allezwembaden" profile permanently to this project directory (/Users/sramzzs4d/Projects-sramzz/swimming)
+npx cf auth activate allezwembaden .
+
+# 4. Verify the active profile for this project directory and check the guardrail script
+npx cf auth whoami --profile allezwembaden
+pnpm cf:profile:check
 ```
 
-### Step 2.4: Core `cf` Commands Used in This Project
+### Step 2.4: Core `cf` Commands Used in This Project (Always Scoped to `--profile allezwembaden`)
 
 ```bash
 # Start local Vite/Cloudflare development server reading cloudflare.config.ts
-cf dev
+pnpm cf:dev             # Runs: cf dev --profile allezwembaden
 
 # Build the production bundle
-cf build
+pnpm cf:build           # Runs: cf build --profile allezwembaden
 
-# Deploy to Cloudflare
-cf deploy
+# Verify profile guardrail & Deploy to Cloudflare
+pnpm cf:deploy          # Runs: tsx src/cli/verify-cf-profile.ts && cf deploy --profile allezwembaden
 
-# Create or list the D1 SQLite database in Cloudflare
-cf d1 create allezwembaden-db
-cf d1 list
+# Create or list the D1 SQLite database in the AlleZwembaden Cloudflare account
+npx cf d1 create --profile allezwembaden
+npx cf d1 list --profile allezwembaden
 ```
 
 ---
@@ -144,19 +153,32 @@ To prevent juniors from breaking `main` or overwriting each other's work:
 
 ---
 
-## 5. Team Lead One-Time Cloud Provisioning Checklist
+## 5. Project Owner (Your Side) One-Time Action Checklist
 
-As the Project Owner / Lead, you only need to do these 4 steps **once** when ready to put the site live on Cloudflare:
+Juniors can complete **100% of Milestone 6 locally** without needing you. You (the Project Owner) only need to step in when ready to connect the live Cloudflare account and GitHub Actions secrets:
 
-- [ ] **1. Create/Select Cloudflare Account (Free Plan):** Log in via `cf auth login`.
-- [ ] **2. Provision Production D1 Database:**
+### A. On This PC (Cloudflare `cf` CLI Multi-Account Binding — 2 Minutes)
+Because `npx cf auth list` on this PC currently has `"default"` bound to your other Cloudflare account, run these 3 commands once when you want to link the **AlleZwembaden** Cloudflare account:
+- [ ] **1. Create the isolated `allezwembaden` profile:**
   ```bash
-  cf d1 create allezwembaden-db
+  npx cf auth create allezwembaden
   ```
-  Copy the returned `database_id` into `cloudflare.config.ts`.
-- [ ] **3. Provision Turnstile Widget:**
-  Use `cf cli search "create turnstile widget"` (or Cloudflare Dashboard $\rightarrow$ Turnstile $\rightarrow$ Add Widget for `allezwembaden.nl`, Managed mode) and set `PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` in Cloudflare environment secrets.
-- [ ] **4. Set GitHub Actions Secrets (for auto-deploy on merge to `main`):**
-  - `CLOUDFLARE_API_TOKEN`
-  - `CLOUDFLARE_ACCOUNT_ID`
-  - `ALERT_WEBHOOK_URL` (your production Telegram / Discord / Slack / ntfy channel)
+  *(Log into the AlleZwembaden Cloudflare account in the browser prompt — this leaves your `"default"` profile untouched!)*
+- [ ] **2. Bind `allezwembaden` to `/Users/sramzzs4d/Projects-sramzz/swimming`:**
+  ```bash
+  npx cf auth activate allezwembaden .
+  pnpm cf:profile:check
+  ```
+- [ ] **3. Provision the D1 Database under the `allezwembaden` profile:**
+  ```bash
+  npx cf d1 create --profile allezwembaden
+  ```
+  *(Copy the returned `database_id` into `cloudflare.config.ts`)*
+
+### B. On GitHub (`https://github.com/sramzz/swimming` — 2 Minutes)
+Your Git remote is already configured (`origin -> https://github.com/sramzz/swimming.git`). Once Milestone 6 is committed:
+- [ ] **1. Push `main` to GitHub:** `git push -u origin main`
+- [ ] **2. Add Repository Secrets (`Settings -> Secrets and variables -> Actions`):**
+  - `CLOUDFLARE_API_TOKEN` *(Scoped strictly to the AlleZwembaden Cloudflare account)*
+  - `CLOUDFLARE_ACCOUNT_ID` *(The Account ID printed by `npx cf auth whoami --profile allezwembaden`)*
+  - `ALERT_WEBHOOK_URL` *(Your Telegram / Discord / Slack / `ntfy.sh` webhook URL for Quarantine Gate alerts)*
