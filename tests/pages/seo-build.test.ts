@@ -41,4 +41,16 @@ describe('Static Page & Sitemap Data Generation', () => {
     expect(indexAstro).toContain('lg:w-[58%]');
     expect(indexAstro).toContain('lg:w-[42%]');
   });
+
+  it('wires StickyBookingWidgetIsland, AlertBanner, schedule slots, and transit chips into Facility Detail page', () => {
+    const detailAstro = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/zwembad/[stad]/[slug].astro'),
+      'utf-8'
+    );
+    expect(detailAstro).toContain('StickyBookingWidgetIsland');
+    expect(detailAstro).toContain('AlertBanner');
+    expect(detailAstro).toContain('resolveVenueScheduleAndAlerts');
+    expect(detailAstro).toContain('Banenzwemmen & Openingstijden');
+    expect(detailAstro).toContain('transitChips');
+  });
 });

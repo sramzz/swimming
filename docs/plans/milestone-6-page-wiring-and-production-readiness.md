@@ -593,7 +593,7 @@ git commit -m "feat(pages): wire 58/42 Split-View ListingMapIsland and SearchAnd
 - Modify: `src/pages/zwembad/[stad]/[slug].astro`
 - Modify: `tests/pages/seo-build.test.ts`
 
-- [ ] **Step 1: Add failing test in `tests/pages/seo-build.test.ts` verifying Detail page mounts `StickyBookingWidgetIsland`, `AlertBanner`, timetable slots, and transit chips**
+- [x] **Step 1: Add failing test in `tests/pages/seo-build.test.ts` verifying Detail page mounts `StickyBookingWidgetIsland`, `AlertBanner`, timetable slots, and transit chips**
 
 Add to `tests/pages/seo-build.test.ts`:
 ```typescript
@@ -610,12 +610,12 @@ Add to `tests/pages/seo-build.test.ts`:
   });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `pnpm test tests/pages/seo-build.test.ts`
 Expected: FAIL (`expected ... to contain 'StickyBookingWidgetIsland'`).
 
-- [ ] **Step 3: Update `src/pages/zwembad/[stad]/[slug].astro`**
+- [x] **Step 3: Update `src/pages/zwembad/[stad]/[slug].astro`**
 
 Update `src/pages/zwembad/[stad]/[slug].astro`:
 ```astro
@@ -902,12 +902,12 @@ const jsonLd = buildVenueJsonLd({
 </BaseLayout>
 ```
 
-- [ ] **Step 4: Run `pnpm check && pnpm test && pnpm build`**
+- [x] **Step 4: Run `pnpm check && pnpm test && pnpm build`**
 
 Run: `pnpm check && pnpm test && pnpm build`
 Expected: PASS.
 
-- [ ] **Step 5: Commit Task 6.3**
+- [x] **Step 5: Commit Task 6.3**
 
 ```bash
 git add src/pages/zwembad/[stad]/[slug].astro tests/pages/seo-build.test.ts
