@@ -130,3 +130,17 @@ export function createMultiChannelAlertSender(
     return { ok: allOk };
   };
 }
+
+export async function pingUptimeKumaHeartbeat(
+  uptimeKumaPushUrl: string | undefined,
+  msg = 'SYNC_CLEAN',
+  fetcher: (url: string) => Promise<{ ok: boolean }> = (url) => fetch(url)
+): Promise<boolean> {
+  if (!uptimeKumaPushUrl || uptimeKumaPushUrl.trim() === '') {
+    return false;
+  }
+  const baseKumaUrl = uptimeKumaPushUrl.trim().split('?')[0];
+  const url = `${baseKumaUrl}?status=up&msg=${encodeURIComponent(msg)}`;
+  const res = await fetcher(url);
+  return res.ok;
+}

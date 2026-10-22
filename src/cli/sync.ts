@@ -3,6 +3,7 @@ import { createDatabase, applyDetailedSchema } from '../db/client';
 import { seedInitialDataset } from '../db/seed';
 import { createRunLogger } from '../lib/logger';
 import { appendRunHistoryRow } from './verify-cf-profile';
+import { pingUptimeKumaHeartbeat } from '../ingestion/alert-dispatcher';
 
 const args = process.argv.slice(2);
 const mode = args[0] ?? 'scheduled';
@@ -44,3 +45,7 @@ logger.info('SYNC_DONE', 'Sync execution finished cleanly', {
 });
 
 db.close();
+
+if (process.env.UPTIME_KUMA_PUSH_URL) {
+  await pingUptimeKumaHeartbeat(process.env.UPTIME_KUMA_PUSH_URL, `SYNC_${mode.toUpperCase()}_CLEAN`);
+}

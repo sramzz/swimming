@@ -3,6 +3,7 @@ import { createDatabase, applyDetailedSchema } from '@/db/client';
 import {
   recordAndDispatchAnomalyAlert,
   createMultiChannelAlertSender,
+  pingUptimeKumaHeartbeat,
 } from '@/ingestion/alert-dispatcher';
 
 describe('Quarantine Webhook Alert Dispatcher with 24h Cooldown FSM', () => {
@@ -73,5 +74,24 @@ describe('Quarantine Webhook Alert Dispatcher with 24h Cooldown FSM', () => {
     expect(fetchCalls[1].url).toContain(
       'https://kuma.example.nl/api/push/abc123xyz?status=down&msg='
     );
+  });
+
+  it('pings Self-Hosted Uptime Kuma Push URL with status=up on clean sync runs', async () => {
+    const fetchCalls: string[] = [];
+    const mockFetch = vi.fn(async (url: string) => {
+      fetchCalls.push(url);
+      return { ok: true } as Response;
+    });
+
+    const res = await pingUptimeKumaHeartbeat(
+      'https://kuma.example.nl/api/push/abc123xyz?status=up&msg=OK&ping=',
+      'SYNC_CLEAN',
+      mockFetch
+    );
+
+    expect(res).toBe(true);
+    expect(fetchCalls).toEqual([
+      'https://kuma.example.nl/api/push/abc123xyz?status=up&msg=SYNC_CLEAN',
+    ]);
   });
 });
