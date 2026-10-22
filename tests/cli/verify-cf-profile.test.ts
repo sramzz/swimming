@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateCfProfileConfig, appendRunHistoryRow } from '@/cli/verify-cf-profile';
+import { prepareCloudflareBuildOutput } from '@/cli/prepare-cf-output';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -47,6 +48,41 @@ describe('Multi-Account cf CLI Profile Guardrail & Run History', () => {
 
     const content = fs.readFileSync(historyFile, 'utf-8');
     expect(content).toContain('| `2026-10-22_seed` | 2026-10-22T02:00:00Z | `LOCAL_MAC` | `SEED` | 6 | 6 | 0 | `logs/runs/2026-10-22_seed.log` |');
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it('generates Cloudflare Build Output Specification v0 directory from dist/', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'az-cf-out-'));
+    const distDir = path.join(tmpDir, 'dist');
+    fs.mkdirSync(distDir, { recursive: true });
+    fs.writeFileSync(path.join(distDir, 'index.html'), '<h1>AlleZwembaden</h1>', 'utf-8');
+
+    prepareCloudflareBuildOutput(tmpDir);
+
+    const rootConfigPath = path.join(tmpDir, '.cloudflare', 'output', 'v0', 'config.json');
+    const workerConfigPath = path.join(
+      tmpDir,
+      '.cloudflare',
+      'output',
+      'v0',
+      'workers',
+      'default',
+      'worker.config.json'
+    );
+    const copiedIndex = path.join(
+      tmpDir,
+      '.cloudflare',
+      'output',
+      'v0',
+      'workers',
+      'default',
+      'assets',
+      'index.html'
+    );
+
+    expect(fs.existsSync(rootConfigPath)).toBe(true);
+    expect(fs.existsSync(workerConfigPath)).toBe(true);
+    expect(fs.readFileSync(copiedIndex, 'utf-8')).toContain('AlleZwembaden');
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 });
