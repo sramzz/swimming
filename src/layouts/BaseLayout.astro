@@ -10,6 +10,7 @@ interface Props {
 
 const { title, description, canonicalPath, jsonLd } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, 'https://zwemkaart.nl').toString();
+const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 <!doctype html>
 <html lang="nl" class="light">
@@ -30,9 +31,9 @@ const canonicalUrl = new URL(canonicalPath, 'https://zwemkaart.nl').toString();
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    {jsonLd && (
-      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    )}
+    {jsonLdList.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
     <script type="speculationrules" is:inline>
       {
         "prerender": [

@@ -40,11 +40,37 @@ const venues =
   intent === 'buitenwater'
     ? allVenues.filter((v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR')
     : allVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Nederland',
+      item: 'https://zwemkaart.nl/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: cityName,
+      item: `https://zwemkaart.nl/steden/${stad}/banenzwemmen`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: intent ? intent.charAt(0).toUpperCase() + intent.slice(1) : '',
+      item: `https://zwemkaart.nl/steden/${stad}/${intent}`,
+    },
+  ],
+};
 ---
 <BaseLayout
   title={`${intent} in ${cityName} | Zwemkaart.nl`}
   description={`Overzicht voor ${intent} in ${cityName}.`}
   canonicalPath={`/steden/${stad}/${intent}`}
+  jsonLd={breadcrumbJsonLd}
 >
   <Header />
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">

@@ -10,11 +10,28 @@ import { listAllVenues } from '../db/queries';
 const db = getBuildDatabase();
 const venues = listAllVenues(db);
 db.close();
+
+const homeJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Zwemkaart.nl',
+  url: 'https://zwemkaart.nl/',
+  description: 'Vind, vergelijk en boek zwembaden, banenzwemmen en zwemles in Nederland.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://zwemkaart.nl/?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
 ---
 <BaseLayout
   title="Zwemkaart.nl - Vind, vergelijk en boek zwembaden & zwemles in Nederland"
   description="Vergelijk binnenbaden, subtropische zwembaden, banenzwemmen tijden, zoutelektrolyse, Zwem-ABC wachttijden en natuurwater in Nederland."
   canonicalPath="/"
+  jsonLd={homeJsonLd}
 >
   <Header />
   <div class="bg-badge-teal-bg/60 border-b border-primary/10 py-2.5 px-4 md:px-8">

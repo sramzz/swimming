@@ -76,7 +76,7 @@ const dayNamesNl: Record<number, string> = {
   7: 'Zondag',
 };
 
-const jsonLd = buildVenueJsonLd({
+const venueJsonLd = buildVenueJsonLd({
   name: venue.name,
   slug: venue.slug,
   citySlug: venue.municipality_slug,
@@ -90,12 +90,37 @@ const jsonLd = buildVenueJsonLd({
   minPriceCents: venue.min_single_price_cents,
   waterTreatment: venue.primary_water_treatment,
 });
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Nederland',
+      item: 'https://zwemkaart.nl/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: venue.municipality_slug.charAt(0).toUpperCase() + venue.municipality_slug.slice(1),
+      item: `https://zwemkaart.nl/steden/${venue.municipality_slug}/banenzwemmen`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: venue.name,
+      item: `https://zwemkaart.nl/zwembad/${venue.municipality_slug}/${venue.slug}`,
+    },
+  ],
+};
 ---
 <BaseLayout
   title={`${venue.name} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`}
   description={`Bekijk actuele entreeprijzen, banenzwemmen tijden, watertemperatuur en Zwem-ABC wachttijden bij ${venue.name}.`}
   canonicalPath={`/zwembad/${venue.municipality_slug}/${venue.slug}`}
-  jsonLd={jsonLd}
+  jsonLd={[venueJsonLd, breadcrumbJsonLd]}
 >
   <Header />
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
