@@ -1,0 +1,142 @@
+---
+// src/pages/provincies/[provincie].astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import VenueCard from '../../components/VenueCard.astro';
+import { getBuildDatabase } from '../../db/runtime-db';
+import type { VenueRow } from '../../db/queries';
+
+export async function getStaticPaths() {
+  const db = getBuildDatabase();
+  const provinces = db
+    .prepare('SELECT DISTINCT province_slug, province_name FROM municipalities ORDER BY province_name')
+    .all() as Array<{ province_slug: string; province_name: string }>;
+
+  const paths = provinces.map((p) => {
+    return {
+      params: { provincie: p.province_slug },
+      props: {
+        provinceSlug: p.province_slug,
+        provinceName: p.province_name,
+      },
+    };
+  });
+
+  db.close();
+  return paths;
+}
+
+const { provincie } = Astro.params;
+const { provinceName } = Astro.props;
+
+const db = getBuildDatabase();
+const venues = db
+  .prepare(
+    `SELECT v.* FROM venues v
+     JOIN municipalities m ON v.municipality_slug = m.slug
+     WHERE m.province_slug = ?
+     ORDER BY v.rating_score DESC`
+  )
+  .all(provincie!) as VenueRow[];
+
+const cities = db
+  .prepare(
+    `SELECT m.slug, m.name, COUNT(v.id) as venue_count
+     FROM municipalities m
+     JOIN venues v ON v.municipality_slug = m.slug
+     WHERE m.province_slug = ?
+     GROUP BY m.slug
+     ORDER BY venue_count DESC, m.name ASC`
+  )
+  .all(provincie!) as Array<{ slug: string; name: string; venue_count: number }>;
+
+db.close();
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Nederland',
+      item: 'https://zwemkaart.nl/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: provinceName,
+      item: `https://zwemkaart.nl/provincies/${provincie}`,
+    },
+  ],
+};
+
+const outdoorCount = venues.filter((v) => v.primary_water_treatment === 'NATURAL_UNTREATED').length;
+const indoorCount = venues.length - outdoorCount;
+---
+<BaseLayout
+  title={`Zwembaden in ${provinceName} (${venues.length} locaties) | Zwemkaart.nl`}
+  description={`Overzicht van alle ${venues.length} zwembaden, subtropische paradijzen en open water zwemlocaties in ${provinceName}. Vergelijk entreeprijzen, banenzwemmen en zwemles.`}
+  canonicalPath={`/provincies/${provincie}`}
+  jsonLd={breadcrumbJsonLd}
+>
+  <Header />
+
+  <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
+    {/* Breadcrumbs */}
+    <nav class="text-xs text-text-muted mb-4 flex items-center gap-2">
+      <a href="/" class="hover:underline">Nederland</a>
+      <span>›</span>
+      <span class="text-text-charcoal font-semibold">{provinceName}</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">
+        Zwembaden & Zwemwater in {provinceName}
+      </h1>
+      <p class="text-sm text-text-muted max-w-3xl">
+        In provincie {provinceName} vind je <strong>{venues.length} zwemlocaties</strong>, waaronder {indoorCount} overdekte zwembaden en {outdoorCount} officiële buitenwater- en recreatielocaties. Vergelijk hieronder actuele entreeprijzen, watertemperaturen en banenzwemmen tijden.
+      </p>
+    </div>
+
+    {/* Municipalities in this province */}
+    {cities.length > 0 && (
+      <section class="mb-10 p-6 rounded-2xl bg-surface-subtle border border-border-hairline">
+        <h2 class="text-sm font-bold text-text-charcoal mb-3 uppercase tracking-wider">
+          Gemeenten in {provinceName} ({cities.length})
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {cities.map((city) => (
+            <a
+              href={`/steden/${city.slug}`}
+              class="px-3 py-1.5 rounded-full bg-surface-pure border border-border-hairline hover:border-primary text-xs font-semibold text-text-charcoal hover:text-primary transition-all flex items-center gap-1.5 shadow-2xs"
+            >
+              <span>{city.name}</span>
+              <span class="text-text-muted text-[10px] bg-surface-subtle px-1.5 py-0.5 rounded-full">
+                {city.venue_count}
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {/* Venues Grid */}
+    <section>
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-text-charcoal">
+          Alle zwemlocaties in {provinceName} ({venues.length})
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {venues.map((venue) => (
+          <VenueCard venue={venue} />
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

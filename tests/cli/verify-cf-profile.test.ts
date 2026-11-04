@@ -51,13 +51,13 @@ describe('Multi-Account cf CLI Profile Guardrail & Run History', () => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it('generates Cloudflare Build Output Specification v0 directory from dist/', () => {
+  it('generates Cloudflare Build Output Specification v0 directory from dist/', async () => {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'az-cf-out-'));
     const distDir = path.join(tmpDir, 'dist');
     fs.mkdirSync(distDir, { recursive: true });
     fs.writeFileSync(path.join(distDir, 'index.html'), '<h1>Zwemkaart</h1>', 'utf-8');
 
-    prepareCloudflareBuildOutput(tmpDir);
+    await prepareCloudflareBuildOutput(tmpDir);
 
     const rootConfigPath = path.join(tmpDir, '.cloudflare', 'output', 'v0', 'config.json');
     const workerConfigPath = path.join(

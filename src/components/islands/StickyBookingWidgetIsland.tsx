@@ -17,12 +17,22 @@ export interface StickyWidgetProps {
   defaultPc4: string;
 }
 
+interface RecommendedSchool {
+  venue_name: string;
+  provider_name: string;
+  current_waitlist_weeks_min: number;
+  current_waitlist_weeks_max: number;
+  monthly_price_cents: number;
+}
+
 export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
   const [state, setState] = useState(createInitialStickyWidgetState);
   const [email, setEmail] = useState('');
   const [pc4, setPc4] = useState(props.defaultPc4 || '1079');
   const [childAge] = useState(4.5);
   const [prefersSalt, setPrefersSalt] = useState(true);
+  const [recommendations, setRecommendations] = useState<RecommendedSchool[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const breakdown = calculateTicketBreakdown({
     adultsCount: state.adultsCount,
@@ -32,7 +42,23 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
     tenPassPriceCents: props.tenPassPriceCents,
   });
 
-  function handleWaitlistSubmit(e: Event) {
+  function handleOfficialTicketClick() {
+    try {
+      fetch('/api/clicks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          venueId: props.venueId,
+          clickTargetType: 'OFFICIAL_TICKETS_CALCULATOR',
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {
+      // Fire-and-forget
+    }
+  }
+
+  async function handleWaitlistSubmit(e: Event) {
     e.preventDefault();
     const next = transitionStickyWidget(state, {
       type: 'SUBMIT_WAITLIST_FORM',
@@ -44,9 +70,45 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
         prefersSaltWater: prefersSalt,
       },
     });
+
     setState(next);
-    if (next.status === 'SUBMITTING_LEAD') {
+    if (next.status !== 'SUBMITTING_LEAD') return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          parentEmail: email,
+          postcodePc4: pc4,
+          childAgeYears: childAge,
+          diplomaTrack: 'DIPLOMA_A',
+          prefersSaltWater: prefersSalt,
+        }),
+      });
+
+      const data = await res.json() as {
+        ok: boolean;
+        errorMessageNl?: string;
+        topRecommendations?: RecommendedSchool[];
+      };
+
+      if (res.ok && data.ok) {
+        setRecommendations(data.topRecommendations ?? []);
+        setState(transitionStickyWidget(next, { type: 'LEAD_SUBMIT_SUCCESS' }));
+      } else {
+        setState({
+          ...next,
+          status: 'TAB_ZWEMLES_IDLE',
+          errorMessageNl: data.errorMessageNl || 'Er ging iets mis bij het opslaan. Controleer de velden.',
+        });
+      }
+    } catch {
+      // Offline fallback: still transition to success gracefully so user isn't stuck
       setState(transitionStickyWidget(next, { type: 'LEAD_SUBMIT_SUCCESS' }));
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -171,7 +233,8 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
               href={props.officialTicketsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="w-full h-11 rounded-full bg-primary text-on-primary text-sm font-bold flex items-center justify-center shadow-sm"
+              onClick={handleOfficialTicketClick}
+              class="w-full h-11 rounded-full bg-primary text-on-primary text-sm font-bold flex items-center justify-center shadow-sm hover:opacity-95 transition-opacity"
             >
               Reserveer op officiële website ↗
             </a>
@@ -219,15 +282,33 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
           )}
 
           {state.status === 'LEAD_CONFIRMED_TOP3_SHOWN' ? (
-            <div class="p-3 rounded-xl bg-badge-teal-bg text-primary text-xs font-bold">
-              ✓ Vergelijking gereed! Bekijk hieronder de snelste startmogelijkheden in postcode {pc4}.
+            <div class="space-y-3">
+              <div class="p-3 rounded-xl bg-badge-teal-bg text-primary text-xs font-bold">
+                ✓ Vergelijking gereed! Wachtlijst-alert geactiveerd voor postcode {pc4}.
+              </div>
+              {recommendations.length > 0 && (
+                <div class="space-y-2 pt-2 border-t border-border-hairline">
+                  <p class="text-xs font-bold text-text-charcoal">Snelste startplekken in jouw regio:</p>
+                  {recommendations.map((rec) => (
+                    <div class="p-2.5 rounded-lg bg-surface-subtle border border-border-hairline text-xs">
+                      <div class="font-bold text-text-charcoal">{rec.venue_name}</div>
+                      <div class="text-text-muted">{rec.provider_name}</div>
+                      <div class="mt-1 flex justify-between items-center text-primary font-semibold">
+                        <span>Wachttijd: {rec.current_waitlist_weeks_min}–{rec.current_waitlist_weeks_max} wkn</span>
+                        <span>{formatEuroCentsNl(rec.monthly_price_cents)}/mnd</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ) : (
             <button
               type="submit"
-              class="w-full h-11 rounded-full bg-primary text-on-primary text-xs font-bold"
+              disabled={isSubmitting}
+              class="w-full h-11 rounded-full bg-primary text-on-primary text-xs font-bold disabled:opacity-50"
             >
-              Vergelijk Kortste Wachttijden (Gratis)
+              {isSubmitting ? 'Bezig met zoeken...' : 'Vergelijk Kortste Wachttijden (Gratis)'}
             </button>
           )}
         </form>

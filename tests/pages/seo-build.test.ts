@@ -62,4 +62,13 @@ describe('Static Page & Sitemap Data Generation', () => {
       fs.existsSync(path.resolve(process.cwd(), '.github/workflows/ci.yml'))
     ).toBe(true);
   });
+
+  it('provides the 12 Dutch Province Hub route (/provincies/[provincie].astro)', () => {
+    const provincePage = path.resolve(process.cwd(), 'src/pages/provincies/[provincie].astro');
+    expect(fs.existsSync(provincePage)).toBe(true);
+    const content = fs.readFileSync(provincePage, 'utf-8');
+    expect(content).toContain('getStaticPaths');
+    expect(content).toContain('BreadcrumbList');
+    expect(content).toContain('Gemeenten in');
+  });
 });

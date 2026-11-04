@@ -6,10 +6,26 @@ import { listAllVenues } from '../db/queries';
 export const GET: APIRoute = () => {
   const db = getBuildDatabase();
   const venues = listAllVenues(db);
+  const provinces = db
+    .prepare('SELECT DISTINCT province_slug FROM municipalities ORDER BY province_slug')
+    .all() as Array<{ province_slug: string }>;
+  const cities = db
+    .prepare(
+      `SELECT DISTINCT slug FROM municipalities
+       WHERE slug IN (SELECT DISTINCT municipality_slug FROM venues)
+       ORDER BY slug`
+    )
+    .all() as Array<{ slug: string }>;
   db.close();
 
   const urls = [
     `<url><loc>https://zwemkaart.nl/</loc></url>`,
+    ...provinces.map(
+      (p) => `<url><loc>https://zwemkaart.nl/provincies/${p.province_slug}</loc></url>`
+    ),
+    ...cities.map(
+      (c) => `<url><loc>https://zwemkaart.nl/steden/${c.slug}</loc></url>`
+    ),
     ...venues.map(
       (v) =>
         `<url><loc>https://zwemkaart.nl/zwembad/${v.municipality_slug}/${v.slug}</loc><lastmod>${v.lastmod_at}</lastmod></url>`
