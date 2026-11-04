@@ -34,6 +34,9 @@ jobs:
         run: pnpm test
 
       - name: Build Static Production Site
+        env:
+          CF_D1_DATABASE_ID: ${{ secrets.CF_D1_DATABASE_ID }}
+          CLOUDFLARE_ACCOUNT_ID: '974cf738d84477d95d11ec01739e67bd'
         run: pnpm build
 
       - name: Deploy to Cloudflare (on push to main)
