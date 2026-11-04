@@ -251,6 +251,12 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
+    // 301 Permanent Redirect: www.zwemkaart.nl -> zwemkaart.nl (SEO host consolidation)
+    if (url.hostname === 'www.zwemkaart.nl') {
+      url.hostname = 'zwemkaart.nl';
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname.startsWith('/api/')) {
       return handleApiRequest(request, env);
     }

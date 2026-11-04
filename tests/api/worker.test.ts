@@ -110,6 +110,15 @@ describe('Cloudflare Worker Edge API & Asset Routing', () => {
     expect(runMock).toHaveBeenCalled();
   });
 
+  it('redirects www.zwemkaart.nl permanently (301) to zwemkaart.nl', async () => {
+    const { env } = createMockEnv();
+    const req = new Request('https://www.zwemkaart.nl/steden/amsterdam', { method: 'GET' });
+    const res = await worker.fetch(req, env);
+
+    expect(res.status).toBe(301);
+    expect(res.headers.get('Location')).toBe('https://zwemkaart.nl/steden/amsterdam');
+  });
+
   it('delegates non-API requests to env.ASSETS.fetch', async () => {
     const { env } = createMockEnv();
     const req = new Request('https://zwemkaart.nl/zwembad/amsterdam/noorderparkbad', { method: 'GET' });
