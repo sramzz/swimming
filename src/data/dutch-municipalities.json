@@ -1,0 +1,3422 @@
+[
+  {
+    "slug": "den-haag",
+    "cbs_code": "GM0518",
+    "name": "Den Haag",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0772,
+    "center_lng": 4.2861
+  },
+  {
+    "slug": "s-hertogenbosch",
+    "cbs_code": "GM0796",
+    "name": "'s-Hertogenbosch (Den Bosch)",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.7182,
+    "center_lng": 5.337
+  },
+  {
+    "slug": "aa-en-hunze",
+    "cbs_code": "GM1680",
+    "name": "Aa en Hunze",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0213,
+    "center_lng": 6.7501
+  },
+  {
+    "slug": "aalsmeer",
+    "cbs_code": "GM0358",
+    "name": "Aalsmeer",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2496,
+    "center_lng": 4.7472
+  },
+  {
+    "slug": "aalten",
+    "cbs_code": "GM0197",
+    "name": "Aalten",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9302,
+    "center_lng": 6.5676
+  },
+  {
+    "slug": "achtkarspelen",
+    "cbs_code": "GM0059",
+    "name": "Achtkarspelen",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.2046,
+    "center_lng": 6.1267
+  },
+  {
+    "slug": "alblasserdam",
+    "cbs_code": "GM0482",
+    "name": "Alblasserdam",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8611,
+    "center_lng": 4.6636
+  },
+  {
+    "slug": "albrandswaard",
+    "cbs_code": "GM0613",
+    "name": "Albrandswaard",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8521,
+    "center_lng": 4.4365
+  },
+  {
+    "slug": "alkmaar",
+    "cbs_code": "GM0361",
+    "name": "Alkmaar",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.605,
+    "center_lng": 4.8032
+  },
+  {
+    "slug": "almelo",
+    "cbs_code": "GM0141",
+    "name": "Almelo",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3435,
+    "center_lng": 6.6595
+  },
+  {
+    "slug": "almere",
+    "cbs_code": "GM0034",
+    "name": "Almere",
+    "province_slug": "flevoland",
+    "province_name": "Flevoland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3796,
+    "center_lng": 5.2508
+  },
+  {
+    "slug": "alphen-aan-den-rijn",
+    "cbs_code": "GM0484",
+    "name": "Alphen aan den Rijn",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1142,
+    "center_lng": 4.6428
+  },
+  {
+    "slug": "alphen-chaam",
+    "cbs_code": "GM1723",
+    "name": "Alphen-Chaam",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5037,
+    "center_lng": 4.8818
+  },
+  {
+    "slug": "altena",
+    "cbs_code": "GM1959",
+    "name": "Altena",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.7673,
+    "center_lng": 4.9547
+  },
+  {
+    "slug": "ameland",
+    "cbs_code": "GM0060",
+    "name": "Ameland",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.4496,
+    "center_lng": 5.7923
+  },
+  {
+    "slug": "amersfoort",
+    "cbs_code": "GM0307",
+    "name": "Amersfoort",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1758,
+    "center_lng": 5.3953
+  },
+  {
+    "slug": "amstelveen",
+    "cbs_code": "GM0362",
+    "name": "Amstelveen",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2866,
+    "center_lng": 4.8519
+  },
+  {
+    "slug": "amsterdam",
+    "cbs_code": "GM0363",
+    "name": "Amsterdam",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.373,
+    "center_lng": 4.8989
+  },
+  {
+    "slug": "apeldoorn",
+    "cbs_code": "GM0200",
+    "name": "Apeldoorn",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1857,
+    "center_lng": 5.9026
+  },
+  {
+    "slug": "arnhem",
+    "cbs_code": "GM0202",
+    "name": "Arnhem",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9923,
+    "center_lng": 5.8968
+  },
+  {
+    "slug": "assen",
+    "cbs_code": "GM0106",
+    "name": "Assen",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0038,
+    "center_lng": 6.5593
+  },
+  {
+    "slug": "asten",
+    "cbs_code": "GM0743",
+    "name": "Asten",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3757,
+    "center_lng": 5.7822
+  },
+  {
+    "slug": "baarle-nassau",
+    "cbs_code": "GM0744",
+    "name": "Baarle-Nassau",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4469,
+    "center_lng": 4.8894
+  },
+  {
+    "slug": "baarn",
+    "cbs_code": "GM0308",
+    "name": "Baarn",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2069,
+    "center_lng": 5.2738
+  },
+  {
+    "slug": "barendrecht",
+    "cbs_code": "GM0489",
+    "name": "Barendrecht",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8494,
+    "center_lng": 4.5257
+  },
+  {
+    "slug": "barneveld",
+    "cbs_code": "GM0203",
+    "name": "Barneveld",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1624,
+    "center_lng": 5.6364
+  },
+  {
+    "slug": "beek",
+    "cbs_code": "GM0888",
+    "name": "Beek",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.9323,
+    "center_lng": 5.8059
+  },
+  {
+    "slug": "beekdaelen",
+    "cbs_code": "GM1954",
+    "name": "Beekdaelen",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.9536,
+    "center_lng": 5.8911
+  },
+  {
+    "slug": "beesel",
+    "cbs_code": "GM0889",
+    "name": "Beesel",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.2691,
+    "center_lng": 6.0653
+  },
+  {
+    "slug": "berg-en-dal",
+    "cbs_code": "GM1945",
+    "name": "Berg en Dal",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8209,
+    "center_lng": 5.9245
+  },
+  {
+    "slug": "bergeijk",
+    "cbs_code": "GM1724",
+    "name": "Bergeijk",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.306,
+    "center_lng": 5.341
+  },
+  {
+    "slug": "bergen-l",
+    "cbs_code": "GM0893",
+    "name": "Bergen (L.)",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5758,
+    "center_lng": 6.0952
+  },
+  {
+    "slug": "bergen-nh",
+    "cbs_code": "GM0373",
+    "name": "Bergen (NH.)",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6746,
+    "center_lng": 4.6803
+  },
+  {
+    "slug": "bergen-op-zoom",
+    "cbs_code": "GM0748",
+    "name": "Bergen op Zoom",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5046,
+    "center_lng": 4.2956
+  },
+  {
+    "slug": "berkelland",
+    "cbs_code": "GM1859",
+    "name": "Berkelland",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1075,
+    "center_lng": 6.5806
+  },
+  {
+    "slug": "bernheze",
+    "cbs_code": "GM1721",
+    "name": "Bernheze",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6846,
+    "center_lng": 5.512
+  },
+  {
+    "slug": "best",
+    "cbs_code": "GM0753",
+    "name": "Best",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5161,
+    "center_lng": 5.3985
+  },
+  {
+    "slug": "beuningen",
+    "cbs_code": "GM0209",
+    "name": "Beuningen",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8595,
+    "center_lng": 5.7467
+  },
+  {
+    "slug": "beverwijk",
+    "cbs_code": "GM0375",
+    "name": "Beverwijk",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.4892,
+    "center_lng": 4.6452
+  },
+  {
+    "slug": "bladel",
+    "cbs_code": "GM1728",
+    "name": "Bladel",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3664,
+    "center_lng": 5.2485
+  },
+  {
+    "slug": "blaricum",
+    "cbs_code": "GM0376",
+    "name": "Blaricum",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2774,
+    "center_lng": 5.2551
+  },
+  {
+    "slug": "bloemendaal",
+    "cbs_code": "GM0377",
+    "name": "Bloemendaal",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3506,
+    "center_lng": 4.5874
+  },
+  {
+    "slug": "bodegraven-reeuwijk",
+    "cbs_code": "GM1901",
+    "name": "Bodegraven-Reeuwijk",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0628,
+    "center_lng": 4.7666
+  },
+  {
+    "slug": "boekel",
+    "cbs_code": "GM0755",
+    "name": "Boekel",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6061,
+    "center_lng": 5.6926
+  },
+  {
+    "slug": "borger-odoorn",
+    "cbs_code": "GM1681",
+    "name": "Borger-Odoorn",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.9046,
+    "center_lng": 6.8844
+  },
+  {
+    "slug": "borne",
+    "cbs_code": "GM0147",
+    "name": "Borne",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3086,
+    "center_lng": 6.7457
+  },
+  {
+    "slug": "borsele",
+    "cbs_code": "GM0654",
+    "name": "Borsele",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4345,
+    "center_lng": 3.8131
+  },
+  {
+    "slug": "boxtel",
+    "cbs_code": "GM0757",
+    "name": "Boxtel",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5788,
+    "center_lng": 5.3278
+  },
+  {
+    "slug": "breda",
+    "cbs_code": "GM0758",
+    "name": "Breda",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5791,
+    "center_lng": 4.7651
+  },
+  {
+    "slug": "bronckhorst",
+    "cbs_code": "GM1876",
+    "name": "Bronckhorst",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0529,
+    "center_lng": 6.2986
+  },
+  {
+    "slug": "brummen",
+    "cbs_code": "GM0213",
+    "name": "Brummen",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1137,
+    "center_lng": 6.1125
+  },
+  {
+    "slug": "brunssum",
+    "cbs_code": "GM0899",
+    "name": "Brunssum",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.9452,
+    "center_lng": 5.9733
+  },
+  {
+    "slug": "bunnik",
+    "cbs_code": "GM0312",
+    "name": "Bunnik",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0424,
+    "center_lng": 5.2165
+  },
+  {
+    "slug": "bunschoten",
+    "cbs_code": "GM0313",
+    "name": "Bunschoten",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2398,
+    "center_lng": 5.3571
+  },
+  {
+    "slug": "buren",
+    "cbs_code": "GM0214",
+    "name": "Buren",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9446,
+    "center_lng": 5.4143
+  },
+  {
+    "slug": "capelle-aan-den-ijssel",
+    "cbs_code": "GM0502",
+    "name": "Capelle aan den IJssel",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9351,
+    "center_lng": 4.5918
+  },
+  {
+    "slug": "castricum",
+    "cbs_code": "GM0383",
+    "name": "Castricum",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5539,
+    "center_lng": 4.6901
+  },
+  {
+    "slug": "coevorden",
+    "cbs_code": "GM0109",
+    "name": "Coevorden",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7413,
+    "center_lng": 6.7209
+  },
+  {
+    "slug": "cranendonck",
+    "cbs_code": "GM1706",
+    "name": "Cranendonck",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.2773,
+    "center_lng": 5.5938
+  },
+  {
+    "slug": "culemborg",
+    "cbs_code": "GM0216",
+    "name": "Culemborg",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9428,
+    "center_lng": 5.2066
+  },
+  {
+    "slug": "dalfsen",
+    "cbs_code": "GM0148",
+    "name": "Dalfsen",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.526,
+    "center_lng": 6.2747
+  },
+  {
+    "slug": "dantumadiel",
+    "cbs_code": "GM1891",
+    "name": "Dantumadiel",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.2686,
+    "center_lng": 5.9795
+  },
+  {
+    "slug": "de-bilt",
+    "cbs_code": "GM0310",
+    "name": "De Bilt",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1367,
+    "center_lng": 5.163
+  },
+  {
+    "slug": "de-fryske-marren",
+    "cbs_code": "GM1940",
+    "name": "De Fryske Marren",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 52.909,
+    "center_lng": 5.7623
+  },
+  {
+    "slug": "de-ronde-venen",
+    "cbs_code": "GM0736",
+    "name": "De Ronde Venen",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2071,
+    "center_lng": 4.9087
+  },
+  {
+    "slug": "de-wolden",
+    "cbs_code": "GM1690",
+    "name": "De Wolden",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6904,
+    "center_lng": 6.355
+  },
+  {
+    "slug": "delft",
+    "cbs_code": "GM0503",
+    "name": "Delft",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9988,
+    "center_lng": 4.364
+  },
+  {
+    "slug": "den-helder",
+    "cbs_code": "GM0400",
+    "name": "Den Helder",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.9221,
+    "center_lng": 4.7603
+  },
+  {
+    "slug": "deurne",
+    "cbs_code": "GM0762",
+    "name": "Deurne",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4389,
+    "center_lng": 5.8312
+  },
+  {
+    "slug": "deventer",
+    "cbs_code": "GM0150",
+    "name": "Deventer",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2695,
+    "center_lng": 6.2416
+  },
+  {
+    "slug": "diemen",
+    "cbs_code": "GM0384",
+    "name": "Diemen",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3368,
+    "center_lng": 4.9899
+  },
+  {
+    "slug": "dijk-en-waard",
+    "cbs_code": "GM1980",
+    "name": "Dijk en Waard",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6804,
+    "center_lng": 4.8273
+  },
+  {
+    "slug": "dinkelland",
+    "cbs_code": "GM1774",
+    "name": "Dinkelland",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3695,
+    "center_lng": 6.9207
+  },
+  {
+    "slug": "doesburg",
+    "cbs_code": "GM0221",
+    "name": "Doesburg",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0185,
+    "center_lng": 6.1436
+  },
+  {
+    "slug": "doetinchem",
+    "cbs_code": "GM0222",
+    "name": "Doetinchem",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9651,
+    "center_lng": 6.2802
+  },
+  {
+    "slug": "dongen",
+    "cbs_code": "GM0766",
+    "name": "Dongen",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6419,
+    "center_lng": 4.9544
+  },
+  {
+    "slug": "dordrecht",
+    "cbs_code": "GM0505",
+    "name": "Dordrecht",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.788,
+    "center_lng": 4.6957
+  },
+  {
+    "slug": "drechterland",
+    "cbs_code": "GM0498",
+    "name": "Drechterland",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6662,
+    "center_lng": 5.1691
+  },
+  {
+    "slug": "drimmelen",
+    "cbs_code": "GM1719",
+    "name": "Drimmelen",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6943,
+    "center_lng": 4.7496
+  },
+  {
+    "slug": "dronten",
+    "cbs_code": "GM0303",
+    "name": "Dronten",
+    "province_slug": "flevoland",
+    "province_name": "Flevoland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5008,
+    "center_lng": 5.7114
+  },
+  {
+    "slug": "druten",
+    "cbs_code": "GM0225",
+    "name": "Druten",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8679,
+    "center_lng": 5.6079
+  },
+  {
+    "slug": "duiven",
+    "cbs_code": "GM0226",
+    "name": "Duiven",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9477,
+    "center_lng": 6.0172
+  },
+  {
+    "slug": "echt-susteren",
+    "cbs_code": "GM1711",
+    "name": "Echt-Susteren",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.0957,
+    "center_lng": 5.9158
+  },
+  {
+    "slug": "edam-volendam",
+    "cbs_code": "GM0385",
+    "name": "Edam-Volendam",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5344,
+    "center_lng": 5.0306
+  },
+  {
+    "slug": "ede",
+    "cbs_code": "GM0228",
+    "name": "Ede",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0842,
+    "center_lng": 5.7488
+  },
+  {
+    "slug": "eemnes",
+    "cbs_code": "GM0317",
+    "name": "Eemnes",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2521,
+    "center_lng": 5.2771
+  },
+  {
+    "slug": "eemsdelta",
+    "cbs_code": "GM1979",
+    "name": "Eemsdelta",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.3176,
+    "center_lng": 6.8458
+  },
+  {
+    "slug": "eersel",
+    "cbs_code": "GM0770",
+    "name": "Eersel",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3731,
+    "center_lng": 5.3268
+  },
+  {
+    "slug": "eijsden-margraten",
+    "cbs_code": "GM1903",
+    "name": "Eijsden-Margraten",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.8181,
+    "center_lng": 5.7731
+  },
+  {
+    "slug": "eindhoven",
+    "cbs_code": "GM0772",
+    "name": "Eindhoven",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4503,
+    "center_lng": 5.4528
+  },
+  {
+    "slug": "elburg",
+    "cbs_code": "GM0230",
+    "name": "Elburg",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.4234,
+    "center_lng": 5.8409
+  },
+  {
+    "slug": "emmen",
+    "cbs_code": "GM0114",
+    "name": "Emmen",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7521,
+    "center_lng": 6.9598
+  },
+  {
+    "slug": "enkhuizen",
+    "cbs_code": "GM0388",
+    "name": "Enkhuizen",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7177,
+    "center_lng": 5.281
+  },
+  {
+    "slug": "enschede",
+    "cbs_code": "GM0153",
+    "name": "Enschede",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2184,
+    "center_lng": 6.8685
+  },
+  {
+    "slug": "epe",
+    "cbs_code": "GM0232",
+    "name": "Epe",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.3305,
+    "center_lng": 5.9677
+  },
+  {
+    "slug": "ermelo",
+    "cbs_code": "GM0233",
+    "name": "Ermelo",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.288,
+    "center_lng": 5.6549
+  },
+  {
+    "slug": "etten-leur",
+    "cbs_code": "GM0777",
+    "name": "Etten-Leur",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5749,
+    "center_lng": 4.6429
+  },
+  {
+    "slug": "geertruidenberg",
+    "cbs_code": "GM0779",
+    "name": "Geertruidenberg",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6972,
+    "center_lng": 4.8784
+  },
+  {
+    "slug": "geldrop-mierlo",
+    "cbs_code": "GM1771",
+    "name": "Geldrop-Mierlo",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4373,
+    "center_lng": 5.5908
+  },
+  {
+    "slug": "gemert-bakel",
+    "cbs_code": "GM1652",
+    "name": "Gemert-Bakel",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5401,
+    "center_lng": 5.752
+  },
+  {
+    "slug": "gennep",
+    "cbs_code": "GM0907",
+    "name": "Gennep",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6926,
+    "center_lng": 5.9819
+  },
+  {
+    "slug": "gilze-en-rijen",
+    "cbs_code": "GM0784",
+    "name": "Gilze en Rijen",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5542,
+    "center_lng": 4.9046
+  },
+  {
+    "slug": "goeree-overflakkee",
+    "cbs_code": "GM1924",
+    "name": "Goeree-Overflakkee",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.7658,
+    "center_lng": 4.0772
+  },
+  {
+    "slug": "goes",
+    "cbs_code": "GM0664",
+    "name": "Goes",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.516,
+    "center_lng": 3.8384
+  },
+  {
+    "slug": "goirle",
+    "cbs_code": "GM0785",
+    "name": "Goirle",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5086,
+    "center_lng": 5.034
+  },
+  {
+    "slug": "gooise-meren",
+    "cbs_code": "GM1942",
+    "name": "Gooise Meren",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2958,
+    "center_lng": 5.1453
+  },
+  {
+    "slug": "gorinchem",
+    "cbs_code": "GM0512",
+    "name": "Gorinchem",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8404,
+    "center_lng": 4.9781
+  },
+  {
+    "slug": "gouda",
+    "cbs_code": "GM0513",
+    "name": "Gouda",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0147,
+    "center_lng": 4.7028
+  },
+  {
+    "slug": "groningen",
+    "cbs_code": "GM0014",
+    "name": "Groningen",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.223,
+    "center_lng": 6.5658
+  },
+  {
+    "slug": "gulpen-wittem",
+    "cbs_code": "GM1729",
+    "name": "Gulpen-Wittem",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.7985,
+    "center_lng": 5.9014
+  },
+  {
+    "slug": "haaksbergen",
+    "cbs_code": "GM0158",
+    "name": "Haaksbergen",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.1561,
+    "center_lng": 6.7566
+  },
+  {
+    "slug": "haarlem",
+    "cbs_code": "GM0392",
+    "name": "Haarlem",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.379,
+    "center_lng": 4.6434
+  },
+  {
+    "slug": "haarlemmermeer",
+    "cbs_code": "GM0394",
+    "name": "Haarlemmermeer",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3079,
+    "center_lng": 4.6841
+  },
+  {
+    "slug": "halderberge",
+    "cbs_code": "GM1655",
+    "name": "Halderberge",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.588,
+    "center_lng": 4.5207
+  },
+  {
+    "slug": "hardenberg",
+    "cbs_code": "GM0160",
+    "name": "Hardenberg",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5925,
+    "center_lng": 6.5675
+  },
+  {
+    "slug": "harderwijk",
+    "cbs_code": "GM0243",
+    "name": "Harderwijk",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.3431,
+    "center_lng": 5.6443
+  },
+  {
+    "slug": "hardinxveld-giessendam",
+    "cbs_code": "GM0523",
+    "name": "Hardinxveld-Giessendam",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.825,
+    "center_lng": 4.8653
+  },
+  {
+    "slug": "harlingen",
+    "cbs_code": "GM0072",
+    "name": "Harlingen",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.1773,
+    "center_lng": 5.4495
+  },
+  {
+    "slug": "hattem",
+    "cbs_code": "GM0244",
+    "name": "Hattem",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.4744,
+    "center_lng": 6.0522
+  },
+  {
+    "slug": "heemskerk",
+    "cbs_code": "GM0396",
+    "name": "Heemskerk",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5148,
+    "center_lng": 4.6535
+  },
+  {
+    "slug": "heemstede",
+    "cbs_code": "GM0397",
+    "name": "Heemstede",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3459,
+    "center_lng": 4.6154
+  },
+  {
+    "slug": "heerde",
+    "cbs_code": "GM0246",
+    "name": "Heerde",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.4047,
+    "center_lng": 6.0409
+  },
+  {
+    "slug": "heerenveen",
+    "cbs_code": "GM0074",
+    "name": "Heerenveen",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 52.9542,
+    "center_lng": 5.9702
+  },
+  {
+    "slug": "heerlen",
+    "cbs_code": "GM0917",
+    "name": "Heerlen",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.9021,
+    "center_lng": 5.9614
+  },
+  {
+    "slug": "heeze-leende",
+    "cbs_code": "GM1658",
+    "name": "Heeze-Leende",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3632,
+    "center_lng": 5.5642
+  },
+  {
+    "slug": "heiloo",
+    "cbs_code": "GM0399",
+    "name": "Heiloo",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6018,
+    "center_lng": 4.7112
+  },
+  {
+    "slug": "hellendoorn",
+    "cbs_code": "GM0163",
+    "name": "Hellendoorn",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3844,
+    "center_lng": 6.4654
+  },
+  {
+    "slug": "helmond",
+    "cbs_code": "GM0794",
+    "name": "Helmond",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4811,
+    "center_lng": 5.6531
+  },
+  {
+    "slug": "hendrik-ido-ambacht",
+    "cbs_code": "GM0531",
+    "name": "Hendrik-Ido-Ambacht",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8377,
+    "center_lng": 4.6364
+  },
+  {
+    "slug": "hengelo",
+    "cbs_code": "GM0164",
+    "name": "Hengelo",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2668,
+    "center_lng": 6.7777
+  },
+  {
+    "slug": "het-hogeland",
+    "cbs_code": "GM1966",
+    "name": "Het Hogeland",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.377,
+    "center_lng": 6.4971
+  },
+  {
+    "slug": "heumen",
+    "cbs_code": "GM0252",
+    "name": "Heumen",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.774,
+    "center_lng": 5.8114
+  },
+  {
+    "slug": "heusden",
+    "cbs_code": "GM0797",
+    "name": "Heusden",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.7059,
+    "center_lng": 5.1667
+  },
+  {
+    "slug": "hillegom",
+    "cbs_code": "GM0534",
+    "name": "Hillegom",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2958,
+    "center_lng": 4.5772
+  },
+  {
+    "slug": "hilvarenbeek",
+    "cbs_code": "GM0798",
+    "name": "Hilvarenbeek",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4759,
+    "center_lng": 5.1501
+  },
+  {
+    "slug": "hilversum",
+    "cbs_code": "GM0402",
+    "name": "Hilversum",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2176,
+    "center_lng": 5.1607
+  },
+  {
+    "slug": "hoeksche-waard",
+    "cbs_code": "GM1963",
+    "name": "Hoeksche Waard",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.7728,
+    "center_lng": 4.4609
+  },
+  {
+    "slug": "hof-van-twente",
+    "cbs_code": "GM1735",
+    "name": "Hof van Twente",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2255,
+    "center_lng": 6.5841
+  },
+  {
+    "slug": "hollands-kroon",
+    "cbs_code": "GM1911",
+    "name": "Hollands Kroon",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.8257,
+    "center_lng": 4.9366
+  },
+  {
+    "slug": "hoogeveen",
+    "cbs_code": "GM0118",
+    "name": "Hoogeveen",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.718,
+    "center_lng": 6.5186
+  },
+  {
+    "slug": "hoorn",
+    "cbs_code": "GM0405",
+    "name": "Hoorn",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6557,
+    "center_lng": 5.0652
+  },
+  {
+    "slug": "horst-aan-de-maas",
+    "cbs_code": "GM1507",
+    "name": "Horst aan de Maas",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4455,
+    "center_lng": 6.0468
+  },
+  {
+    "slug": "houten",
+    "cbs_code": "GM0321",
+    "name": "Houten",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9999,
+    "center_lng": 5.1955
+  },
+  {
+    "slug": "huizen",
+    "cbs_code": "GM0406",
+    "name": "Huizen",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2913,
+    "center_lng": 5.2306
+  },
+  {
+    "slug": "hulst",
+    "cbs_code": "GM0677",
+    "name": "Hulst",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3113,
+    "center_lng": 4.0896
+  },
+  {
+    "slug": "ijsselstein",
+    "cbs_code": "GM0353",
+    "name": "IJsselstein",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.032,
+    "center_lng": 5.0279
+  },
+  {
+    "slug": "kaag-en-braassem",
+    "cbs_code": "GM1884",
+    "name": "Kaag en Braassem",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1883,
+    "center_lng": 4.632
+  },
+  {
+    "slug": "kampen",
+    "cbs_code": "GM0166",
+    "name": "Kampen",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5465,
+    "center_lng": 5.9232
+  },
+  {
+    "slug": "kapelle",
+    "cbs_code": "GM0678",
+    "name": "Kapelle",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4822,
+    "center_lng": 3.9628
+  },
+  {
+    "slug": "katwijk",
+    "cbs_code": "GM0537",
+    "name": "Katwijk",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1874,
+    "center_lng": 4.4206
+  },
+  {
+    "slug": "kerkrade",
+    "cbs_code": "GM0928",
+    "name": "Kerkrade",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.8735,
+    "center_lng": 6.0555
+  },
+  {
+    "slug": "koggenland",
+    "cbs_code": "GM1598",
+    "name": "Koggenland",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6421,
+    "center_lng": 4.9498
+  },
+  {
+    "slug": "krimpen-aan-den-ijssel",
+    "cbs_code": "GM0542",
+    "name": "Krimpen aan den IJssel",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9158,
+    "center_lng": 4.5963
+  },
+  {
+    "slug": "krimpenerwaard",
+    "cbs_code": "GM1931",
+    "name": "Krimpenerwaard",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9543,
+    "center_lng": 4.7253
+  },
+  {
+    "slug": "laarbeek",
+    "cbs_code": "GM1659",
+    "name": "Laarbeek",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5336,
+    "center_lng": 5.6096
+  },
+  {
+    "slug": "land-van-cuijk",
+    "cbs_code": "GM1982",
+    "name": "Land van Cuijk",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.667,
+    "center_lng": 5.8519
+  },
+  {
+    "slug": "landgraaf",
+    "cbs_code": "GM0882",
+    "name": "Landgraaf",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.9119,
+    "center_lng": 6.0401
+  },
+  {
+    "slug": "landsmeer",
+    "cbs_code": "GM0415",
+    "name": "Landsmeer",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.453,
+    "center_lng": 4.9219
+  },
+  {
+    "slug": "lansingerland",
+    "cbs_code": "GM1621",
+    "name": "Lansingerland",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9996,
+    "center_lng": 4.4951
+  },
+  {
+    "slug": "laren",
+    "cbs_code": "GM0417",
+    "name": "Laren",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2423,
+    "center_lng": 5.2165
+  },
+  {
+    "slug": "leeuwarden",
+    "cbs_code": "GM0080",
+    "name": "Leeuwarden",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.1508,
+    "center_lng": 5.7972
+  },
+  {
+    "slug": "leiden",
+    "cbs_code": "GM0546",
+    "name": "Leiden",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1518,
+    "center_lng": 4.4823
+  },
+  {
+    "slug": "leiderdorp",
+    "cbs_code": "GM0547",
+    "name": "Leiderdorp",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.156,
+    "center_lng": 4.5434
+  },
+  {
+    "slug": "leidschendam-voorburg",
+    "cbs_code": "GM1916",
+    "name": "Leidschendam-Voorburg",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0883,
+    "center_lng": 4.4141
+  },
+  {
+    "slug": "lelystad",
+    "cbs_code": "GM0995",
+    "name": "Lelystad",
+    "province_slug": "flevoland",
+    "province_name": "Flevoland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.4743,
+    "center_lng": 5.4321
+  },
+  {
+    "slug": "leudal",
+    "cbs_code": "GM1640",
+    "name": "Leudal",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.2415,
+    "center_lng": 5.8917
+  },
+  {
+    "slug": "leusden",
+    "cbs_code": "GM0327",
+    "name": "Leusden",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1241,
+    "center_lng": 5.4116
+  },
+  {
+    "slug": "lingewaard",
+    "cbs_code": "GM1705",
+    "name": "Lingewaard",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9052,
+    "center_lng": 5.9516
+  },
+  {
+    "slug": "lisse",
+    "cbs_code": "GM0553",
+    "name": "Lisse",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2566,
+    "center_lng": 4.5433
+  },
+  {
+    "slug": "lochem",
+    "cbs_code": "GM0262",
+    "name": "Lochem",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1814,
+    "center_lng": 6.355
+  },
+  {
+    "slug": "loon-op-zand",
+    "cbs_code": "GM0809",
+    "name": "Loon op Zand",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6366,
+    "center_lng": 5.0468
+  },
+  {
+    "slug": "lopik",
+    "cbs_code": "GM0331",
+    "name": "Lopik",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9897,
+    "center_lng": 4.9484
+  },
+  {
+    "slug": "losser",
+    "cbs_code": "GM0168",
+    "name": "Losser",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2966,
+    "center_lng": 7.0017
+  },
+  {
+    "slug": "maasdriel",
+    "cbs_code": "GM0263",
+    "name": "Maasdriel",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.7774,
+    "center_lng": 5.3101
+  },
+  {
+    "slug": "maasgouw",
+    "cbs_code": "GM1641",
+    "name": "Maasgouw",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.1733,
+    "center_lng": 5.882
+  },
+  {
+    "slug": "maashorst",
+    "cbs_code": "GM1991",
+    "name": "Maashorst",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6878,
+    "center_lng": 5.6558
+  },
+  {
+    "slug": "maassluis",
+    "cbs_code": "GM0556",
+    "name": "Maassluis",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9221,
+    "center_lng": 4.2528
+  },
+  {
+    "slug": "maastricht",
+    "cbs_code": "GM0935",
+    "name": "Maastricht",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.8597,
+    "center_lng": 5.7009
+  },
+  {
+    "slug": "medemblik",
+    "cbs_code": "GM0420",
+    "name": "Medemblik",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7223,
+    "center_lng": 5.0967
+  },
+  {
+    "slug": "meerssen",
+    "cbs_code": "GM0938",
+    "name": "Meerssen",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.8829,
+    "center_lng": 5.7572
+  },
+  {
+    "slug": "meierijstad",
+    "cbs_code": "GM1948",
+    "name": "Meierijstad",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5904,
+    "center_lng": 5.4973
+  },
+  {
+    "slug": "meppel",
+    "cbs_code": "GM0119",
+    "name": "Meppel",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.704,
+    "center_lng": 6.1894
+  },
+  {
+    "slug": "middelburg",
+    "cbs_code": "GM0687",
+    "name": "Middelburg",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.495,
+    "center_lng": 3.6626
+  },
+  {
+    "slug": "midden-delfland",
+    "cbs_code": "GM1842",
+    "name": "Midden-Delfland",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9712,
+    "center_lng": 4.3117
+  },
+  {
+    "slug": "midden-drenthe",
+    "cbs_code": "GM1731",
+    "name": "Midden-Drenthe",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.8596,
+    "center_lng": 6.5437
+  },
+  {
+    "slug": "midden-groningen",
+    "cbs_code": "GM1952",
+    "name": "Midden-Groningen",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.179,
+    "center_lng": 6.7996
+  },
+  {
+    "slug": "moerdijk",
+    "cbs_code": "GM1709",
+    "name": "Moerdijk",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6529,
+    "center_lng": 4.5433
+  },
+  {
+    "slug": "molenlanden",
+    "cbs_code": "GM1978",
+    "name": "Molenlanden",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8822,
+    "center_lng": 4.8669
+  },
+  {
+    "slug": "montferland",
+    "cbs_code": "GM1955",
+    "name": "Montferland",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9063,
+    "center_lng": 6.2114
+  },
+  {
+    "slug": "montfoort",
+    "cbs_code": "GM0335",
+    "name": "Montfoort",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0458,
+    "center_lng": 4.9428
+  },
+  {
+    "slug": "mook-en-middelaar",
+    "cbs_code": "GM0944",
+    "name": "Mook en Middelaar",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.745,
+    "center_lng": 5.9013
+  },
+  {
+    "slug": "neder-betuwe",
+    "cbs_code": "GM1740",
+    "name": "Neder-Betuwe",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9236,
+    "center_lng": 5.5823
+  },
+  {
+    "slug": "nederweert",
+    "cbs_code": "GM0946",
+    "name": "Nederweert",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.2947,
+    "center_lng": 5.7607
+  },
+  {
+    "slug": "nieuwegein",
+    "cbs_code": "GM0356",
+    "name": "Nieuwegein",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0313,
+    "center_lng": 5.0964
+  },
+  {
+    "slug": "nieuwkoop",
+    "cbs_code": "GM0569",
+    "name": "Nieuwkoop",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1735,
+    "center_lng": 4.7866
+  },
+  {
+    "slug": "nijkerk",
+    "cbs_code": "GM0267",
+    "name": "Nijkerk",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2128,
+    "center_lng": 5.5141
+  },
+  {
+    "slug": "nijmegen",
+    "cbs_code": "GM0268",
+    "name": "Nijmegen",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8396,
+    "center_lng": 5.8333
+  },
+  {
+    "slug": "nissewaard",
+    "cbs_code": "GM1930",
+    "name": "Nissewaard",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8319,
+    "center_lng": 4.2655
+  },
+  {
+    "slug": "noardeast-fryslan",
+    "cbs_code": "GM1970",
+    "name": "Noardeast-Fryslân",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.3557,
+    "center_lng": 6.0191
+  },
+  {
+    "slug": "noord-beveland",
+    "cbs_code": "GM1695",
+    "name": "Noord-Beveland",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5775,
+    "center_lng": 3.7682
+  },
+  {
+    "slug": "noordenveld",
+    "cbs_code": "GM1699",
+    "name": "Noordenveld",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0844,
+    "center_lng": 6.422
+  },
+  {
+    "slug": "noordoostpolder",
+    "cbs_code": "GM0171",
+    "name": "Noordoostpolder",
+    "province_slug": "flevoland",
+    "province_name": "Flevoland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7082,
+    "center_lng": 5.789
+  },
+  {
+    "slug": "noordwijk",
+    "cbs_code": "GM0575",
+    "name": "Noordwijk",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2627,
+    "center_lng": 4.4669
+  },
+  {
+    "slug": "nuenen-gerwen-en-nederwetten",
+    "cbs_code": "GM0820",
+    "name": "Nuenen, Gerwen en Nederwetten",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4757,
+    "center_lng": 5.556
+  },
+  {
+    "slug": "nunspeet",
+    "cbs_code": "GM0302",
+    "name": "Nunspeet",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.3332,
+    "center_lng": 5.7798
+  },
+  {
+    "slug": "oegstgeest",
+    "cbs_code": "GM0579",
+    "name": "Oegstgeest",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1857,
+    "center_lng": 4.4753
+  },
+  {
+    "slug": "oirschot",
+    "cbs_code": "GM0823",
+    "name": "Oirschot",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4947,
+    "center_lng": 5.2977
+  },
+  {
+    "slug": "oisterwijk",
+    "cbs_code": "GM0824",
+    "name": "Oisterwijk",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5508,
+    "center_lng": 5.2017
+  },
+  {
+    "slug": "oldambt",
+    "cbs_code": "GM1895",
+    "name": "Oldambt",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.1891,
+    "center_lng": 7.0661
+  },
+  {
+    "slug": "oldebroek",
+    "cbs_code": "GM0269",
+    "name": "Oldebroek",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.4366,
+    "center_lng": 5.939
+  },
+  {
+    "slug": "oldenzaal",
+    "cbs_code": "GM0173",
+    "name": "Oldenzaal",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3094,
+    "center_lng": 6.9053
+  },
+  {
+    "slug": "olst-wijhe",
+    "cbs_code": "GM1773",
+    "name": "Olst-Wijhe",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3795,
+    "center_lng": 6.1542
+  },
+  {
+    "slug": "ommen",
+    "cbs_code": "GM0175",
+    "name": "Ommen",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.522,
+    "center_lng": 6.4662
+  },
+  {
+    "slug": "oost-gelre",
+    "cbs_code": "GM1586",
+    "name": "Oost Gelre",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0026,
+    "center_lng": 6.5728
+  },
+  {
+    "slug": "oosterhout",
+    "cbs_code": "GM0826",
+    "name": "Oosterhout",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6297,
+    "center_lng": 4.8583
+  },
+  {
+    "slug": "ooststellingwerf",
+    "cbs_code": "GM0085",
+    "name": "Ooststellingwerf",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 52.989,
+    "center_lng": 6.2573
+  },
+  {
+    "slug": "oostzaan",
+    "cbs_code": "GM0431",
+    "name": "Oostzaan",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.45,
+    "center_lng": 4.8749
+  },
+  {
+    "slug": "opmeer",
+    "cbs_code": "GM0432",
+    "name": "Opmeer",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7137,
+    "center_lng": 4.9551
+  },
+  {
+    "slug": "opsterland",
+    "cbs_code": "GM0086",
+    "name": "Opsterland",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0567,
+    "center_lng": 6.1297
+  },
+  {
+    "slug": "oss",
+    "cbs_code": "GM0828",
+    "name": "Oss",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.7795,
+    "center_lng": 5.5261
+  },
+  {
+    "slug": "oude-ijsselstreek",
+    "cbs_code": "GM1509",
+    "name": "Oude IJsselstreek",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9183,
+    "center_lng": 6.4106
+  },
+  {
+    "slug": "ouder-amstel",
+    "cbs_code": "GM0437",
+    "name": "Ouder-Amstel",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2886,
+    "center_lng": 4.9124
+  },
+  {
+    "slug": "oudewater",
+    "cbs_code": "GM0589",
+    "name": "Oudewater",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0283,
+    "center_lng": 4.8626
+  },
+  {
+    "slug": "overbetuwe",
+    "cbs_code": "GM1734",
+    "name": "Overbetuwe",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9189,
+    "center_lng": 5.776
+  },
+  {
+    "slug": "papendrecht",
+    "cbs_code": "GM0590",
+    "name": "Papendrecht",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8322,
+    "center_lng": 4.7064
+  },
+  {
+    "slug": "peel-en-maas",
+    "cbs_code": "GM1894",
+    "name": "Peel en Maas",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3348,
+    "center_lng": 5.9999
+  },
+  {
+    "slug": "pekela",
+    "cbs_code": "GM0765",
+    "name": "Pekela",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0723,
+    "center_lng": 6.9716
+  },
+  {
+    "slug": "pijnacker-nootdorp",
+    "cbs_code": "GM1926",
+    "name": "Pijnacker-Nootdorp",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.012,
+    "center_lng": 4.4215
+  },
+  {
+    "slug": "purmerend",
+    "cbs_code": "GM0439",
+    "name": "Purmerend",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5489,
+    "center_lng": 4.932
+  },
+  {
+    "slug": "putten",
+    "cbs_code": "GM0273",
+    "name": "Putten",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2421,
+    "center_lng": 5.5811
+  },
+  {
+    "slug": "raalte",
+    "cbs_code": "GM0177",
+    "name": "Raalte",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3793,
+    "center_lng": 6.2735
+  },
+  {
+    "slug": "reimerswaal",
+    "cbs_code": "GM0703",
+    "name": "Reimerswaal",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4142,
+    "center_lng": 4.1353
+  },
+  {
+    "slug": "renkum",
+    "cbs_code": "GM0274",
+    "name": "Renkum",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9922,
+    "center_lng": 5.7924
+  },
+  {
+    "slug": "renswoude",
+    "cbs_code": "GM0339",
+    "name": "Renswoude",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0608,
+    "center_lng": 5.5294
+  },
+  {
+    "slug": "reusel-de-mierden",
+    "cbs_code": "GM1667",
+    "name": "Reusel-De Mierden",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3717,
+    "center_lng": 5.1379
+  },
+  {
+    "slug": "rheden",
+    "cbs_code": "GM0275",
+    "name": "Rheden",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0419,
+    "center_lng": 6.0446
+  },
+  {
+    "slug": "rhenen",
+    "cbs_code": "GM0340",
+    "name": "Rhenen",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9786,
+    "center_lng": 5.5525
+  },
+  {
+    "slug": "ridderkerk",
+    "cbs_code": "GM0597",
+    "name": "Ridderkerk",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8664,
+    "center_lng": 4.5983
+  },
+  {
+    "slug": "rijssen-holten",
+    "cbs_code": "GM1742",
+    "name": "Rijssen-Holten",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2895,
+    "center_lng": 6.4402
+  },
+  {
+    "slug": "rijswijk",
+    "cbs_code": "GM0603",
+    "name": "Rijswijk",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0341,
+    "center_lng": 4.3243
+  },
+  {
+    "slug": "roerdalen",
+    "cbs_code": "GM1669",
+    "name": "Roerdalen",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.1329,
+    "center_lng": 6.0467
+  },
+  {
+    "slug": "roermond",
+    "cbs_code": "GM0957",
+    "name": "Roermond",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.1997,
+    "center_lng": 6.0036
+  },
+  {
+    "slug": "roosendaal",
+    "cbs_code": "GM1674",
+    "name": "Roosendaal",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5067,
+    "center_lng": 4.4197
+  },
+  {
+    "slug": "rotterdam",
+    "cbs_code": "GM0599",
+    "name": "Rotterdam",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.918,
+    "center_lng": 4.4733
+  },
+  {
+    "slug": "rozendaal",
+    "cbs_code": "GM0277",
+    "name": "Rozendaal",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.04,
+    "center_lng": 5.9727
+  },
+  {
+    "slug": "rucphen",
+    "cbs_code": "GM0840",
+    "name": "Rucphen",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5196,
+    "center_lng": 4.5625
+  },
+  {
+    "slug": "schagen",
+    "cbs_code": "GM0441",
+    "name": "Schagen",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7754,
+    "center_lng": 4.743
+  },
+  {
+    "slug": "scherpenzeel",
+    "cbs_code": "GM0279",
+    "name": "Scherpenzeel",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.091,
+    "center_lng": 5.4993
+  },
+  {
+    "slug": "schiedam",
+    "cbs_code": "GM0606",
+    "name": "Schiedam",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9262,
+    "center_lng": 4.3846
+  },
+  {
+    "slug": "schiermonnikoog",
+    "cbs_code": "GM0088",
+    "name": "Schiermonnikoog",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.4913,
+    "center_lng": 6.2471
+  },
+  {
+    "slug": "schouwen-duiveland",
+    "cbs_code": "GM1676",
+    "name": "Schouwen-Duiveland",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6801,
+    "center_lng": 3.9186
+  },
+  {
+    "slug": "simpelveld",
+    "cbs_code": "GM0965",
+    "name": "Simpelveld",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.8269,
+    "center_lng": 5.989
+  },
+  {
+    "slug": "sint-michielsgestel",
+    "cbs_code": "GM0845",
+    "name": "Sint-Michielsgestel",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6564,
+    "center_lng": 5.3639
+  },
+  {
+    "slug": "sittard-geleen",
+    "cbs_code": "GM1883",
+    "name": "Sittard-Geleen",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.9975,
+    "center_lng": 5.8316
+  },
+  {
+    "slug": "sliedrecht",
+    "cbs_code": "GM0610",
+    "name": "Sliedrecht",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8299,
+    "center_lng": 4.7704
+  },
+  {
+    "slug": "sluis",
+    "cbs_code": "GM1714",
+    "name": "Sluis",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3449,
+    "center_lng": 3.5343
+  },
+  {
+    "slug": "smallingerland",
+    "cbs_code": "GM0090",
+    "name": "Smallingerland",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.1145,
+    "center_lng": 6.0281
+  },
+  {
+    "slug": "soest",
+    "cbs_code": "GM0342",
+    "name": "Soest",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1556,
+    "center_lng": 5.2966
+  },
+  {
+    "slug": "someren",
+    "cbs_code": "GM0847",
+    "name": "Someren",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3659,
+    "center_lng": 5.7042
+  },
+  {
+    "slug": "son-en-breugel",
+    "cbs_code": "GM0848",
+    "name": "Son en Breugel",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5192,
+    "center_lng": 5.485
+  },
+  {
+    "slug": "stadskanaal",
+    "cbs_code": "GM0037",
+    "name": "Stadskanaal",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 52.999,
+    "center_lng": 7.0144
+  },
+  {
+    "slug": "staphorst",
+    "cbs_code": "GM0180",
+    "name": "Staphorst",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6355,
+    "center_lng": 6.212
+  },
+  {
+    "slug": "stede-broec",
+    "cbs_code": "GM0532",
+    "name": "Stede Broec",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7013,
+    "center_lng": 5.2223
+  },
+  {
+    "slug": "steenbergen",
+    "cbs_code": "GM0851",
+    "name": "Steenbergen",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5986,
+    "center_lng": 4.3171
+  },
+  {
+    "slug": "steenwijkerland",
+    "cbs_code": "GM1708",
+    "name": "Steenwijkerland",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.7428,
+    "center_lng": 6.0346
+  },
+  {
+    "slug": "stein",
+    "cbs_code": "GM0971",
+    "name": "Stein",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.9653,
+    "center_lng": 5.77
+  },
+  {
+    "slug": "stichtse-vecht",
+    "cbs_code": "GM1904",
+    "name": "Stichtse Vecht",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1923,
+    "center_lng": 5.0148
+  },
+  {
+    "slug": "sudwest-fryslan",
+    "cbs_code": "GM1900",
+    "name": "Súdwest-Fryslân",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.035,
+    "center_lng": 5.545
+  },
+  {
+    "slug": "terneuzen",
+    "cbs_code": "GM0715",
+    "name": "Terneuzen",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.2764,
+    "center_lng": 3.8257
+  },
+  {
+    "slug": "terschelling",
+    "cbs_code": "GM0093",
+    "name": "Terschelling",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.4028,
+    "center_lng": 5.3535
+  },
+  {
+    "slug": "texel",
+    "cbs_code": "GM0448",
+    "name": "Texel",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0783,
+    "center_lng": 4.8085
+  },
+  {
+    "slug": "teylingen",
+    "cbs_code": "GM1525",
+    "name": "Teylingen",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2172,
+    "center_lng": 4.5081
+  },
+  {
+    "slug": "tholen",
+    "cbs_code": "GM0716",
+    "name": "Tholen",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5644,
+    "center_lng": 4.1117
+  },
+  {
+    "slug": "tiel",
+    "cbs_code": "GM0281",
+    "name": "Tiel",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8761,
+    "center_lng": 5.3987
+  },
+  {
+    "slug": "tilburg",
+    "cbs_code": "GM0855",
+    "name": "Tilburg",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.574,
+    "center_lng": 5.0639
+  },
+  {
+    "slug": "tubbergen",
+    "cbs_code": "GM0183",
+    "name": "Tubbergen",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.4171,
+    "center_lng": 6.7772
+  },
+  {
+    "slug": "twenterand",
+    "cbs_code": "GM1700",
+    "name": "Twenterand",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.4417,
+    "center_lng": 6.6276
+  },
+  {
+    "slug": "tynaarlo",
+    "cbs_code": "GM1730",
+    "name": "Tynaarlo",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0909,
+    "center_lng": 6.5977
+  },
+  {
+    "slug": "tytsjerksteradiel",
+    "cbs_code": "GM0737",
+    "name": "Tytsjerksteradiel",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.1808,
+    "center_lng": 5.9718
+  },
+  {
+    "slug": "uitgeest",
+    "cbs_code": "GM0450",
+    "name": "Uitgeest",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5211,
+    "center_lng": 4.7365
+  },
+  {
+    "slug": "uithoorn",
+    "cbs_code": "GM0451",
+    "name": "Uithoorn",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2425,
+    "center_lng": 4.7875
+  },
+  {
+    "slug": "urk",
+    "cbs_code": "GM0184",
+    "name": "Urk",
+    "province_slug": "flevoland",
+    "province_name": "Flevoland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.6663,
+    "center_lng": 5.624
+  },
+  {
+    "slug": "utrecht",
+    "cbs_code": "GM0344",
+    "name": "Utrecht",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0968,
+    "center_lng": 5.0827
+  },
+  {
+    "slug": "utrechtse-heuvelrug",
+    "cbs_code": "GM1581",
+    "name": "Utrechtse Heuvelrug",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0324,
+    "center_lng": 5.395
+  },
+  {
+    "slug": "vaals",
+    "cbs_code": "GM0981",
+    "name": "Vaals",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.7807,
+    "center_lng": 5.9743
+  },
+  {
+    "slug": "valkenburg-aan-de-geul",
+    "cbs_code": "GM0994",
+    "name": "Valkenburg aan de Geul",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.8593,
+    "center_lng": 5.8187
+  },
+  {
+    "slug": "valkenswaard",
+    "cbs_code": "GM0858",
+    "name": "Valkenswaard",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3263,
+    "center_lng": 5.4574
+  },
+  {
+    "slug": "veendam",
+    "cbs_code": "GM0047",
+    "name": "Veendam",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0856,
+    "center_lng": 6.8807
+  },
+  {
+    "slug": "veenendaal",
+    "cbs_code": "GM0345",
+    "name": "Veenendaal",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0246,
+    "center_lng": 5.5514
+  },
+  {
+    "slug": "veere",
+    "cbs_code": "GM0717",
+    "name": "Veere",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5288,
+    "center_lng": 3.5568
+  },
+  {
+    "slug": "veldhoven",
+    "cbs_code": "GM0861",
+    "name": "Veldhoven",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4116,
+    "center_lng": 5.3865
+  },
+  {
+    "slug": "velsen",
+    "cbs_code": "GM0453",
+    "name": "Velsen",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.4474,
+    "center_lng": 4.6389
+  },
+  {
+    "slug": "venlo",
+    "cbs_code": "GM0983",
+    "name": "Venlo",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3483,
+    "center_lng": 6.1486
+  },
+  {
+    "slug": "venray",
+    "cbs_code": "GM0984",
+    "name": "Venray",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.5141,
+    "center_lng": 5.9714
+  },
+  {
+    "slug": "vijfheerenlanden",
+    "cbs_code": "GM1961",
+    "name": "Vijfheerenlanden",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9321,
+    "center_lng": 5.0615
+  },
+  {
+    "slug": "vlaardingen",
+    "cbs_code": "GM0622",
+    "name": "Vlaardingen",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9168,
+    "center_lng": 4.3188
+  },
+  {
+    "slug": "vlieland",
+    "cbs_code": "GM0096",
+    "name": "Vlieland",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.2525,
+    "center_lng": 4.9463
+  },
+  {
+    "slug": "vlissingen",
+    "cbs_code": "GM0718",
+    "name": "Vlissingen",
+    "province_slug": "zeeland",
+    "province_name": "Zeeland",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4581,
+    "center_lng": 3.6171
+  },
+  {
+    "slug": "voerendaal",
+    "cbs_code": "GM0986",
+    "name": "Voerendaal",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 50.8752,
+    "center_lng": 5.9155
+  },
+  {
+    "slug": "voorne-aan-zee",
+    "cbs_code": "GM1992",
+    "name": "Voorne aan Zee",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8727,
+    "center_lng": 4.1341
+  },
+  {
+    "slug": "voorschoten",
+    "cbs_code": "GM0626",
+    "name": "Voorschoten",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1223,
+    "center_lng": 4.4352
+  },
+  {
+    "slug": "voorst",
+    "cbs_code": "GM0285",
+    "name": "Voorst",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.2125,
+    "center_lng": 6.1115
+  },
+  {
+    "slug": "vught",
+    "cbs_code": "GM0865",
+    "name": "Vught",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6553,
+    "center_lng": 5.2618
+  },
+  {
+    "slug": "waadhoeke",
+    "cbs_code": "GM1949",
+    "name": "Waadhoeke",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 53.2206,
+    "center_lng": 5.6148
+  },
+  {
+    "slug": "waalre",
+    "cbs_code": "GM0866",
+    "name": "Waalre",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.3876,
+    "center_lng": 5.4681
+  },
+  {
+    "slug": "waalwijk",
+    "cbs_code": "GM0867",
+    "name": "Waalwijk",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.6914,
+    "center_lng": 5.0149
+  },
+  {
+    "slug": "waddinxveen",
+    "cbs_code": "GM0627",
+    "name": "Waddinxveen",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0417,
+    "center_lng": 4.6486
+  },
+  {
+    "slug": "wageningen",
+    "cbs_code": "GM0289",
+    "name": "Wageningen",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9739,
+    "center_lng": 5.665
+  },
+  {
+    "slug": "wassenaar",
+    "cbs_code": "GM0629",
+    "name": "Wassenaar",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1402,
+    "center_lng": 4.3733
+  },
+  {
+    "slug": "waterland",
+    "cbs_code": "GM0852",
+    "name": "Waterland",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.4443,
+    "center_lng": 5.007
+  },
+  {
+    "slug": "weert",
+    "cbs_code": "GM0988",
+    "name": "Weert",
+    "province_slug": "limburg",
+    "province_name": "Limburg",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.2321,
+    "center_lng": 5.6789
+  },
+  {
+    "slug": "west-betuwe",
+    "cbs_code": "GM1960",
+    "name": "West Betuwe",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8586,
+    "center_lng": 5.1965
+  },
+  {
+    "slug": "west-maas-en-waal",
+    "cbs_code": "GM0668",
+    "name": "West Maas en Waal",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8586,
+    "center_lng": 5.5053
+  },
+  {
+    "slug": "westerkwartier",
+    "cbs_code": "GM1969",
+    "name": "Westerkwartier",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.2271,
+    "center_lng": 6.341
+  },
+  {
+    "slug": "westerveld",
+    "cbs_code": "GM1701",
+    "name": "Westerveld",
+    "province_slug": "drenthe",
+    "province_name": "Drenthe",
+    "school_vacation_region": "noord",
+    "center_lat": 52.8478,
+    "center_lng": 6.3093
+  },
+  {
+    "slug": "westervoort",
+    "cbs_code": "GM0293",
+    "name": "Westervoort",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9579,
+    "center_lng": 5.9756
+  },
+  {
+    "slug": "westerwolde",
+    "cbs_code": "GM1950",
+    "name": "Westerwolde",
+    "province_slug": "groningen",
+    "province_name": "Groningen",
+    "school_vacation_region": "noord",
+    "center_lat": 53.0147,
+    "center_lng": 7.1433
+  },
+  {
+    "slug": "westland",
+    "cbs_code": "GM1783",
+    "name": "Westland",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.988,
+    "center_lng": 4.2193
+  },
+  {
+    "slug": "weststellingwerf",
+    "cbs_code": "GM0098",
+    "name": "Weststellingwerf",
+    "province_slug": "fryslan",
+    "province_name": "Fryslân",
+    "school_vacation_region": "noord",
+    "center_lat": 52.8678,
+    "center_lng": 6.0324
+  },
+  {
+    "slug": "wierden",
+    "cbs_code": "GM0189",
+    "name": "Wierden",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3502,
+    "center_lng": 6.5578
+  },
+  {
+    "slug": "wijchen",
+    "cbs_code": "GM0296",
+    "name": "Wijchen",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8116,
+    "center_lng": 5.6994
+  },
+  {
+    "slug": "wijdemeren",
+    "cbs_code": "GM1696",
+    "name": "Wijdemeren",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.2267,
+    "center_lng": 5.0845
+  },
+  {
+    "slug": "wijk-bij-duurstede",
+    "cbs_code": "GM0352",
+    "name": "Wijk bij Duurstede",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 51.99,
+    "center_lng": 5.3292
+  },
+  {
+    "slug": "winterswijk",
+    "cbs_code": "GM0294",
+    "name": "Winterswijk",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9661,
+    "center_lng": 6.7327
+  },
+  {
+    "slug": "woensdrecht",
+    "cbs_code": "GM0873",
+    "name": "Woensdrecht",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4092,
+    "center_lng": 4.3475
+  },
+  {
+    "slug": "woerden",
+    "cbs_code": "GM0632",
+    "name": "Woerden",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1158,
+    "center_lng": 4.8985
+  },
+  {
+    "slug": "wormerland",
+    "cbs_code": "GM0880",
+    "name": "Wormerland",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.4965,
+    "center_lng": 4.8618
+  },
+  {
+    "slug": "woudenberg",
+    "cbs_code": "GM0351",
+    "name": "Woudenberg",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0801,
+    "center_lng": 5.4277
+  },
+  {
+    "slug": "zaanstad",
+    "cbs_code": "GM0479",
+    "name": "Zaanstad",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.474,
+    "center_lng": 4.7684
+  },
+  {
+    "slug": "zaltbommel",
+    "cbs_code": "GM0297",
+    "name": "Zaltbommel",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.7888,
+    "center_lng": 5.1623
+  },
+  {
+    "slug": "zandvoort",
+    "cbs_code": "GM0473",
+    "name": "Zandvoort",
+    "province_slug": "noord-holland",
+    "province_name": "Noord-Holland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3581,
+    "center_lng": 4.5427
+  },
+  {
+    "slug": "zeewolde",
+    "cbs_code": "GM0050",
+    "name": "Zeewolde",
+    "province_slug": "flevoland",
+    "province_name": "Flevoland",
+    "school_vacation_region": "noord",
+    "center_lat": 52.3448,
+    "center_lng": 5.462
+  },
+  {
+    "slug": "zeist",
+    "cbs_code": "GM0355",
+    "name": "Zeist",
+    "province_slug": "utrecht",
+    "province_name": "Utrecht",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0981,
+    "center_lng": 5.2552
+  },
+  {
+    "slug": "zevenaar",
+    "cbs_code": "GM0299",
+    "name": "Zevenaar",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9215,
+    "center_lng": 6.0696
+  },
+  {
+    "slug": "zoetermeer",
+    "cbs_code": "GM0637",
+    "name": "Zoetermeer",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.0593,
+    "center_lng": 4.4863
+  },
+  {
+    "slug": "zoeterwoude",
+    "cbs_code": "GM0638",
+    "name": "Zoeterwoude",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1142,
+    "center_lng": 4.511
+  },
+  {
+    "slug": "zuidplas",
+    "cbs_code": "GM1892",
+    "name": "Zuidplas",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.9892,
+    "center_lng": 4.6179
+  },
+  {
+    "slug": "zundert",
+    "cbs_code": "GM0879",
+    "name": "Zundert",
+    "province_slug": "noord-brabant",
+    "province_name": "Noord-Brabant",
+    "school_vacation_region": "zuid",
+    "center_lat": 51.4736,
+    "center_lng": 4.6375
+  },
+  {
+    "slug": "zutphen",
+    "cbs_code": "GM0301",
+    "name": "Zutphen",
+    "province_slug": "gelderland",
+    "province_name": "Gelderland",
+    "school_vacation_region": "midden",
+    "center_lat": 52.1344,
+    "center_lng": 6.2342
+  },
+  {
+    "slug": "zwartewaterland",
+    "cbs_code": "GM1896",
+    "name": "Zwartewaterland",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.607,
+    "center_lng": 6.0626
+  },
+  {
+    "slug": "zwijndrecht",
+    "cbs_code": "GM0642",
+    "name": "Zwijndrecht",
+    "province_slug": "zuid-holland",
+    "province_name": "Zuid-Holland",
+    "school_vacation_region": "midden",
+    "center_lat": 51.8185,
+    "center_lng": 4.6128
+  },
+  {
+    "slug": "zwolle",
+    "cbs_code": "GM0193",
+    "name": "Zwolle",
+    "province_slug": "overijssel",
+    "province_name": "Overijssel",
+    "school_vacation_region": "noord",
+    "center_lat": 52.5098,
+    "center_lng": 6.1155
+  }
+]

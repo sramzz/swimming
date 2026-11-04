@@ -11,6 +11,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
   const [treatmentFilter, setTreatmentFilter] = useState<
     'ALL' | 'SALT_ELECTROLYSIS' | 'TRADITIONAL_CHLORINE' | 'NATURAL_UNTREATED'
   >('ALL');
+  const [visibleCount, setVisibleCount] = useState(40);
 
   const filtered = venues.filter((v) => {
     const q = query.trim().toLowerCase();
@@ -23,6 +24,8 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       treatmentFilter === 'ALL' || v.primary_water_treatment === treatmentFilter;
     return matchesText && matchesTreatment;
   });
+
+  const displayed = filtered.slice(0, visibleCount);
 
   return (
     <div class="space-y-4">
@@ -91,7 +94,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        {filtered.map((venue) => {
+        {displayed.map((venue) => {
           const href = `/zwembad/${venue.municipality_slug}/${venue.slug}`;
           return (
             <article
@@ -144,6 +147,18 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
           );
         })}
       </div>
+
+      {filtered.length > visibleCount && (
+        <div class="pt-4 text-center">
+          <button
+            type="button"
+            onClick={() => setVisibleCount((prev) => prev + 40)}
+            class="px-6 py-2.5 rounded-full border border-primary text-primary hover:bg-primary hover:text-white font-bold text-sm transition-all"
+          >
+            Toon meer zwemlocaties ({filtered.length - visibleCount} resterend) ↓
+          </button>
+        </div>
+      )}
     </div>
   );
 }

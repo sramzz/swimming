@@ -23,6 +23,10 @@ data/*.db*
 *.sqlite-wal
 *.sqlite-shm
 
+# Logs & Runs
+logs/
+*.log
+
 # Operating system
 .DS_Store
 Thumbs.db

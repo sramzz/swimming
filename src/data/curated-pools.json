@@ -1,0 +1,3093 @@
+[
+  {
+    "slug": "noorderparkbad",
+    "municipality_slug": "amsterdam",
+    "name": "Noorderparkbad Amsterdam",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Florapark 1",
+    "postcode_pc6": "1032 LA",
+    "postcode_pc4": "1032",
+    "neighborhood_name": "Amsterdam Noord",
+    "lat": 52.3965,
+    "lng": 4.9189,
+    "operator_name": "Gemeente Amsterdam Sportbedrijf",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Gemeente Amsterdam Keurmerk",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Betaald parkeren op openbare weg (Noorderpark)",
+    "ev_chargers_count": 4,
+    "municipal_pass_name": "Stadspas Amsterdam",
+    "municipal_pass_discount_nl": "Stadspas met groene stip gratis / € 1,-",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.3965,4.9189&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.3965,4.9189",
+    "official_website_url": "https://www.amsterdam.nl/sport/zwembaden/noorderparkbad/",
+    "official_tickets_url": "https://sport.amsterdam.nl/tickets",
+    "rating_score": 4.5,
+    "rating_count": 412,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "Mooiste Zwembad van de Wereld (AIT Award)",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.5
+      },
+      {
+        "name_nl": "Doelgroepenbad met beweegbare bodem",
+        "basin_category": "INSTRUCTION_TARGET_GROUP",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 20,
+        "lanes_count": 4,
+        "target_temp_celsius": 31
+      },
+      {
+        "name_nl": "Buitenbad 50m (Zomers geopend)",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 6,
+        "target_temp_celsius": 24
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Volwassene",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "SINGLE_CHILD",
+        "title_nl": "Losse Entree Jeugd (tot 16 jr)",
+        "price_cents": 480,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_12",
+        "title_nl": "12-Badenkaart Amsterdam",
+        "price_cents": 6200,
+        "unit_label_nl": "12 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banenzwemmen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      },
+      {
+        "day_of_week": 3,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Avond Banenzwemmen",
+        "start_time": "19:30",
+        "end_time": "21:30"
+      },
+      {
+        "day_of_week": 6,
+        "activity_type": "VRIJZWEMMEN_RECREATIEF",
+        "label_nl": "Recreatief Zwemmen",
+        "start_time": "11:00",
+        "end_time": "16:00"
+      }
+    ]
+  },
+  {
+    "slug": "zuiderbad-amsterdam",
+    "municipality_slug": "amsterdam",
+    "name": "Zuiderbad Amsterdam",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Hobbemastraat 26",
+    "postcode_pc6": "1071 ZC",
+    "postcode_pc4": "1071",
+    "neighborhood_name": "Museumkwartier",
+    "lat": 52.3592,
+    "lng": 4.8856,
+    "operator_name": "Gemeente Amsterdam Sportbedrijf",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Rijksmonument Badhuis 1912",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Geen eigen parkeerterrein. Q-Park Museumplein op 300m loopafstand",
+    "ev_chargers_count": 0,
+    "municipal_pass_name": "Stadspas Amsterdam",
+    "municipal_pass_discount_nl": "Stadspas met groene stip gratis / € 1,-",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.3592,4.8856&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.3592,4.8856",
+    "official_website_url": "https://www.amsterdam.nl/sport/zwembaden/zuiderbad/",
+    "rating_score": 4.6,
+    "rating_count": 388,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "Historisch Monumentaal Zwembad",
+    "basins": [
+      {
+        "name_nl": "Historisch 25m Bassin",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 5,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Volwassene",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_12",
+        "title_nl": "12-Badenkaart Amsterdam",
+        "price_cents": 6200,
+        "unit_label_nl": "12 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Vroege Vogel Banenzwemmen",
+        "start_time": "07:00",
+        "end_time": "08:45"
+      },
+      {
+        "day_of_week": 2,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Middag Banenzwemmen",
+        "start_time": "12:00",
+        "end_time": "13:30"
+      }
+    ]
+  },
+  {
+    "slug": "het-marnix-amsterdam",
+    "municipality_slug": "amsterdam",
+    "name": "Het Marnix Amsterdam",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Marnixplein 1",
+    "postcode_pc6": "1015 ZN",
+    "postcode_pc4": "1015",
+    "neighborhood_name": "Jordaan / Centrum",
+    "lat": 52.3789,
+    "lng": 4.8805,
+    "operator_name": "Marnix Sportstichting",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeergarage Marnixstraat op 2 minuten loopafstand",
+    "ev_chargers_count": 2,
+    "municipal_pass_name": "Stadspas Amsterdam",
+    "municipal_pass_discount_nl": "Geldig voor daluren",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.3789,4.8805&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.3789,4.8805",
+    "official_website_url": "https://www.hetmarnix.nl/",
+    "rating_score": 4.4,
+    "rating_count": 512,
+    "min_single_price_cents": 680,
+    "featured_badge_nl": "2x 25m Baden in de Jordaan",
+    "basins": [
+      {
+        "name_nl": "Bassin 1 (Wedstrijdbad)",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Bassin 2 (Doelgroepenbad)",
+        "basin_category": "INSTRUCTION_TARGET_GROUP",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 5,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Banenzwemmen",
+        "price_cents": 680,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_10",
+        "title_nl": "10-Badenkaart Het Marnix",
+        "price_cents": 6200,
+        "unit_label_nl": "10 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen Ochtend",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      },
+      {
+        "day_of_week": 2,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen Avond",
+        "start_time": "19:00",
+        "end_time": "21:30"
+      }
+    ]
+  },
+  {
+    "slug": "flevoparkbad-amsterdam",
+    "municipality_slug": "amsterdam",
+    "name": "Flevoparkbad Amsterdam",
+    "venue_type": "OUTDOOR_SEASONAL_POOL",
+    "street_address": "Insulindeweg 1002",
+    "postcode_pc6": "1095 DX",
+    "postcode_pc4": "1095",
+    "neighborhood_name": "Indische Buurt / Oost",
+    "lat": 52.3615,
+    "lng": 4.9498,
+    "operator_name": "Gemeente Amsterdam Sportbedrijf",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Gemeente Amsterdam Keurmerk",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis fietsenstalling, betaald parkeren langs Flevoparkweg",
+    "ev_chargers_count": 2,
+    "municipal_pass_name": "Stadspas Amsterdam",
+    "municipal_pass_discount_nl": "Stadspas met groene stip gratis / € 1,-",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.3615,4.9498&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.3615,4.9498",
+    "official_website_url": "https://www.amsterdam.nl/sport/zwembaden/flevoparkbad/",
+    "rating_score": 4.7,
+    "rating_count": 670,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "50m Openluchtbad in het Park",
+    "basins": [
+      {
+        "name_nl": "50m Olympisch Buitenbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 23.5
+      },
+      {
+        "name_nl": "Recreatie & Peuterbad",
+        "basin_category": "TODDLER_POOL",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "target_temp_celsius": 25
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Openluchtbad",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_12",
+        "title_nl": "12-Badenkaart Amsterdam",
+        "price_cents": 6200,
+        "unit_label_nl": "12 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Zomer Vroege Vogel 50m",
+        "start_time": "07:00",
+        "end_time": "10:00"
+      }
+    ]
+  },
+  {
+    "slug": "bijlmer-sportcentrum",
+    "municipality_slug": "amsterdam",
+    "name": "Bijlmer Sportcentrum",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Anton de Komplein 157",
+    "postcode_pc6": "1102 CW",
+    "postcode_pc4": "1102",
+    "neighborhood_name": "Amsterdam Zuidoost",
+    "lat": 52.3142,
+    "lng": 4.9542,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeergarage Anton de Komplein (eerste uur € 1,50)",
+    "ev_chargers_count": 6,
+    "municipal_pass_name": "Stadspas Amsterdam",
+    "municipal_pass_discount_nl": "Stadspas met groene stip gratis / € 1,-",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.3142,4.9542&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.3142,4.9542",
+    "official_website_url": "https://www.optisport.nl/bijlmer",
+    "rating_score": 4.2,
+    "rating_count": 295,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "Groot Sportcomplex Zuidoost",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Doelgroepenbad met beweegbare bodem",
+        "basin_category": "INSTRUCTION_TARGET_GROUP",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 20,
+        "lanes_count": 4,
+        "target_temp_celsius": 31.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Banenzwemmen",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_12",
+        "title_nl": "12-Badenkaart Amsterdam",
+        "price_cents": 6200,
+        "unit_label_nl": "12 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen Ochtend",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "zwemcentrum-rotterdam",
+    "municipality_slug": "rotterdam",
+    "name": "Zwemcentrum Rotterdam (Zuidplein)",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Annie M.G. Schmidtplein 8",
+    "postcode_pc6": "3083 NZ",
+    "postcode_pc4": "3083",
+    "neighborhood_name": "Zuidplein / Charlois",
+    "lat": 51.8845,
+    "lng": 4.4921,
+    "operator_name": "Sportbedrijf Rotterdam",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Topzwemcentrum Rotterdam",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Q-Park Zuidplein (direct onder metro- en busstation)",
+    "ev_chargers_count": 8,
+    "municipal_pass_name": "Rotterdampas",
+    "municipal_pass_discount_nl": "1x gratis toegang per jaar + 25% korting",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.8845,4.4921&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.8845,4.4921",
+    "official_website_url": "https://www.sportbedrijfrotterdam.nl/locaties/zwemcentrum-rotterdam",
+    "rating_score": 4.6,
+    "rating_count": 530,
+    "min_single_price_cents": 570,
+    "featured_badge_nl": "50m Olympisch Wedstrijdbad",
+    "basins": [
+      {
+        "name_nl": "50m Olympisch Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 10,
+        "target_temp_celsius": 27.5
+      },
+      {
+        "name_nl": "25m Spring- & Doelgroepenbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 29.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Volwassene",
+        "price_cents": 570,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_10",
+        "title_nl": "10-Badenkaart Rotterdam",
+        "price_cents": 5100,
+        "unit_label_nl": "10 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen 50m Lang",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      },
+      {
+        "day_of_week": 4,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Avond Banenzwemmen 50m",
+        "start_time": "19:30",
+        "end_time": "21:30"
+      }
+    ]
+  },
+  {
+    "slug": "oostelijk-zwembad-rotterdam",
+    "municipality_slug": "rotterdam",
+    "name": "Oostelijk Zwembad Rotterdam",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Gerdesiaweg 480",
+    "postcode_pc6": "3061 RA",
+    "postcode_pc4": "3061",
+    "neighborhood_name": "Kralingen",
+    "lat": 51.9262,
+    "lng": 4.5028,
+    "operator_name": "Sportbedrijf Rotterdam",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Rijksmonument 1932",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Betaald parkeren langs Gerdesiaweg / metrostation Gerdesiaweg 100m",
+    "ev_chargers_count": 2,
+    "municipal_pass_name": "Rotterdampas",
+    "municipal_pass_discount_nl": "1x gratis toegang per jaar + 25% korting",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.9262,4.5028&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.9262,4.5028",
+    "official_website_url": "https://www.oostelijkzwembad.nl/",
+    "rating_score": 4.7,
+    "rating_count": 620,
+    "min_single_price_cents": 570,
+    "featured_badge_nl": "Prachtig Art-Deco Monumentaal Bad",
+    "basins": [
+      {
+        "name_nl": "25m Monumentaal Bassin",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 5,
+        "target_temp_celsius": 28.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Volwassene",
+        "price_cents": 570,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_10",
+        "title_nl": "10-Badenkaart Rotterdam",
+        "price_cents": 5100,
+        "unit_label_nl": "10 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banenzwemmen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "van-maanenbad-rotterdam",
+    "municipality_slug": "rotterdam",
+    "name": "Van Maanenbad Rotterdam",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Van Maanenstraat 8",
+    "postcode_pc6": "3038 CZ",
+    "postcode_pc4": "3038",
+    "neighborhood_name": "Blijdorp",
+    "lat": 51.9362,
+    "lng": 4.4682,
+    "operator_name": "Sportfondsen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Sportfondsenbad Rotterdam Noord",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeren langs Van Maanenstraat (betaald)",
+    "ev_chargers_count": 2,
+    "municipal_pass_name": "Rotterdampas",
+    "municipal_pass_discount_nl": "Rotterdampas acties van toepassing",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.9362,4.4682&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.9362,4.4682",
+    "official_website_url": "https://www.sportfondsenrotterdamnoord.nl/",
+    "rating_score": 4.4,
+    "rating_count": 410,
+    "min_single_price_cents": 590,
+    "featured_badge_nl": "Binnenbad + Buitenbad in Blijdorp",
+    "basins": [
+      {
+        "name_nl": "25m Binnenbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 5,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Openlucht Buitenbad",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 25,
+        "lanes_count": 4,
+        "target_temp_celsius": 25
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Volwassene",
+        "price_cents": 590,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 2,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Vroege Vogel Banen",
+        "start_time": "07:00",
+        "end_time": "08:45"
+      }
+    ]
+  },
+  {
+    "slug": "hofbad-den-haag",
+    "municipality_slug": "den-haag",
+    "name": "Zwemcomplex Hofbad Den Haag",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Ypenburgse Boslaan 30",
+    "postcode_pc6": "2496 ZA",
+    "postcode_pc4": "2496",
+    "neighborhood_name": "Ypenburg",
+    "lat": 52.0468,
+    "lng": 4.3721,
+    "operator_name": "Gemeente Den Haag Dienst Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Topsporthal & 50m Wedstrijdbad",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeerterrein naast het zwemcomplex (150 plekken)",
+    "ev_chargers_count": 6,
+    "municipal_pass_name": "Ooievaarspas",
+    "municipal_pass_discount_nl": "50% korting met Ooievaarspas",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.0468,4.3721&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.0468,4.3721",
+    "official_website_url": "https://www.denhaag.nl/nl/in-de-stad/sport/zwemmen-en-zwembaden/zwembad-het-hofbad/",
+    "rating_score": 4.5,
+    "rating_count": 730,
+    "min_single_price_cents": 490,
+    "featured_badge_nl": "50m Olympisch Wedstrijdbad Den Haag",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 10,
+        "target_temp_celsius": 27.5
+      },
+      {
+        "name_nl": "Instructiebad & Recreatiebad",
+        "basin_category": "INSTRUCTION_TARGET_GROUP",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 4,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Den Haag",
+        "price_cents": 490,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_12",
+        "title_nl": "12-Badenkaart Gemeente Den Haag",
+        "price_cents": 4900,
+        "unit_label_nl": "12 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen 50m Ochtend",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      },
+      {
+        "day_of_week": 3,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen 50m Avond",
+        "start_time": "19:30",
+        "end_time": "21:30"
+      }
+    ]
+  },
+  {
+    "slug": "de-blinkerd-scheveningen",
+    "municipality_slug": "den-haag",
+    "name": "Zwembad De Blinkerd Scheveningen",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Seinpoststraat 150",
+    "postcode_pc6": "2586 HC",
+    "postcode_pc4": "2586",
+    "neighborhood_name": "Scheveningen Bad",
+    "lat": 52.1105,
+    "lng": 4.2852,
+    "operator_name": "Gemeente Den Haag Dienst Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Betaald parkeren in de straat / Tram 1 en 9 halte op 3 min loopafstand",
+    "ev_chargers_count": 2,
+    "municipal_pass_name": "Ooievaarspas",
+    "municipal_pass_discount_nl": "50% korting met Ooievaarspas",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.1105,4.2852&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.1105,4.2852",
+    "official_website_url": "https://www.denhaag.nl/nl/in-de-stad/sport/zwemmen-en-zwembaden/zwembad-de-blinkerd/",
+    "rating_score": 4.3,
+    "rating_count": 310,
+    "min_single_price_cents": 490,
+    "featured_badge_nl": "Zwemmen aan de Kust in Scheveningen",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Den Haag",
+        "price_cents": 490,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 2,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banenzwemmen",
+        "start_time": "07:00",
+        "end_time": "08:45"
+      }
+    ]
+  },
+  {
+    "slug": "tikibad-duinrell",
+    "municipality_slug": "wassenaar",
+    "name": "Tikibad Duinrell Wassenaar",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Duinrell 1",
+    "postcode_pc6": "2242 JP",
+    "postcode_pc4": "2242",
+    "neighborhood_name": "Wassenaar Duinrell",
+    "lat": 52.1465,
+    "lng": 4.3821,
+    "operator_name": "Duinrell BV",
+    "is_nrz_licensed": 0,
+    "is_knzb_affiliated": 0,
+    "municipal_keurmerk_label": "Grootste Waterglijbanenpark Benelux",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 0,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot parkeerterrein Duinrell (€ 15,- per dag)",
+    "ev_chargers_count": 12,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.1465,4.3821&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.1465,4.3821",
+    "official_website_url": "https://www.duinrell.nl/tikibad",
+    "rating_score": 4.4,
+    "rating_count": 3200,
+    "min_single_price_cents": 2250,
+    "featured_badge_nl": "21 Glijbanen & Tropisch Golfslagbad",
+    "basins": [
+      {
+        "name_nl": "Tropisch Golfslagbad & Lazy River",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "target_temp_celsius": 30.5
+      },
+      {
+        "name_nl": "Playa Kids Waterpark",
+        "basin_category": "TODDLER_POOL",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Dagticket Tikibad",
+        "price_cents": 2250,
+        "unit_label_nl": "per sessie"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 6,
+        "activity_type": "VRIJZWEMMEN_RECREATIEF",
+        "label_nl": "Tikibad Toegang Regulier",
+        "start_time": "10:00",
+        "end_time": "21:00"
+      }
+    ]
+  },
+  {
+    "slug": "zwembad-den-hommel",
+    "municipality_slug": "utrecht",
+    "name": "Zwembad Den Hommel Utrecht",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Kennedylaan 9",
+    "postcode_pc6": "3533 KH",
+    "postcode_pc4": "3533",
+    "neighborhood_name": "Oog in Al",
+    "lat": 52.0882,
+    "lng": 5.0921,
+    "operator_name": "Gemeente Utrecht Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Gemeente Utrecht Keurmerk",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Eigen parkeerterrein voor de deur (betaald)",
+    "ev_chargers_count": 4,
+    "municipal_pass_name": "U-pas",
+    "municipal_pass_discount_nl": "U-pas budget volledig inzetbaar",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.0882,5.0921&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.0882,5.0921",
+    "official_website_url": "https://www.utrecht.nl/wonen-en-leven/vrije-tijd/zwembaden/zwembad-den-hommel/",
+    "rating_score": 4.4,
+    "rating_count": 460,
+    "min_single_price_cents": 590,
+    "featured_badge_nl": "Populair Familie- & Banenbad Utrecht",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Recreatiebad met stroomversnelling & glijbaan",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Utrecht",
+        "price_cents": 590,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_12",
+        "title_nl": "12-Badenkaart Utrecht",
+        "price_cents": 5900,
+        "unit_label_nl": "12 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen Vroeg",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      },
+      {
+        "day_of_week": 3,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Avond Banenzwemmen",
+        "start_time": "19:30",
+        "end_time": "21:30"
+      }
+    ]
+  },
+  {
+    "slug": "zwembad-de-kwakel-utrecht",
+    "municipality_slug": "utrecht",
+    "name": "Zwembad De Kwakel Utrecht",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Paranadreef 10",
+    "postcode_pc6": "3563 AZ",
+    "postcode_pc4": "3563",
+    "neighborhood_name": "Overvecht",
+    "lat": 52.1215,
+    "lng": 5.1142,
+    "operator_name": "Gemeente Utrecht Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Gemeente Utrecht Keurmerk",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Ruim gratis parkeerterrein naast het zwembad",
+    "ev_chargers_count": 2,
+    "municipal_pass_name": "U-pas",
+    "municipal_pass_discount_nl": "U-pas budget inzetbaar",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.1215,5.1142&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.1215,5.1142",
+    "official_website_url": "https://www.utrecht.nl/wonen-en-leven/vrije-tijd/zwembaden/zwembad-de-kwakel/",
+    "rating_score": 4.3,
+    "rating_count": 380,
+    "min_single_price_cents": 590,
+    "featured_badge_nl": "Recreatiebad & Doelgroepenbad",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Utrecht",
+        "price_cents": 590,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 2,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banen",
+        "start_time": "07:00",
+        "end_time": "08:45"
+      }
+    ]
+  },
+  {
+    "slug": "krommerijn-zwembad-utrecht",
+    "municipality_slug": "utrecht",
+    "name": "Krommerijn Zwembad Utrecht",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Weg naar Rhijnauwen 3",
+    "postcode_pc6": "3584 AD",
+    "postcode_pc4": "3584",
+    "neighborhood_name": "Oost / Rhijnauwen",
+    "lat": 52.0825,
+    "lng": 5.1512,
+    "operator_name": "Gemeente Utrecht Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "50m Buitenbad met Schuifdak",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeren bij het zwembad / sneltram halte De Kromme Rijn",
+    "ev_chargers_count": 4,
+    "municipal_pass_name": "U-pas",
+    "municipal_pass_discount_nl": "U-pas budget inzetbaar",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.0825,5.1512&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.0825,5.1512",
+    "official_website_url": "https://www.utrecht.nl/wonen-en-leven/vrije-tijd/zwembaden/zwembad-de-krommerijn/",
+    "rating_score": 4.6,
+    "rating_count": 510,
+    "min_single_price_cents": 590,
+    "featured_badge_nl": "50m Wedstrijdbad met Cabriodak",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Utrecht",
+        "price_cents": 590,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "50m Banenzwemmen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "amerena-amersfoort",
+    "municipality_slug": "amersfoort",
+    "name": "Sportcomplex Amerena Amersfoort",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "De Velduil 1",
+    "postcode_pc6": "3815 GE",
+    "postcode_pc4": "3815",
+    "neighborhood_name": "Hogeweg / Liendert",
+    "lat": 52.1645,
+    "lng": 5.4052,
+    "operator_name": "SRO Amersfoort",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Nationaal Topsportcentrum",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Eigen parkeergarage onder Amerena (eerste 2 uur gratis)",
+    "ev_chargers_count": 8,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.1645,5.4052&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.1645,5.4052",
+    "official_website_url": "https://www.amerena.nl/",
+    "rating_score": 4.6,
+    "rating_count": 680,
+    "min_single_price_cents": 650,
+    "featured_badge_nl": "50m Olympisch Bad & Springtoren",
+    "basins": [
+      {
+        "name_nl": "50m Olympisch Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 10,
+        "target_temp_celsius": 27.5
+      },
+      {
+        "name_nl": "Spring- en Doelgroepenbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 30
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Amerena",
+        "price_cents": 650,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_10",
+        "title_nl": "10-Badenkaart Amerena",
+        "price_cents": 5850,
+        "unit_label_nl": "10 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "50m Vroege Vogels",
+        "start_time": "06:45",
+        "end_time": "08:30"
+      },
+      {
+        "day_of_week": 3,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "50m Avond Banen",
+        "start_time": "19:30",
+        "end_time": "21:30"
+      }
+    ]
+  },
+  {
+    "slug": "ottenbad-eindhoven",
+    "municipality_slug": "eindhoven",
+    "name": "Zwembad ir. Ottenbad Eindhoven",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Vijfkamplaan 12",
+    "postcode_pc6": "5624 EB",
+    "postcode_pc4": "5624",
+    "neighborhood_name": "Woensel Noord",
+    "lat": 51.4725,
+    "lng": 5.4652,
+    "operator_name": "Gemeente Eindhoven Sportbedrijf",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein sportpark Vijfkamplaan",
+    "ev_chargers_count": 6,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.4725,5.4652&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.4725,5.4652",
+    "official_website_url": "https://www.eindhoven.nl/sport/zwemmen/ottenbad",
+    "rating_score": 4.4,
+    "rating_count": 420,
+    "min_single_price_cents": 580,
+    "featured_badge_nl": "Groot Binnen- & Buitenzwembad Eindhoven",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Doelgroepen- en Recreatiebad",
+        "basin_category": "INSTRUCTION_TARGET_GROUP",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      },
+      {
+        "name_nl": "Buitenbad Woensel",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 25,
+        "target_temp_celsius": 24.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Volwassene",
+        "price_cents": 580,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_12",
+        "title_nl": "12-Badenkaart Eindhoven",
+        "price_cents": 5800,
+        "unit_label_nl": "12 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "recreatiebad-stappegoor",
+    "municipality_slug": "tilburg",
+    "name": "Recreatiebad Stappegoor Tilburg",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Stappegoorweg 1",
+    "postcode_pc6": "5022 DA",
+    "postcode_pc4": "5022",
+    "neighborhood_name": "Stappegoor",
+    "lat": 51.5385,
+    "lng": 5.0782,
+    "operator_name": "Gemeente Tilburg Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeergarage Stappegoor (€ 2,20 per dag)",
+    "ev_chargers_count": 8,
+    "municipal_pass_name": "Meedoenregeling Tilburg",
+    "municipal_pass_discount_nl": "Meedoenregeling tegoed volledig inzetbaar",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.5385,5.0782&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.5385,5.0782",
+    "official_website_url": "https://www.sportintilburg.nl/zwembaden/recreatiebad-stappegoor/",
+    "rating_score": 4.5,
+    "rating_count": 890,
+    "min_single_price_cents": 640,
+    "featured_badge_nl": "Wildwaterbaan & 25m Wedstrijdbad",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Subtropisch Recreatiebad & Stroomversnelling",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Stappegoor",
+        "price_cents": 640,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "zwembad-sonsbeeck-breda",
+    "municipality_slug": "breda",
+    "name": "Zwembad Sonsbeeck Breda",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Pieter-Christiaanstraat 2",
+    "postcode_pc6": "4811 NX",
+    "postcode_pc4": "4811",
+    "neighborhood_name": "Boeimeer",
+    "lat": 51.5825,
+    "lng": 4.7682,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Eigen parkeerterrein voor de deur (eerste 3 uur gratis)",
+    "ev_chargers_count": 4,
+    "municipal_pass_name": "BredaPas",
+    "municipal_pass_discount_nl": "BredaPas kortingstarief",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.5825,4.7682&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.5825,4.7682",
+    "official_website_url": "https://www.optisport.nl/sonsbeeck",
+    "rating_score": 4.3,
+    "rating_count": 410,
+    "min_single_price_cents": 610,
+    "featured_badge_nl": "Grootste Zwembad van Breda",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Recreatiebad met wildwaterglijbaan",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Breda",
+        "price_cents": 610,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen Vroeg",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "kardinge-sportcentrum-groningen",
+    "municipality_slug": "groningen",
+    "name": "Sportcentrum Kardinge Groningen",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Kardingerplein 1",
+    "postcode_pc6": "9735 AA",
+    "postcode_pc4": "9735",
+    "neighborhood_name": "Kardinge / Lewenborg",
+    "lat": 53.2445,
+    "lng": 6.5982,
+    "operator_name": "Gemeente Groningen Sport050",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Sport050 Keurmerk",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein Kardinge",
+    "ev_chargers_count": 10,
+    "municipal_pass_name": "Stadjerspas",
+    "municipal_pass_discount_nl": "Stadjerspas actietarief",
+    "google_maps_embed_url": "https://maps.google.com/maps?q=53.2445,6.5982&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=53.2445,6.5982",
+    "official_website_url": "https://sport050.nl/sportlocaties/sportcentrum-kardinge/",
+    "rating_score": 4.5,
+    "rating_count": 650,
+    "min_single_price_cents": 610,
+    "featured_badge_nl": "Golfslagbad & 25m Wedstrijdbad",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Subtropisch Golfslagbad",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Kardinge",
+        "price_cents": 610,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "zwembad-de-vrolijkheid-zwolle",
+    "municipality_slug": "zwolle",
+    "name": "Zwembad De Vrolijkheid Zwolle",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Ossenkamp 7",
+    "postcode_pc6": "8024 PB",
+    "postcode_pc4": "8024",
+    "neighborhood_name": "Diezerpoort",
+    "lat": 52.5215,
+    "lng": 6.1282,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Topzwemcentrum Overijssel",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein voor de deur",
+    "ev_chargers_count": 6,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.5215,6.1282&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.5215,6.1282",
+    "official_website_url": "https://www.optisport.nl/vrolijkheid",
+    "rating_score": 4.5,
+    "rating_count": 520,
+    "min_single_price_cents": 630,
+    "featured_badge_nl": "50m Wedstrijdbad & Recreatiebad",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.5
+      },
+      {
+        "name_nl": "Recreatiebad met glijbanen",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Zwolle",
+        "price_cents": 630,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "50m Vroege Vogels",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "de-scheg-deventer",
+    "municipality_slug": "deventer",
+    "name": "Sport- en Belevingscentrum De Scheg",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Piet van Donkplein 1",
+    "postcode_pc6": "7422 LW",
+    "postcode_pc4": "7422",
+    "neighborhood_name": "Colmschate",
+    "lat": 52.2515,
+    "lng": 6.2082,
+    "operator_name": "Sportbedrijf Deventer",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Ruim gratis parkeerterrein naast station Deventer Colmschate",
+    "ev_chargers_count": 8,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.2515,6.2082&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.2515,6.2082",
+    "official_website_url": "https://www.descheg.nl/",
+    "rating_score": 4.6,
+    "rating_count": 1420,
+    "min_single_price_cents": 890,
+    "featured_badge_nl": "Subtropisch Zwemparadijs & IJsbaan",
+    "basins": [
+      {
+        "name_nl": "Subtropisch Zwemparadijs Blue Lagoon",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "target_temp_celsius": 31.5
+      },
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Subtropisch Zwemparadijs Entree",
+        "price_cents": 890,
+        "unit_label_nl": "per dag"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banenzwemmen Wedstrijdbad",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "sportiom-den-bosch",
+    "municipality_slug": "s-hertogenbosch",
+    "name": "Sportiom 's-Hertogenbosch",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Victorialaan 10",
+    "postcode_pc6": "5213 JE",
+    "postcode_pc4": "5213",
+    "neighborhood_name": "De Vliert",
+    "lat": 51.6985,
+    "lng": 5.3342,
+    "operator_name": "Sportfondsen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeerterrein Sportiom (€ 4,- per dag)",
+    "ev_chargers_count": 6,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.6985,5.3342&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.6985,5.3342",
+    "official_website_url": "https://www.sportiom.nl/",
+    "rating_score": 4.5,
+    "rating_count": 1180,
+    "min_single_price_cents": 950,
+    "featured_badge_nl": "Aquafun Subtropisch Paradijs & Golfslagbad",
+    "basins": [
+      {
+        "name_nl": "Aquafun Golfslagbad & Wildwaterrivier",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      },
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Aquafun Dagticket",
+        "price_cents": 950,
+        "unit_label_nl": "per dag"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banen 25m",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "geusseltbad-maastricht",
+    "municipality_slug": "maastricht",
+    "name": "Geusseltbad Maastricht",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Discusworp 4",
+    "postcode_pc6": "6225 XP",
+    "postcode_pc4": "6225",
+    "neighborhood_name": "Geusseltpark",
+    "lat": 50.8615,
+    "lng": 5.7212,
+    "operator_name": "Gemeente Maastricht Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Duurzaam Zwembad BREEAM",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein Geusseltpark",
+    "ev_chargers_count": 8,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=50.8615,5.7212&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=50.8615,5.7212",
+    "official_website_url": "https://www.geusseltbad.nl/",
+    "rating_score": 4.5,
+    "rating_count": 690,
+    "min_single_price_cents": 590,
+    "featured_badge_nl": "BREEAM Duurzaam Zwembad met Buitenbad",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.8
+      },
+      {
+        "name_nl": "Doelgroepenbad met beweegbare bodem",
+        "basin_category": "INSTRUCTION_TARGET_GROUP",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31.5
+      },
+      {
+        "name_nl": "Buitenbad Geusseltpark",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 25,
+        "target_temp_celsius": 24
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Geusseltbad",
+        "price_cents": 590,
+        "unit_label_nl": "per bezoek"
+      },
+      {
+        "tariff_category": "MULTI_PASS_10",
+        "title_nl": "10-Badenkaart Maastricht",
+        "price_cents": 5300,
+        "unit_label_nl": "10 bezoeken"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "de-blauwe-golf-leeuwarden",
+    "municipality_slug": "leeuwarden",
+    "name": "Zwemcentrum De Blauwe Golf",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Dancker de Rijpstraat 26",
+    "postcode_pc6": "8917 AV",
+    "postcode_pc4": "8917",
+    "neighborhood_name": "Vossepark",
+    "lat": 53.2115,
+    "lng": 5.7812,
+    "operator_name": "Bv Sport Leeuwarden",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Ruim gratis parkeerterrein",
+    "ev_chargers_count": 4,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=53.2115,5.7812&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=53.2115,5.7812",
+    "official_website_url": "https://www.bvsport.nl/accommodaties/zwembad-de-blauwe-golf/",
+    "rating_score": 4.4,
+    "rating_count": 480,
+    "min_single_price_cents": 650,
+    "featured_badge_nl": "Golfslagbad & 25m Wedstrijdbad Fryslân",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Golfslagbad met stroomversnelling",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 650,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banen Vroeg",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "de-bonte-wever-assen",
+    "municipality_slug": "assen",
+    "name": "De Bonte Wever Assen",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Stadsbroek 17",
+    "postcode_pc6": "9405 BK",
+    "postcode_pc4": "9405",
+    "neighborhood_name": "Stadsbroek",
+    "lat": 52.9845,
+    "lng": 6.5512,
+    "operator_name": "De Bonte Wever",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 0,
+    "municipal_keurmerk_label": "Subtropisch Zwemparadijs Drenthe",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein (500+ plekken)",
+    "ev_chargers_count": 8,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.9845,6.5512&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.9845,6.5512",
+    "official_website_url": "https://www.debontewever.nl/zwemparadijs/",
+    "rating_score": 4.5,
+    "rating_count": 870,
+    "min_single_price_cents": 950,
+    "featured_badge_nl": "Subtropisch Golfslagbad & Buitenbad",
+    "basins": [
+      {
+        "name_nl": "Subtropisch Golfslagbad",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      },
+      {
+        "name_nl": "25m Verwarmd Buitenbad",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 25,
+        "target_temp_celsius": 27.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Dagticket Zwemparadijs",
+        "price_cents": 950,
+        "unit_label_nl": "per dag"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Ochtend Banen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "optisport-het-mineraal-almere",
+    "municipality_slug": "almere",
+    "name": "Optisport Zwembad Het Mineraal Almere",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Radioweg 43",
+    "postcode_pc6": "1336 JA",
+    "postcode_pc4": "1336",
+    "neighborhood_name": "Almere Buiten",
+    "lat": 52.3985,
+    "lng": 5.2812,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "SALT_ELECTROLYSIS",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeren voor het zwembad",
+    "ev_chargers_count": 4,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.3985,5.2812&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.3985,5.2812",
+    "official_website_url": "https://www.optisport.nl/mineraal",
+    "rating_score": 4.5,
+    "rating_count": 340,
+    "min_single_price_cents": 630,
+    "featured_badge_nl": "Huidvriendelijke Zoutelektrolyse Almere",
+    "basins": [
+      {
+        "name_nl": "25m Zoutwaterbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 5,
+        "target_temp_celsius": 29,
+        "water_treatment": "SALT_ELECTROLYSIS"
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Zoutwaterbad",
+        "price_cents": 630,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Zoutwater Banenzwemmen",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "vrijburgbad-vlissingen",
+    "municipality_slug": "vlissingen",
+    "name": "Vrijburgbad Vlissingen / Middelburg",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Sportweg 2",
+    "postcode_pc6": "4387 PM",
+    "postcode_pc4": "4387",
+    "neighborhood_name": "Vrijburg",
+    "lat": 51.4682,
+    "lng": 3.6012,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein",
+    "ev_chargers_count": 4,
+    "municipal_pass_name": null,
+    "municipal_pass_discount_nl": null,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.4682,3.6012&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.4682,3.6012",
+    "official_website_url": "https://www.optisport.nl/vrijburgbad",
+    "rating_score": 4.5,
+    "rating_count": 510,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "Centraal Zwemcomplex Walcheren",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Recreatiebad met buizen-glijbaan",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Vrijburgbad",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      }
+    ],
+    "slots": [
+      {
+        "day_of_week": 1,
+        "activity_type": "BANENZWEMMEN",
+        "label_nl": "Banen Ochtend",
+        "start_time": "07:00",
+        "end_time": "09:00"
+      }
+    ]
+  },
+  {
+    "slug": "boschbad-apeldoorn",
+    "municipality_slug": "apeldoorn",
+    "name": "Openluchtbad Boschbad Apeldoorn",
+    "venue_type": "OUTDOOR_SEASONAL_POOL",
+    "street_address": "Felualaan 29",
+    "postcode_pc6": "7313 GM",
+    "postcode_pc4": "7313",
+    "neighborhood_name": "Berg en Bos",
+    "lat": 52.2285,
+    "lng": 5.9212,
+    "operator_name": "Accres Apeldoorn",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Grootste Openluchtbad van Nederland",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot parkeerterrein in bosrijke omgeving",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.2285,5.9212&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.2285,5.9212",
+    "official_website_url": "https://www.boschbad.nl/",
+    "rating_score": 4.7,
+    "rating_count": 1200,
+    "min_single_price_cents": 720,
+    "featured_badge_nl": "Grootste Openluchtbad van Nederland",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad Openlucht",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 24
+      },
+      {
+        "name_nl": "Recreatiebad met duikplanken & waterspeeltuin",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "target_temp_celsius": 25
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Dagticket Boschbad",
+        "price_cents": 720,
+        "unit_label_nl": "per dag"
+      }
+    ]
+  },
+  {
+    "slug": "aquacentrum-malkander-apeldoorn",
+    "municipality_slug": "apeldoorn",
+    "name": "Aquacentrum Malkander Apeldoorn",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Dubbelbeek 56",
+    "postcode_pc6": "7333 NJ",
+    "postcode_pc4": "7333",
+    "neighborhood_name": "Malkenschoten",
+    "lat": 52.1815,
+    "lng": 5.9612,
+    "operator_name": "Accres Apeldoorn",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeren voor de deur",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.1815,5.9612&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.1815,5.9612",
+    "official_website_url": "https://www.malkander.nl/",
+    "rating_score": 4.4,
+    "rating_count": 530,
+    "min_single_price_cents": 610,
+    "featured_badge_nl": "Recreatiebad & 25m Wedstrijdbad",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 610,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "boerhaavebad-haarlem",
+    "municipality_slug": "haarlem",
+    "name": "Boerhaavebad Haarlem",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Kadijk 1",
+    "postcode_pc6": "2035 LA",
+    "postcode_pc4": "2035",
+    "neighborhood_name": "Schalkwijk",
+    "lat": 52.3578,
+    "lng": 4.6468,
+    "operator_name": "SRO Haarlem",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeren op het parkeerterrein",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.3578,4.6468&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.3578,4.6468",
+    "official_website_url": "https://www.sro.nl/haarlem/boerhaavebad/",
+    "rating_score": 4.3,
+    "rating_count": 410,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "Binnenbad + Buitenterrein in Schalkwijk",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "skwa-hoofddorp",
+    "municipality_slug": "haarlemmermeer",
+    "name": "Sportcomplex Koning Willem-Alexander (SKWA)",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Bennebroekerweg 800",
+    "postcode_pc6": "2134 TL",
+    "postcode_pc4": "2134",
+    "neighborhood_name": "Hoofddorp Zuid",
+    "lat": 52.2858,
+    "lng": 4.6754,
+    "operator_name": "Sportfondsen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Topsporthal & 50m Wedstrijdbad",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein SKWA",
+    "ev_chargers_count": 8,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.2858,4.6754&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.2858,4.6754",
+    "official_website_url": "https://www.skwa.nl/",
+    "rating_score": 4.6,
+    "rating_count": 670,
+    "min_single_price_cents": 640,
+    "featured_badge_nl": "50m Olympisch Wedstrijdbad Haarlemmermeer",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree 50m",
+        "price_cents": 640,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "de-hoornse-vaart-alkmaar",
+    "municipality_slug": "alkmaar",
+    "name": "Sportcomplex De Hoornse Vaart Alkmaar",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Hertog Aalbrechtweg 4",
+    "postcode_pc6": "1823 DL",
+    "postcode_pc4": "1823",
+    "neighborhood_name": "Overdie",
+    "lat": 52.6415,
+    "lng": 4.7735,
+    "operator_name": "Alkmaar Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.6415,4.7735&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.6415,4.7735",
+    "official_website_url": "https://www.hoornsevaart.nl/",
+    "rating_score": 4.5,
+    "rating_count": 790,
+    "min_single_price_cents": 630,
+    "featured_badge_nl": "50m Wedstrijdbad & Golfslagbad Alkmaar",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.5
+      },
+      {
+        "name_nl": "Golfslagbad met 3 waterglijbanen",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Hoornse Vaart",
+        "price_cents": 630,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "sportboulevard-dordrecht",
+    "municipality_slug": "dordrecht",
+    "name": "Sportboulevard Dordrecht",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Sportboulevard 101",
+    "postcode_pc6": "3313 LG",
+    "postcode_pc4": "3313",
+    "neighborhood_name": "Crabbehof",
+    "lat": 51.7925,
+    "lng": 4.6782,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Topzwemcentrum Drechtsteden",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot parkeerterrein Sportboulevard (eerste 4 uur gratis)",
+    "ev_chargers_count": 8,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.7925,4.6782&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.7925,4.6782",
+    "official_website_url": "https://www.optisport.nl/sportboulevard",
+    "rating_score": 4.5,
+    "rating_count": 620,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "50m Wedstrijdbad & Doelgroepenbad",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "groenhovenbad-gouda",
+    "municipality_slug": "gouda",
+    "name": "Groenhovenbad Gouda",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Tobbepad 4",
+    "postcode_pc6": "2803 WH",
+    "postcode_pc4": "2803",
+    "neighborhood_name": "Groenhovenpark",
+    "lat": 52.0285,
+    "lng": 4.6982,
+    "operator_name": "SPORT.GOUDA",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Ruim gratis parkeerterrein bij het Groenhovenpark",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.0285,4.6982&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.0285,4.6982",
+    "official_website_url": "https://www.sportpuntgouda.nl/groenhovenbad/",
+    "rating_score": 4.4,
+    "rating_count": 470,
+    "min_single_price_cents": 590,
+    "featured_badge_nl": "Zwemmen in het Groenhovenpark",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 8,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Gouda",
+        "price_cents": 590,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "aquadrome-enschede",
+    "municipality_slug": "enschede",
+    "name": "Aquadrome Enschede",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "J.J. van Deinselaan 2",
+    "postcode_pc6": "7541 BR",
+    "postcode_pc4": "7541",
+    "neighborhood_name": "Stadsveld",
+    "lat": 52.2082,
+    "lng": 6.8912,
+    "operator_name": "Sportaal Enschede",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein sportpark Diekman",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.2082,6.8912&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.2082,6.8912",
+    "official_website_url": "https://www.sportaal.nl/aquadrome/",
+    "rating_score": 4.4,
+    "rating_count": 780,
+    "min_single_price_cents": 710,
+    "featured_badge_nl": "Golfslagbad & Wildwaterbaan Twente",
+    "basins": [
+      {
+        "name_nl": "Golfslagbad & Glijbanen",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      },
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Dagticket Aquadrome",
+        "price_cents": 710,
+        "unit_label_nl": "per dag"
+      }
+    ]
+  },
+  {
+    "slug": "twentebad-hengelo",
+    "municipality_slug": "hengelo",
+    "name": "Twentebad Hengelo",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Lage Weide 3",
+    "postcode_pc6": "7556 GA",
+    "postcode_pc4": "7556",
+    "neighborhood_name": "Hasseloor",
+    "lat": 52.2745,
+    "lng": 6.7812,
+    "operator_name": "Gemeente Hengelo",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeren voor het zwembad",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.2745,6.7812&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.2745,6.7812",
+    "official_website_url": "https://www.twentebad.nl/",
+    "rating_score": 4.5,
+    "rating_count": 650,
+    "min_single_price_cents": 580,
+    "featured_badge_nl": "50m Buitenbad & Binnenbaden Twente",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "50m Buitenbad (Zomer geopend)",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 6,
+        "target_temp_celsius": 24.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Twentebad",
+        "price_cents": 580,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "aquarena-emmen",
+    "municipality_slug": "emmen",
+    "name": "Aquarena Emmen",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Stadionplein 23",
+    "postcode_pc6": "7825 SG",
+    "postcode_pc4": "7825",
+    "neighborhood_name": "Meerdijk",
+    "lat": 52.7682,
+    "lng": 6.9285,
+    "operator_name": "Gemeente Emmen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein Stadion Meerdijk",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.7682,6.9285&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.7682,6.9285",
+    "official_website_url": "https://www.aquarena.nl/",
+    "rating_score": 4.5,
+    "rating_count": 510,
+    "min_single_price_cents": 610,
+    "featured_badge_nl": "Modern Duurzaam Zwembad Drenthe",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad 8 banen",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 8,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Aquarena",
+        "price_cents": 610,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "de-koploper-lelystad",
+    "municipality_slug": "lelystad",
+    "name": "Sportcentrum De Koploper Lelystad",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Badweg 21",
+    "postcode_pc6": "8223 PA",
+    "postcode_pc4": "8223",
+    "neighborhood_name": "Stadspark",
+    "lat": 52.5185,
+    "lng": 5.4882,
+    "operator_name": "Sportbedrijf Lelystad",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein voor de deur",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.5185,5.4882&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.5185,5.4882",
+    "official_website_url": "https://www.dekoploper.nl/",
+    "rating_score": 4.4,
+    "rating_count": 680,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "5 Zwembaden onder 1 Dak in Flevoland",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Recreatiebad met stroomversnelling & glijbanen",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree De Koploper",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "sportstad-heerenveen",
+    "municipality_slug": "heerenveen",
+    "name": "Zwemcentrum Sportstad Heerenveen",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Abe Lenstra Boulevard 23",
+    "postcode_pc6": "8448 JA",
+    "postcode_pc4": "8448",
+    "neighborhood_name": "Abe Lenstra Stadion",
+    "lat": 52.9585,
+    "lng": 5.9382,
+    "operator_name": "Sportstad Heerenveen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Nationaal Topsport Trainingscentrum",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeerterrein Abe Lenstra Stadion",
+    "ev_chargers_count": 8,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.9585,5.9382&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.9585,5.9382",
+    "official_website_url": "https://www.sportstad.nl/zwemmen/",
+    "rating_score": 4.6,
+    "rating_count": 490,
+    "min_single_price_cents": 600,
+    "featured_badge_nl": "50m Topsportbad Fryslân",
+    "basins": [
+      {
+        "name_nl": "50m Wedstrijdbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree 50m Bad",
+        "price_cents": 600,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "de-grote-koppel-arnhem",
+    "municipality_slug": "arnhem",
+    "name": "Zwembad De Grote Koppel Arnhem",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Olympus 1",
+    "postcode_pc6": "6832 EL",
+    "postcode_pc4": "6832",
+    "neighborhood_name": "Malburgen",
+    "lat": 51.9545,
+    "lng": 5.9082,
+    "operator_name": "Sportbedrijf Arnhem",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.9545,5.9082&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.9545,5.9082",
+    "official_website_url": "https://www.sportbedrijfarnhem.nl/locaties/zwembad-de-grote-koppel/",
+    "rating_score": 4.4,
+    "rating_count": 510,
+    "min_single_price_cents": 610,
+    "featured_badge_nl": "Golfslagbad & 25m Wedstrijdbad Arnhem",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 610,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "erica-terpstra-nijmegen",
+    "municipality_slug": "nijmegen",
+    "name": "Erica Terpstra Sportfondsenbad Nijmegen",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Kwakkenbergweg 25",
+    "postcode_pc6": "6523 MJ",
+    "postcode_pc4": "6523",
+    "neighborhood_name": "Kwakkenberg",
+    "lat": 51.8315,
+    "lng": 5.8852,
+    "operator_name": "Sportfondsen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Eigen parkeerterrein (gratis)",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.8315,5.8852&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.8315,5.8852",
+    "official_website_url": "https://www.sportfondsenbadnijmegen.nl/",
+    "rating_score": 4.6,
+    "rating_count": 620,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "Topzwembad Nijmegen Oost",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad 8 banen",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 8,
+        "target_temp_celsius": 27.8
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "de-goffert-nijmegen",
+    "municipality_slug": "nijmegen",
+    "name": "Openluchtbad De Goffert Nijmegen",
+    "venue_type": "OUTDOOR_SEASONAL_POOL",
+    "street_address": "Goffertweg 22",
+    "postcode_pc6": "6532 AA",
+    "postcode_pc4": "6532",
+    "neighborhood_name": "Goffertpark",
+    "lat": 51.8215,
+    "lng": 5.8342,
+    "operator_name": "Sportfondsen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Parkeren bij Goffertpark / station Nijmegen Goffert",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.8215,5.8342&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.8215,5.8342",
+    "official_website_url": "https://www.goffertbad.nl/",
+    "rating_score": 4.6,
+    "rating_count": 840,
+    "min_single_price_cents": 600,
+    "featured_badge_nl": "50m Openluchtbad in het Goffertpark",
+    "basins": [
+      {
+        "name_nl": "50m Buitenbad",
+        "basin_category": "COMPETITION_50M",
+        "is_default_basin": 1,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 24
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Entree Openluchtbad",
+        "price_cents": 600,
+        "unit_label_nl": "per dag"
+      }
+    ]
+  },
+  {
+    "slug": "sportfondsenbad-kerkpolder-delft",
+    "municipality_slug": "delft",
+    "name": "Sportfondsenbad Kerkpolder Delft",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Kerkpolderweg 1",
+    "postcode_pc6": "2625 EB",
+    "postcode_pc4": "2625",
+    "neighborhood_name": "Tanthof West",
+    "lat": 51.9968,
+    "lng": 4.3312,
+    "operator_name": "Sportfondsen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.9968,4.3312&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.9968,4.3312",
+    "official_website_url": "https://www.sportfondsenbadkerkpolder.nl/",
+    "rating_score": 4.4,
+    "rating_count": 480,
+    "min_single_price_cents": 590,
+    "featured_badge_nl": "Grootste Zwembad van Delft",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Delft",
+        "price_cents": 590,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "zwembad-de-veur-zoetermeer",
+    "municipality_slug": "zoetermeer",
+    "name": "Zwembad De Veur Zoetermeer",
+    "venue_type": "INDOOR_ONLY",
+    "street_address": "Prismalaan 40",
+    "postcode_pc6": "2718 CX",
+    "postcode_pc4": "2718",
+    "neighborhood_name": "Rokkeveen",
+    "lat": 52.0415,
+    "lng": 4.4825,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeren voor het complex",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.0415,4.4825&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.0415,4.4825",
+    "official_website_url": "https://www.optisport.nl/veur",
+    "rating_score": 4.3,
+    "rating_count": 380,
+    "min_single_price_cents": 610,
+    "featured_badge_nl": "Zwemcentrum Rokkeveen Zoetermeer",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Zoetermeer",
+        "price_cents": 610,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "zwembad-de-vallei-veenendaal",
+    "municipality_slug": "veenendaal",
+    "name": "Zwembad De Vallei Veenendaal",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Sportlaan 3",
+    "postcode_pc6": "3905 AD",
+    "postcode_pc4": "3905",
+    "neighborhood_name": "Sportpark Panhuis",
+    "lat": 52.0295,
+    "lng": 5.5412,
+    "operator_name": "Sportservice Veenendaal",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeren Sportlaan",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.0295,5.5412&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.0295,5.5412",
+    "official_website_url": "https://www.zwembaddevallei.nl/",
+    "rating_score": 4.5,
+    "rating_count": 530,
+    "min_single_price_cents": 600,
+    "featured_badge_nl": "Binnenbad + Openluchtbad Veenendaal",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 8,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 600,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "zwembad-dijnselburg-zeist",
+    "municipality_slug": "zeist",
+    "name": "Zwembad Dijnselburg Zeist",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Badmeester Schenkpad 1",
+    "postcode_pc6": "3705 GK",
+    "postcode_pc4": "3705",
+    "neighborhood_name": "Dijnselburg",
+    "lat": 52.1015,
+    "lng": 5.2312,
+    "operator_name": "Sportfondsen",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Gratis parkeerterrein in bosrijke omgeving",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=52.1015,5.2312&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=52.1015,5.2312",
+    "official_website_url": "https://www.dijnselburg.nl/",
+    "rating_score": 4.5,
+    "rating_count": 610,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "Subtropisch Binnenbad & 50m Buitenbad Zeist",
+    "basins": [
+      {
+        "name_nl": "25m Binnenbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "50m Buitenbad Zeist",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 6,
+        "target_temp_celsius": 24
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Dijnselburg",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "caribabad-gorinchem",
+    "municipality_slug": "gorinchem",
+    "name": "Caribabad Gorinchem",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Bataafsekade 8",
+    "postcode_pc6": "4204 AX",
+    "postcode_pc4": "4204",
+    "neighborhood_name": "Bataafse Kade",
+    "lat": 51.8385,
+    "lng": 4.9682,
+    "operator_name": "Optisport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Ruim gratis parkeerterrein",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.8385,4.9682&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.8385,4.9682",
+    "official_website_url": "https://www.optisport.nl/caribabad",
+    "rating_score": 4.4,
+    "rating_count": 590,
+    "min_single_price_cents": 690,
+    "featured_badge_nl": "Tropisch Recreatiebad & 25m Wedstrijdbad",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "Tropisch Golfslagbad",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Tropisch Entreekaartje",
+        "price_cents": 690,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "de-warande-oosterhout",
+    "municipality_slug": "oosterhout",
+    "name": "Recreatieoord De Warande Oosterhout",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Bredaseweg 119",
+    "postcode_pc6": "4904 SB",
+    "postcode_pc4": "4904",
+    "neighborhood_name": "Warandepark",
+    "lat": 51.6315,
+    "lng": 4.8512,
+    "operator_name": "Sportbedrijf Oosterhout",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein",
+    "ev_chargers_count": 4,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.6315,4.8512&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.6315,4.8512",
+    "official_website_url": "https://www.dewarande.nl/",
+    "rating_score": 4.6,
+    "rating_count": 730,
+    "min_single_price_cents": 610,
+    "featured_badge_nl": "50m Buitenbad & Binnenbaden Brabant",
+    "basins": [
+      {
+        "name_nl": "25m Binnenbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "50m Buitenbad Oosterhout",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 24.5
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Warande",
+        "price_cents": 610,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "laco-glanerbrook-geleen",
+    "municipality_slug": "sittard-geleen",
+    "name": "Laco Glanerbrook Geleen",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Kummenaedestraat 45",
+    "postcode_pc6": "6165 BT",
+    "postcode_pc4": "6165",
+    "neighborhood_name": "Glanerbrook",
+    "lat": 50.9682,
+    "lng": 5.8285,
+    "operator_name": "Laco Sportcentra",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Topzwemcentrum Limburg",
+    "primary_water_treatment": "UV_LOW_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=50.9682,5.8285&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=50.9682,5.8285",
+    "official_website_url": "https://www.laco.eu/geleen/",
+    "rating_score": 4.5,
+    "rating_count": 590,
+    "min_single_price_cents": 620,
+    "featured_badge_nl": "50m Buitenbad & 25m Binnenbad Limburg",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      },
+      {
+        "name_nl": "50m Buitenbad Glanerbrook",
+        "basin_category": "OUTDOOR_HEATED_BASIN",
+        "is_default_basin": 0,
+        "is_indoor": 0,
+        "length_meters": 50,
+        "lanes_count": 8,
+        "target_temp_celsius": 24
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree Laco",
+        "price_cents": 620,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "de-ijzeren-man-weert",
+    "municipality_slug": "weert",
+    "name": "Zwembad De IJzeren Man Weert",
+    "venue_type": "INDOOR_AND_OUTDOOR",
+    "street_address": "Geurtsvenweg 1",
+    "postcode_pc6": "6006 SN",
+    "postcode_pc4": "6006",
+    "neighborhood_name": "IJzeren Man",
+    "lat": 51.2385,
+    "lng": 5.6882,
+    "operator_name": "Stichting Zwembad De IJzeren Man",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Ruim gratis parkeerterrein in natuurgebied",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.2385,5.6882&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.2385,5.6882",
+    "official_website_url": "https://www.zwembadweert.nl/",
+    "rating_score": 4.5,
+    "rating_count": 640,
+    "min_single_price_cents": 630,
+    "featured_badge_nl": "Zwemmen aan het Natuurgebied Weert",
+    "basins": [
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Losse Entree",
+        "price_cents": 630,
+        "unit_label_nl": "per bezoek"
+      }
+    ]
+  },
+  {
+    "slug": "omnium-goes",
+    "municipality_slug": "goes",
+    "name": "Sport- en Recreatiecentrum Omnium Goes",
+    "venue_type": "SUBTROPICAL_PARADISE",
+    "street_address": "Zwembadweg 3",
+    "postcode_pc6": "4463 AB",
+    "postcode_pc4": "4463",
+    "neighborhood_name": "Oostmolenpark",
+    "lat": 51.5085,
+    "lng": 3.8812,
+    "operator_name": "Omnium Sport",
+    "is_nrz_licensed": 1,
+    "is_knzb_affiliated": 1,
+    "municipal_keurmerk_label": "Keurmerk Veilig & Schoon",
+    "primary_water_treatment": "TRADITIONAL_CHLORINE",
+    "has_wheelchair_lift": 1,
+    "has_accessible_changing": 1,
+    "parking_info_nl": "Groot gratis parkeerterrein Omnium",
+    "ev_chargers_count": 6,
+    "google_maps_embed_url": "https://maps.google.com/maps?q=51.5085,3.8812&hl=nl&z=15&output=embed",
+    "google_maps_route_url": "https://www.google.com/maps/dir/?api=1&destination=51.5085,3.8812",
+    "official_website_url": "https://www.omnium.nl/",
+    "rating_score": 4.5,
+    "rating_count": 780,
+    "min_single_price_cents": 720,
+    "featured_badge_nl": "Subtropisch Paradijs & Tropisch Bos Zeeland",
+    "basins": [
+      {
+        "name_nl": "Subtropisch Recreatiebad",
+        "basin_category": "SUBTROPICAL_WAVE_RECREATION",
+        "is_default_basin": 1,
+        "is_indoor": 1,
+        "target_temp_celsius": 31
+      },
+      {
+        "name_nl": "25m Wedstrijdbad",
+        "basin_category": "COMPETITION_25M",
+        "is_default_basin": 0,
+        "is_indoor": 1,
+        "length_meters": 25,
+        "lanes_count": 6,
+        "target_temp_celsius": 28
+      }
+    ],
+    "tariffs": [
+      {
+        "tariff_category": "SINGLE_ADULT",
+        "title_nl": "Entree Omnium",
+        "price_cents": 720,
+        "unit_label_nl": "per dag"
+      }
+    ]
+  }
+]

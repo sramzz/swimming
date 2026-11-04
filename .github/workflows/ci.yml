@@ -30,6 +30,9 @@ jobs:
       - name: Run Vitest TDD Suite
         run: pnpm test
 
+      - name: Ingest National Venues (1000+ Dutch Pools)
+        run: pnpm ingest:national
+
       - name: Build Static Production Site
         run: pnpm build
 

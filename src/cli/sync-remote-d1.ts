@@ -55,29 +55,38 @@ execFileSync(
 
 const sqlitePath = path.resolve(process.cwd(), 'data/allezwembaden.sqlite');
 if (fs.existsSync(sqlitePath)) {
-  const dump = execFileSync('sqlite3', [sqlitePath, '.dump'], { encoding: 'utf-8' });
-  const inserts = dump
+  const dump = execFileSync('sqlite3', [sqlitePath, '.dump'], {
+    encoding: 'utf-8',
+    maxBuffer: 50 * 1024 * 1024,
+  });
+  const insertLines = dump
     .split('\n')
     .filter((line) => line.startsWith('INSERT INTO '))
-    .map((line) => line.replace(/^INSERT INTO /, 'INSERT OR IGNORE INTO '))
-    .join('\n');
+    .map((line) => line.replace(/^INSERT INTO /, 'INSERT OR IGNORE INTO '));
 
-  if (inserts.length > 0) {
-    console.log(`Seeding data into remote EU D1 (${targetDb.name})...`);
-    execFileSync(
-      'npx',
-      [
-        'cf',
-        'd1',
-        'query',
-        targetDb.uuid,
-        '--profile',
-        REQUIRED_CF_PROFILE,
-        '--body',
-        JSON.stringify({ sql: inserts }),
-      ],
-      { stdio: 'ignore' }
-    );
+  if (insertLines.length > 0) {
+    console.log(`Seeding ${insertLines.length} records into remote EU D1 (${targetDb.name})...`);
+    const BATCH_SIZE = 60;
+    const totalBatches = Math.ceil(insertLines.length / BATCH_SIZE);
+    for (let i = 0; i < totalBatches; i++) {
+      const batch = insertLines.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE).join('\n');
+      process.stdout.write(`  Syncing batch ${i + 1}/${totalBatches}...\r`);
+      execFileSync(
+        'npx',
+        [
+          'cf',
+          'd1',
+          'query',
+          targetDb.uuid,
+          '--profile',
+          REQUIRED_CF_PROFILE,
+          '--body',
+          JSON.stringify({ sql: batch }),
+        ],
+        { stdio: 'ignore' }
+      );
+    }
+    console.log(`\n  All ${insertLines.length} records synchronized to D1.`);
   }
 }
 

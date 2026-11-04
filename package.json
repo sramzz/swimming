@@ -19,6 +19,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "db:seed": "tsx src/cli/run-seed.ts",
+    "ingest:national": "tsx src/cli/ingest-national.ts",
     "sync:venue": "tsx src/cli/sync.ts venue",
     "sync:scheduled": "tsx src/cli/sync.ts scheduled",
     "sync:overrides": "tsx src/cli/sync.ts overrides"
