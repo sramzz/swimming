@@ -27,11 +27,11 @@ jobs:
       - name: Run Oxlint & Astro Check
         run: pnpm check
 
-      - name: Run Vitest TDD Suite
-        run: pnpm test
-
       - name: Ingest National Venues (1000+ Dutch Pools)
         run: pnpm ingest:national
+
+      - name: Run Vitest TDD Suite
+        run: pnpm test
 
       - name: Build Static Production Site
         run: pnpm build
