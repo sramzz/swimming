@@ -6,6 +6,7 @@ export default defineConfig({
     name: 'zwemkaart-nl',
     compatibilityDate: '2026-10-01',
     workersDev: true,
+    domains: ['zwemkaart.nl', 'www.zwemkaart.nl'],
     assets: {
       htmlHandling: 'auto-trailing-slash',
       notFoundHandling: '404-page',
