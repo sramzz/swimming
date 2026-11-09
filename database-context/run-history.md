@@ -37,3 +37,4 @@ pnpm sync:venue --slug=<venue-slug> --push-d1
 | `2026-10-22_sync_venue` | 2026-10-22T00:17:21.705Z | `LOCAL_MAC` | `SYNC_VENUE` | 1 | 1 | 0 | `logs/runs/2026-10-22_sync_venue.log` |
 | `2026-11-04_seed` | 2026-11-04T10:36:27.542Z | `LOCAL_MAC` | `SEED_INITIAL` | 6 | 6 | 0 | `logs/runs/2026-11-04_seed.log` |
 | `2026-11-04_national_ingest` | 2026-11-04T10:36:32.000Z | `LOCAL_MAC` | `NATIONAL_VENUE_SCALE` | 1002 | 1002 | 0 | `logs/runs/2026-11-04_national_ingest.log` |
+| `2026-11-09_seed` | 2026-11-09T19:07:11.896Z | `LOCAL_MAC` | `SEED_INITIAL` | 1002 | 1002 | 0 | `logs/runs/2026-11-09_seed.log` |

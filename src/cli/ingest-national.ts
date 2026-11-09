@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { getBuildDatabase } from '../db/runtime-db';
 import { haversineDistanceKm } from '../db/geo';
+import { buildCuratedPhotosForVenue } from '../domain/venue-photos';
 
 interface MunicipalityRecord {
   slug: string;
@@ -179,7 +180,7 @@ export async function runNationalIngestion(): Promise<{
       parking_info_nl, ev_chargers_count, transit_chips_json,
       municipal_pass_name, municipal_pass_discount_nl,
       google_maps_embed_url, google_maps_route_url, official_website_url, official_tickets_url,
-      rating_score, rating_count, min_single_price_cents, featured_badge_nl, content_hash
+      rating_score, rating_count, min_single_price_cents, featured_badge_nl, hero_photos_json, content_hash
     ) VALUES (
       @id, @slug, @municipality_slug, @name, @venue_type, @enrichment_tier, @operational_state,
       @street_address, @postcode_pc6, @postcode_pc4, @neighborhood_name, @lat, @lng,
@@ -188,14 +189,15 @@ export async function runNationalIngestion(): Promise<{
       @parking_info_nl, @ev_chargers_count, @transit_chips_json,
       @municipal_pass_name, @municipal_pass_discount_nl,
       @google_maps_embed_url, @google_maps_route_url, @official_website_url, @official_tickets_url,
-      @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl, @content_hash
+      @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl, @hero_photos_json, @content_hash
     )
     ON CONFLICT(id) DO UPDATE SET
       name = excluded.name,
       rating_score = excluded.rating_score,
       rating_count = excluded.rating_count,
       min_single_price_cents = excluded.min_single_price_cents,
-      operational_state = excluded.operational_state
+      operational_state = excluded.operational_state,
+      hero_photos_json = excluded.hero_photos_json
   `);
 
   const upsertBasin = db.prepare(`
@@ -333,6 +335,13 @@ export async function runNationalIngestion(): Promise<{
         rating_count: pool.rating_count,
         min_single_price_cents: pool.min_single_price_cents,
         featured_badge_nl: pool.featured_badge_nl ?? null,
+        hero_photos_json: JSON.stringify(
+          buildCuratedPhotosForVenue({
+            slug: pool.slug,
+            name: pool.name,
+            venueType: pool.venue_type,
+          })
+        ),
         content_hash: contentHash,
       });
 
@@ -612,6 +621,13 @@ export async function runNationalIngestion(): Promise<{
         rating_count: 0,
         min_single_price_cents: 0,
         featured_badge_nl: badgeNl,
+        hero_photos_json: JSON.stringify(
+          buildCuratedPhotosForVenue({
+            slug: uniqueSlug,
+            name: cleanName,
+            venueType: 'OPEN_WATER_NATURAL',
+          })
+        ),
         content_hash: contentHash,
       });
 

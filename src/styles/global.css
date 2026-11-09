@@ -36,3 +36,20 @@
   --color-badge-teal-bg: #164e63;
   --color-badge-amber-bg: #431407;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.map-grid-pattern {
+  background-color: #edf6f9;
+  background-image:
+    radial-gradient(#bce0eb 1.2px, transparent 1.2px),
+    radial-gradient(#bce0eb 1.2px, #edf6f9 1.2px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}

@@ -15,6 +15,9 @@ export interface StickyWidgetProps {
   officialTicketsUrl: string | null;
   officialZwemlesUrl: string | null;
   defaultPc4: string;
+  ratingScore?: number | null;
+  ratingCount?: number;
+  primaryWaterTreatment?: string;
 }
 
 interface RecommendedSchool {
@@ -33,6 +36,8 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
   const [prefersSalt, setPrefersSalt] = useState(true);
   const [recommendations, setRecommendations] = useState<RecommendedSchool[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('Vandaag, 14:00 - 16:30');
+  const [visitorPickerOpen, setVisitorPickerOpen] = useState(true);
 
   const breakdown = calculateTicketBreakdown({
     adultsCount: state.adultsCount,
@@ -88,7 +93,7 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
         }),
       });
 
-      const data = await res.json() as {
+      const data = (await res.json()) as {
         ok: boolean;
         errorMessageNl?: string;
         topRecommendations?: RecommendedSchool[];
@@ -105,23 +110,71 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
         });
       }
     } catch {
-      // Offline fallback: still transition to success gracefully so user isn't stuck
       setState(transitionStickyWidget(next, { type: 'LEAD_SUBMIT_SUCCESS' }));
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  const isSalt = props.primaryWaterTreatment === 'SALT_ELECTROLYSIS';
+  const isNatural = props.primaryWaterTreatment === 'NATURAL_UNTREATED';
+
   return (
     <div class="p-6 bg-surface-pure rounded-2xl border border-border-hairline shadow-xl">
-      <div class="grid grid-cols-2 gap-1 p-1 bg-surface-subtle rounded-xl mb-4 text-center text-xs font-bold">
+      {/* Pricing & Rating Header (Photo 4) */}
+      <div class="flex items-baseline justify-between pb-4 border-b border-border-hairline">
+        <div>
+          <span class="text-2xl font-extrabold text-text-charcoal">
+            {props.adultPriceCents === 0 ? 'Gratis toegang' : `Vanaf ${formatEuroCentsNl(props.adultPriceCents)}`}
+          </span>
+          <span class="text-xs text-text-muted block mt-0.5">
+            {props.adultPriceCents === 0 ? 'officiële zwemwaterlocatie' : 'per losse entree'}
+          </span>
+        </div>
+        {props.ratingScore && (
+          <div class="flex items-center text-xs">
+            <span class="text-amber-500 mr-1">★</span>
+            <span class="font-bold text-text-charcoal">{props.ratingScore.toFixed(2)}</span>
+            {props.ratingCount !== undefined && (
+              <span class="text-text-muted ml-1">({props.ratingCount})</span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Green Water Treatment Callout Banner (Photo 4) */}
+      {isSalt ? (
+        <div class="mt-3 py-2.5 px-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-2 text-xs text-emerald-900 font-medium">
+          <span class="text-emerald-600 shrink-0 text-sm">💧</span>
+          <span>
+            Waterbehandeling: <strong class="font-bold">Zoutelektrolyse</strong> (ideaal voor gevoelige huid en allergieën)
+          </span>
+        </div>
+      ) : isNatural ? (
+        <div class="mt-3 py-2.5 px-3 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center gap-2 text-xs text-cyan-900 font-medium">
+          <span class="text-cyan-600 shrink-0 text-sm">🌊</span>
+          <span>
+            Waterkwaliteit: <strong class="font-bold">Natuurwater</strong> gecontroleerd door Rijkswaterstaat
+          </span>
+        </div>
+      ) : (
+        <div class="mt-3 py-2.5 px-3 rounded-xl bg-badge-teal-bg/70 border border-primary/20 flex items-center gap-2 text-xs text-primary font-medium">
+          <span class="shrink-0 text-sm">✓</span>
+          <span>
+            Waterkwaliteit: <strong class="font-bold">Gecontroleerd Zwemwater</strong> volgens keurmerk
+          </span>
+        </div>
+      )}
+
+      {/* Segmented Tab Picker (Photo 4) */}
+      <div class="grid grid-cols-2 gap-1 p-1 bg-surface-subtle rounded-xl mt-4 mb-4 text-center text-xs font-bold">
         <button
           type="button"
           onClick={() => setState(transitionStickyWidget(state, { type: 'SWITCH_TAB', tab: 'CALCULATOR' }))}
-          class={`py-2 rounded-lg transition-all ${
+          class={`py-2 rounded-lg transition-all cursor-pointer ${
             state.status === 'TAB_CALCULATOR_IDLE'
-              ? 'bg-surface-pure text-text-charcoal shadow-sm'
-              : 'text-text-muted'
+              ? 'bg-surface-pure text-text-charcoal shadow-xs'
+              : 'text-text-muted hover:text-text-charcoal'
           }`}
         >
           Vrijzwemmen / Banen
@@ -129,93 +182,174 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
         <button
           type="button"
           onClick={() => setState(transitionStickyWidget(state, { type: 'SWITCH_TAB', tab: 'ZWEMLES' }))}
-          class={`py-2 rounded-lg transition-all ${
+          class={`py-2 rounded-lg transition-all cursor-pointer ${
             state.status !== 'TAB_CALCULATOR_IDLE'
-              ? 'bg-surface-pure text-text-charcoal shadow-sm'
-              : 'text-text-muted'
+              ? 'bg-surface-pure text-text-charcoal shadow-xs'
+              : 'text-text-muted hover:text-text-charcoal'
           }`}
         >
-          Zwemles Wachttijd
+          Zwemles Aanvraag
         </button>
       </div>
 
       {state.status === 'TAB_CALCULATOR_IDLE' ? (
         <div class="space-y-4">
-          <div class="flex items-center justify-between text-sm">
-            <span>Volwassenen ({formatEuroCentsNl(props.adultPriceCents)})</span>
-            <div class="flex items-center gap-2">
+          {/* Airbnb Style Segmented Box for Datum/Tijdslot & Bezoekers (Photo 4) */}
+          <div class="border border-border-strong rounded-xl overflow-hidden divide-y divide-border-hairline">
+            <div class="p-3 hover:bg-surface-subtle transition-colors">
+              <label
+                htmlFor="widget-timeslot-select"
+                class="block text-[10px] text-text-charcoal uppercase font-extrabold tracking-wider"
+              >
+                Datum &amp; Tijdslot
+              </label>
+              <select
+                id="widget-timeslot-select"
+                value={selectedTimeSlot}
+                onChange={(e) => setSelectedTimeSlot((e.target as HTMLSelectElement).value)}
+                class="w-full bg-transparent text-xs font-semibold text-text-charcoal mt-1 focus:outline-none cursor-pointer"
+              >
+                <option value="Vandaag, 14:00 - 16:30">Vandaag, 14:00 - 16:30</option>
+                <option value="Vandaag, 19:00 - 21:30">Vandaag, 19:00 - 21:30 (Avondbanen)</option>
+                <option value="Morgen, 07:00 - 09:30">Morgen, 07:00 - 09:30 (Vroege Vogel)</option>
+                <option value="Weekend, 10:00 - 16:00">Weekend, 10:00 - 16:00 (Gezin &amp; Recreatie)</option>
+              </select>
+              <span class="block text-[11px] text-primary font-semibold mt-0.5">
+                Recreatiebad &amp; Wedstrijdbanen
+              </span>
+            </div>
+
+            <div class="p-3 bg-surface-pure">
               <button
                 type="button"
-                class="w-7 h-7 rounded-full border border-border-strong"
-                onClick={() =>
-                  setState(
-                    transitionStickyWidget(state, {
-                      type: 'SET_Counts',
-                      adultsCount: state.adultsCount - 1,
-                      childrenCount: state.childrenCount,
-                    })
-                  )
-                }
+                onClick={() => setVisitorPickerOpen((prev) => !prev)}
+                class="w-full text-left flex items-center justify-between cursor-pointer"
               >
-                -
+                <div>
+                  <span class="block text-[10px] text-text-charcoal uppercase font-extrabold tracking-wider">
+                    Bezoekers
+                  </span>
+                  <span class="block text-xs font-semibold text-text-charcoal mt-0.5">
+                    {state.adultsCount} Volwassene{state.adultsCount !== 1 ? 'n' : ''}
+                    {state.childrenCount > 0 ? `, ${state.childrenCount} Kind (t/m 12 jr)` : ''}
+                  </span>
+                </div>
+                <span class="text-xs text-text-muted">{visitorPickerOpen ? '▴' : '▾'}</span>
               </button>
-              <span class="font-bold w-4 text-center">{state.adultsCount}</span>
-              <button
-                type="button"
-                class="w-7 h-7 rounded-full border border-border-strong"
-                onClick={() =>
-                  setState(
-                    transitionStickyWidget(state, {
-                      type: 'SET_Counts',
-                      adultsCount: state.adultsCount + 1,
-                      childrenCount: state.childrenCount,
-                    })
-                  )
-                }
-              >
-                +
-              </button>
+
+              {visitorPickerOpen && (
+                <div class="mt-3 pt-3 border-t border-border-hairline space-y-2.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-text-charcoal font-medium">
+                      Volwassenen ({formatEuroCentsNl(props.adultPriceCents)})
+                    </span>
+                    <div class="flex items-center gap-2">
+                      <button
+                        type="button"
+                        aria-label="Minder volwassenen"
+                        class="w-7 h-7 rounded-full border border-border-strong flex items-center justify-center font-bold hover:border-text-charcoal cursor-pointer"
+                        onClick={() =>
+                          setState(
+                            transitionStickyWidget(state, {
+                              type: 'SET_Counts',
+                              adultsCount: state.adultsCount - 1,
+                              childrenCount: state.childrenCount,
+                            })
+                          )
+                        }
+                      >
+                        -
+                      </button>
+                      <span class="font-bold w-4 text-center">{state.adultsCount}</span>
+                      <button
+                        type="button"
+                        aria-label="Meer volwassenen"
+                        class="w-7 h-7 rounded-full border border-border-strong flex items-center justify-center font-bold hover:border-text-charcoal cursor-pointer"
+                        onClick={() =>
+                          setState(
+                            transitionStickyWidget(state, {
+                              type: 'SET_Counts',
+                              adultsCount: state.adultsCount + 1,
+                              childrenCount: state.childrenCount,
+                            })
+                          )
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-text-charcoal font-medium">
+                      Kinderen t/m 12 jr ({formatEuroCentsNl(props.childPriceCents)})
+                    </span>
+                    <div class="flex items-center gap-2">
+                      <button
+                        type="button"
+                        aria-label="Minder kinderen"
+                        class="w-7 h-7 rounded-full border border-border-strong flex items-center justify-center font-bold hover:border-text-charcoal cursor-pointer"
+                        onClick={() =>
+                          setState(
+                            transitionStickyWidget(state, {
+                              type: 'SET_Counts',
+                              adultsCount: state.adultsCount,
+                              childrenCount: state.childrenCount - 1,
+                            })
+                          )
+                        }
+                      >
+                        -
+                      </button>
+                      <span class="font-bold w-4 text-center">{state.childrenCount}</span>
+                      <button
+                        type="button"
+                        aria-label="Meer kinderen"
+                        class="w-7 h-7 rounded-full border border-border-strong flex items-center justify-center font-bold hover:border-text-charcoal cursor-pointer"
+                        onClick={() =>
+                          setState(
+                            transitionStickyWidget(state, {
+                              type: 'SET_Counts',
+                              adultsCount: state.adultsCount,
+                              childrenCount: state.childrenCount + 1,
+                            })
+                          )
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          <div class="flex items-center justify-between text-sm">
-            <span>Kinderen t/m 12 jr ({formatEuroCentsNl(props.childPriceCents)})</span>
-            <div class="flex items-center gap-2">
-              <button
-                type="button"
-                class="w-7 h-7 rounded-full border border-border-strong"
-                onClick={() =>
-                  setState(
-                    transitionStickyWidget(state, {
-                      type: 'SET_Counts',
-                      adultsCount: state.adultsCount,
-                      childrenCount: state.childrenCount - 1,
-                    })
-                  )
-                }
-              >
-                -
-              </button>
-              <span class="font-bold w-4 text-center">{state.childrenCount}</span>
-              <button
-                type="button"
-                class="w-7 h-7 rounded-full border border-border-strong"
-                onClick={() =>
-                  setState(
-                    transitionStickyWidget(state, {
-                      type: 'SET_Counts',
-                      adultsCount: state.adultsCount,
-                      childrenCount: state.childrenCount + 1,
-                    })
-                  )
-                }
-              >
-                +
-              </button>
+          {/* Itemized Price Breakdown (Photo 4) */}
+          <div class="space-y-2 text-xs text-text-muted border-b border-border-hairline pb-3">
+            {state.adultsCount > 0 && (
+              <div class="flex justify-between">
+                <span class="underline">{state.adultsCount}x Volwassene entree</span>
+                <span class="text-text-charcoal font-semibold">
+                  {formatEuroCentsNl(state.adultsCount * props.adultPriceCents)}
+                </span>
+              </div>
+            )}
+            {state.childrenCount > 0 && (
+              <div class="flex justify-between">
+                <span class="underline">{state.childrenCount}x Kind entree (t/m 12 jr)</span>
+                <span class="text-text-charcoal font-semibold">
+                  {formatEuroCentsNl(state.childrenCount * props.childPriceCents)}
+                </span>
+              </div>
+            )}
+            <div class="flex justify-between">
+              <span>Reserveringskosten</span>
+              <span class="text-emerald-700 font-semibold">€ 0,00 (Gratis)</span>
             </div>
           </div>
 
-          <div class="pt-3 border-t border-border-hairline flex justify-between items-baseline">
+          <div class="flex justify-between items-baseline">
             <span class="font-bold text-text-charcoal">Totaalbedrag</span>
             <span class="text-xl font-extrabold text-text-charcoal">
               {formatEuroCentsNl(breakdown.totalCents)}
@@ -223,22 +357,43 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
           </div>
 
           {breakdown.tenPassPerVisitCents && (
-            <p class="text-xs text-emerald-800 bg-emerald-50 p-2.5 rounded-lg">
+            <p class="text-xs text-emerald-800 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200/70">
               Tip: Met een 10-badenkaart betaal je <strong>{formatEuroCentsNl(breakdown.tenPassPerVisitCents)}</strong> per bezoek ({breakdown.tenPassSavingsPercent}% besparing).
             </p>
           )}
 
-          {props.officialTicketsUrl && (
+          {props.officialTicketsUrl ? (
             <a
               href={props.officialTicketsUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleOfficialTicketClick}
-              class="w-full h-11 rounded-full bg-primary text-on-primary text-sm font-bold flex items-center justify-center shadow-sm hover:opacity-95 transition-opacity"
+              class="w-full h-12 rounded-full bg-primary hover:bg-primary-container text-on-primary text-xs md:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-all"
             >
-              Reserveer op officiële website ↗
+              <span>Reserveer Tijdslot &amp; Koop Tickets</span>
+              <span>↗</span>
+            </a>
+          ) : (
+            <a
+              href="#locatie"
+              class="w-full h-12 rounded-full bg-primary hover:bg-primary-container text-on-primary text-xs md:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-all"
+            >
+              <span>Bekijk locatie &amp; openingstijden</span>
+              <span>↓</span>
             </a>
           )}
+
+          {/* Trust Badges (Photo 4) */}
+          <div class="pt-3 border-t border-border-hairline space-y-1.5 text-[11px] text-text-muted">
+            <div class="flex items-center gap-2">
+              <span class="text-primary font-bold">✓</span>
+              <span>Officiële gemeentelijke &amp; zwembadtarieven zonder toeslag</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-primary font-bold">✓</span>
+              <span>Directe doorgang naar het officiële reserveringsportaal</span>
+            </div>
+          </div>
         </div>
       ) : (
         <form onSubmit={handleWaitlistSubmit} class="space-y-3 text-sm">
@@ -246,7 +401,9 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             Ontvang direct de <strong>Top 3 zwemscholen met de kortste wachttijd</strong> rond jouw postcode (+ wachtlijst-alert).
           </p>
           <div>
-            <label htmlFor="waitlist-pc4" class="block text-xs font-bold mb-1">4-Cijferige Postcode (PC4)</label>
+            <label htmlFor="waitlist-pc4" class="block text-xs font-bold mb-1">
+              4-Cijferige Postcode (PC4)
+            </label>
             <input
               id="waitlist-pc4"
               type="text"
@@ -257,7 +414,9 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             />
           </div>
           <div>
-            <label htmlFor="waitlist-email" class="block text-xs font-bold mb-1">E-mailadres ouder</label>
+            <label htmlFor="waitlist-email" class="block text-xs font-bold mb-1">
+              E-mailadres ouder
+            </label>
             <input
               id="waitlist-email"
               type="email"
@@ -294,7 +453,9 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
                       <div class="font-bold text-text-charcoal">{rec.venue_name}</div>
                       <div class="text-text-muted">{rec.provider_name}</div>
                       <div class="mt-1 flex justify-between items-center text-primary font-semibold">
-                        <span>Wachttijd: {rec.current_waitlist_weeks_min}–{rec.current_waitlist_weeks_max} wkn</span>
+                        <span>
+                          Wachttijd: {rec.current_waitlist_weeks_min}–{rec.current_waitlist_weeks_max} wkn
+                        </span>
                         <span>{formatEuroCentsNl(rec.monthly_price_cents)}/mnd</span>
                       </div>
                     </div>
@@ -306,7 +467,7 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             <button
               type="submit"
               disabled={isSubmitting}
-              class="w-full h-11 rounded-full bg-primary text-on-primary text-xs font-bold disabled:opacity-50"
+              class="w-full h-11 rounded-full bg-primary text-on-primary text-xs font-bold disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? 'Bezig met zoeken...' : 'Vergelijk Kortste Wachttijden (Gratis)'}
             </button>

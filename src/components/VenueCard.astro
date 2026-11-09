@@ -1,6 +1,7 @@
 ---
 import WaterTreatmentBadge from './WaterTreatmentBadge.astro';
 import { formatEuroCentsNl } from '../domain/seo-aggregator';
+import { parseVenuePhotos } from '../domain/venue-photos';
 import type { VenueRow } from '../db/queries';
 
 interface Props {
@@ -8,10 +9,57 @@ interface Props {
 }
 const { venue } = Astro.props;
 const href = `/zwembad/${venue.municipality_slug}/${venue.slug}`;
+const photos = parseVenuePhotos(venue);
+const mainPhoto = photos[0];
+const isOpenWater = venue.venue_type === 'OPEN_WATER_NATURAL';
+const temp = venue.default_temp_celsius;
+const filterCategory =
+  venue.venue_type === 'SUBTROPICAL_PARADISE'
+    ? 'SUBTROPISCH'
+    : venue.venue_type === 'OPEN_WATER_NATURAL' || venue.venue_type === 'OUTDOOR_SEASONAL_POOL'
+      ? 'BUITEN'
+      : 'BINNEN';
 ---
-<article class="group flex flex-col border border-border-hairline rounded-2xl p-4 bg-surface-pure hover:shadow-md transition-all">
+<article
+  class="venue-card-item group flex flex-col transition-all"
+  data-venue-type={venue.venue_type}
+  data-filter-category={filterCategory}
+  data-water-treatment={venue.primary_water_treatment}
+  data-nrz={venue.is_nrz_licensed ? '1' : '0'}
+  data-rating={venue.rating_score ?? 0}
+>
+  <div class="relative aspect-[20/19] rounded-2xl overflow-hidden bg-surface-subtle mb-3 shadow-2xs">
+    <a href={href} class="block w-full h-full">
+      <img
+        src={mainPhoto.url}
+        alt={mainPhoto.alt_nl}
+        loading="lazy"
+        decoding="async"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+    </a>
+    {venue.featured_badge_nl && (
+      <span
+        class={`absolute top-3 left-3 text-[11px] px-2.5 py-1 rounded-full font-bold shadow-sm ${
+          venue.venue_type === 'OPEN_WATER_NATURAL'
+            ? 'bg-accent-seasonal text-on-primary'
+            : venue.featured_badge_nl === 'Populairste Keuze'
+              ? 'bg-text-charcoal text-surface-pure'
+              : 'bg-primary-container text-on-primary'
+        }`}
+      >
+        {venue.featured_badge_nl}
+      </span>
+    )}
+    <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none">
+      <span class="w-2 h-2 rounded-full bg-surface-pure shadow-xs"></span>
+      <span class="w-1.5 h-1.5 rounded-full bg-surface-pure/60"></span>
+      <span class="w-1.5 h-1.5 rounded-full bg-surface-pure/60"></span>
+    </div>
+  </div>
+
   <div class="flex items-start justify-between gap-2">
-    <a href={href} class="text-lg font-bold text-text-charcoal group-hover:text-primary transition-colors">
+    <a href={href} class="text-base font-bold text-text-charcoal group-hover:text-primary transition-colors line-clamp-1">
       {venue.name}
     </a>
     {venue.rating_score && (
@@ -20,19 +68,30 @@ const href = `/zwembad/${venue.municipality_slug}/${venue.slug}`;
       </span>
     )}
   </div>
-  <p class="text-sm text-text-muted mt-0.5">
-    {venue.neighborhood_name ?? venue.municipality_slug}
+
+  <p class="text-xs text-text-muted mt-0.5 line-clamp-1">
+    {venue.default_basin_name_nl ?? venue.neighborhood_name ?? venue.municipality_slug}
   </p>
-  <div class="mt-3 flex flex-wrap items-center gap-1.5">
-    {venue.featured_badge_nl && (
-      <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-badge-teal-bg text-primary">
-        {venue.featured_badge_nl}
+
+  <div class="mt-2 flex flex-wrap items-center gap-1.5">
+    {isOpenWater ? (
+      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] bg-badge-amber-bg text-accent-seasonal font-bold border border-accent-seasonal/25">
+        <span>❄️</span>
+        <span>
+          {temp ? `Watertemp: ${temp.toFixed(1)}°C • Wetsuit advies` : 'Natuurwater • Rijkswaterstaat'}
+        </span>
+      </span>
+    ) : (
+      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] bg-badge-teal-bg text-primary-container font-bold">
+        <span>🌡️</span>
+        <span>Watertemp: {(temp ?? 28.0).toFixed(1)}°C • Binnen open</span>
       </span>
     )}
     <WaterTreatmentBadge treatment={venue.primary_water_treatment} />
   </div>
-  <div class="mt-4 pt-3 border-t border-border-hairline flex items-baseline justify-between">
-    <span class="text-sm font-bold text-text-charcoal">
+
+  <div class="mt-2.5 pt-2.5 border-t border-border-hairline flex items-baseline justify-between">
+    <span class="text-sm font-extrabold text-text-charcoal">
       {venue.min_single_price_cents === 0
         ? 'Gratis toegang'
         : venue.min_single_price_cents
@@ -40,7 +99,7 @@ const href = `/zwembad/${venue.municipality_slug}/${venue.slug}`;
           : 'Prijs op aanvraag'}
     </span>
     <a href={href} class="text-xs font-semibold text-primary hover:underline">
-      Bekijk rooster & zwemles →
+      Bekijk rooster &amp; zwemles →
     </a>
   </div>
 </article>

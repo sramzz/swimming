@@ -25,7 +25,7 @@ const venues = listVenuesByCity(db, stad!);
 db.close();
 
 const paid = venues.filter((v) => v.min_single_price_cents && v.min_single_price_cents > 0);
-const cheapest = paid.sort((a, b) => (a.min_single_price_cents ?? 9999) - (b.min_single_price_cents ?? 9999))[0];
+const cheapest = [...paid].sort((a, b) => (a.min_single_price_cents ?? 9999) - (b.min_single_price_cents ?? 9999))[0];
 const summaryNl = buildCitySeoSummaryNl({
   cityName,
   totalVenues: venues.length,
@@ -42,11 +42,86 @@ const summaryNl = buildCitySeoSummaryNl({
 >
   <Header />
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
+    <nav aria-label="Broodkruimelpad" class="text-xs text-text-muted mb-4 flex items-center gap-2">
+      <a href="/" class="hover:underline">Nederland</a>
+      <span>›</span>
+      <span class="text-text-charcoal font-semibold">{cityName}</span>
+    </nav>
+
     <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">Zwembaden in {cityName}</h1>
-    <p class="text-sm text-text-muted mb-6">{summaryNl}</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <p class="text-sm text-text-muted mb-5">{summaryNl}</p>
+
+    <!-- Interactive Filter Pills for City Overview -->
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-5 mb-6 border-b border-border-hairline" data-static-filter-bar>
+      <button
+        type="button"
+        data-filter="ALL"
+        class="static-filter-pill px-4 py-1.5 rounded-full text-xs font-bold bg-text-charcoal text-surface-pure border border-text-charcoal cursor-pointer transition-all"
+      >
+        Alle baden ({venues.length})
+      </button>
+      <button
+        type="button"
+        data-filter="BINNEN"
+        class="static-filter-pill px-4 py-1.5 rounded-full text-xs font-semibold bg-surface-subtle text-text-charcoal border border-border-hairline hover:border-text-charcoal cursor-pointer transition-all"
+      >
+        Binnenbaden &amp; Banen
+      </button>
+      <button
+        type="button"
+        data-filter="ZWEMLES"
+        class="static-filter-pill px-4 py-1.5 rounded-full text-xs font-semibold bg-surface-subtle text-text-charcoal border border-border-hairline hover:border-text-charcoal cursor-pointer transition-all"
+      >
+        Zwemles A/B/C
+      </button>
+      <button
+        type="button"
+        data-filter="BUITEN"
+        class="static-filter-pill px-4 py-1.5 rounded-full text-xs font-semibold bg-surface-subtle text-text-charcoal border border-border-hairline hover:border-text-charcoal cursor-pointer transition-all"
+      >
+        Buiten &amp; Natuurwater
+      </button>
+      <button
+        type="button"
+        data-filter="SALT_ELECTROLYSIS"
+        class="static-filter-pill px-4 py-1.5 rounded-full text-xs font-semibold bg-surface-pure text-text-charcoal border border-border-hairline hover:border-text-charcoal cursor-pointer transition-all flex items-center gap-1"
+      >
+        <span class="text-primary">💧</span>
+        <span>Zoutelektrolyse</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="city-venues-grid">
       {venues.map((v) => <VenueCard venue={v} />)}
     </div>
   </main>
   <Footer />
 </BaseLayout>
+
+<script>
+  const pills = document.querySelectorAll<HTMLButtonElement>('.static-filter-pill');
+  const cards = document.querySelectorAll<HTMLElement>('.venue-card-item');
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const mode = pill.dataset.filter || 'ALL';
+      pills.forEach((p) => {
+        const active = p === pill;
+        p.classList.toggle('bg-text-charcoal', active);
+        p.classList.toggle('text-surface-pure', active);
+        p.classList.toggle('bg-surface-subtle', !active);
+        p.classList.toggle('text-text-charcoal', !active);
+      });
+      cards.forEach((card) => {
+        const cat = card.dataset.filterCategory;
+        const treat = card.dataset.waterTreatment;
+        const nrz = card.dataset.nrz;
+        let show = true;
+        if (mode === 'BINNEN') show = cat === 'BINNEN' || cat === 'SUBTROPISCH';
+        else if (mode === 'BUITEN') show = cat === 'BUITEN';
+        else if (mode === 'ZWEMLES') show = nrz === '1' || cat !== 'BUITEN';
+        else if (mode === 'SALT_ELECTROLYSIS') show = treat === 'SALT_ELECTROLYSIS';
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+</script>

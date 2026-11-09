@@ -1,4 +1,5 @@
 import type { SqliteDatabase } from './client';
+import { buildCuratedPhotosForVenue } from '../domain/venue-photos';
 
 export function seedInitialDataset(db: SqliteDatabase): void {
   const tx = db.transaction(() => {
@@ -63,7 +64,7 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         parking_info_nl, ev_chargers_count, transit_chips_json,
         municipal_pass_name, municipal_pass_discount_nl,
         google_maps_embed_url, google_maps_route_url, official_website_url, official_tickets_url,
-        rating_score, rating_count, min_single_price_cents, featured_badge_nl, content_hash
+        rating_score, rating_count, min_single_price_cents, featured_badge_nl, hero_photos_json, content_hash
       ) VALUES (
         @id, @slug, @municipality_slug, @name, @venue_type, 'GOLD_STANDARD', 'OPEN_REGULAR',
         @street_address, @postcode_pc6, @postcode_pc4, @neighborhood_name, @lat, @lng,
@@ -72,12 +73,13 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         @parking_info_nl, @ev_chargers_count, @transit_chips_json,
         @municipal_pass_name, @municipal_pass_discount_nl,
         @google_maps_embed_url, @google_maps_route_url, @official_website_url, @official_tickets_url,
-        @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl, 'seed-v1'
+        @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl, @hero_photos_json, 'seed-v1'
       )
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         min_single_price_cents = excluded.min_single_price_cents,
-        primary_water_treatment = excluded.primary_water_treatment
+        primary_water_treatment = excluded.primary_water_treatment,
+        hero_photos_json = excluded.hero_photos_json
     `);
 
     const venues = [
@@ -291,7 +293,18 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         featured_badge_nl: '50m Olympisch',
       },
     ];
-    for (const v of venues) upsertVenue.run(v);
+    for (const v of venues) {
+      upsertVenue.run({
+        ...v,
+        hero_photos_json: JSON.stringify(
+          buildCuratedPhotosForVenue({
+            slug: v.slug,
+            name: v.name,
+            venueType: v.venue_type,
+          })
+        ),
+      });
+    }
 
     // 5. Basins for De Mirandabad + Default Basins for others
     const upsertBasin = db.prepare(`

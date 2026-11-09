@@ -34,6 +34,8 @@ How we code
 
 * TDD with intent: tests are written first, deliberately, well thought behind. They encode what the code is for, not just that it runs. TDD is our default — only throwaway exploration is exempt, and AI makes full TDD viable everywhere else.
 
+* After the feature is finished we check the validity of tests and check improve or design new tests (unit, integration, E2E, etc.).
+
 * DRY, achieved through patient abstraction — never premature.
 
 * AHA (Avoid Hasty Abstractions): when in doubt, prefer duplication over the wrong abstraction. Abstraction can make things complicated.

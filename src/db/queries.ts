@@ -35,7 +35,12 @@ export interface VenueRow {
   rating_count: number;
   min_single_price_cents: number | null;
   featured_badge_nl: string | null;
+  hero_photos_json?: string;
   lastmod_at: string;
+  default_temp_celsius?: number | null;
+  default_basin_name_nl?: string | null;
+  min_waitlist_weeks?: number | null;
+  min_zwemles_monthly_cents?: number | null;
 }
 
 export interface BasinRow {
@@ -157,14 +162,36 @@ export function getVenueByCityAndSlug(
   };
 }
 
+const VENUE_ENRICHED_SELECT = `
+  SELECT
+    v.*,
+    COALESCE(
+      (SELECT b.target_temp_celsius FROM basins b WHERE b.venue_id = v.id AND b.is_default_basin = 1 LIMIT 1),
+      (SELECT oc.water_temp_celsius FROM outdoor_conditions oc WHERE oc.venue_id = v.id AND oc.is_current = 1 LIMIT 1)
+    ) AS default_temp_celsius,
+    (SELECT b.name_nl FROM basins b WHERE b.venue_id = v.id AND b.is_default_basin = 1 LIMIT 1) AS default_basin_name_nl,
+    (SELECT MIN(o.current_waitlist_weeks_min) FROM venue_swim_offerings o WHERE o.venue_id = v.id) AS min_waitlist_weeks,
+    (SELECT MIN(o.monthly_price_cents) FROM venue_swim_offerings o WHERE o.venue_id = v.id) AS min_zwemles_monthly_cents
+  FROM venues v
+`;
+
 export function listVenuesByCity(db: SqliteDatabase, citySlug: string): VenueRow[] {
   return db
-    .prepare('SELECT * FROM venues WHERE municipality_slug = ? ORDER BY rating_score DESC')
+    .prepare(
+      `${VENUE_ENRICHED_SELECT}
+       WHERE v.municipality_slug = ?
+       ORDER BY (v.enrichment_tier = 'GOLD_STANDARD') DESC, v.rating_score DESC`
+    )
     .all(citySlug) as VenueRow[];
 }
 
 export function listAllVenues(db: SqliteDatabase): VenueRow[] {
-  return db.prepare('SELECT * FROM venues ORDER BY rating_score DESC').all() as VenueRow[];
+  return db
+    .prepare(
+      `${VENUE_ENRICHED_SELECT}
+       ORDER BY (v.enrichment_tier = 'GOLD_STANDARD') DESC, (v.rating_score IS NOT NULL) DESC, v.rating_score DESC`
+    )
+    .all() as VenueRow[];
 }
 
 export function findVenuesNearPostcodePc4(

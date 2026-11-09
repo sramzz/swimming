@@ -4,6 +4,7 @@ import path from 'node:path';
 import { getBuildDatabase } from '@/db/runtime-db';
 import { listAllVenues, getVenueByCityAndSlug } from '@/db/queries';
 import { buildVenueJsonLd } from '@/domain/seo-aggregator';
+import { parseVenuePhotos } from '@/domain/venue-photos';
 
 describe('Static Page & Sitemap Data Generation', () => {
   it('loads seeded venues and constructs valid canonical URLs and JSON-LD', () => {
@@ -70,5 +71,34 @@ describe('Static Page & Sitemap Data Generation', () => {
     expect(content).toContain('getStaticPaths');
     expect(content).toContain('BreadcrumbList');
     expect(content).toContain('Gemeenten in');
+  });
+
+  it('populates self-hosted local WebP 5-photo galleries for all venues and renders Airbnb UI components', () => {
+    const db = getBuildDatabase();
+    const venues = listAllVenues(db);
+    for (const v of venues.slice(0, 30)) {
+      const photos = parseVenuePhotos(v);
+      expect(photos.length).toBeGreaterThanOrEqual(5);
+      for (const p of photos) {
+        expect(p.url.startsWith('/images/venues/')).toBe(true);
+        expect(p.url.endsWith('.webp')).toBe(true);
+      }
+    }
+    db.close();
+
+    const headerAstro = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/components/Header.astro'),
+      'utf-8'
+    );
+    expect(headerAstro).toContain('Waar');
+    expect(headerAstro).toContain('Wat zoek je?');
+    expect(headerAstro).toContain('Wie?');
+    expect(headerAstro).toContain('Word Aanbieder');
+
+    const mapIsland = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/components/islands/ListingMapIsland.tsx'),
+      'utf-8'
+    );
+    expect(mapIsland).toContain('https://tiles.openfreemap.org/styles/liberty');
   });
 });

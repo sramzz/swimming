@@ -1,17 +1,200 @@
 ---
 // src/components/Header.astro
 ---
-<header class="bg-surface-pure border-b border-border-hairline sticky top-0 z-40">
-  <div class="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4">
-    <a href="/" class="flex items-center gap-2.5 text-xl font-extrabold text-primary tracking-tight hover:opacity-95 transition-opacity">
-      <img src="/logo-mark.svg" alt="Zwemkaart logo" class="w-9 h-9" width="36" height="36" />
-      <span>Zwemkaart<span class="text-accent-seasonal">.nl</span></span>
+<header class="bg-surface-pure border-b border-border-hairline shadow-2xs sticky top-0 z-40">
+  <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4">
+    <!-- Brand Logo Anchor (Mockup wave icon + Zwemkaart.nl brand) -->
+    <a
+      href="/"
+      class="flex items-center gap-2.5 text-xl font-extrabold text-primary tracking-tight hover:opacity-95 active:scale-95 transition-all shrink-0"
+    >
+      <span class="w-10 h-10 rounded-full bg-badge-teal-bg flex items-center justify-center text-primary-container shadow-2xs">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M2 15c1.67-1.33 3.33-2 5-2s3.33.67 5 2c1.67 1.33 3.33 2 5 2s3.33-.67 5-2v2.5c-1.67 1.33-3.33 2-5 2s-3.33-.67-5-2c-1.67-1.33-3.33-2-5-2s-3.33.67-5 2V15zm0-5c1.67-1.33 3.33-2 5-2s3.33.67 5 2c1.67 1.33 3.33 2 5 2s3.33-.67 5-2v2.5c-1.67 1.33-3.33 2-5 2s-3.33-.67-5-2c-1.67-1.33-3.33-2-5-2s-3.33.67-5 2V10zm0-5c1.67-1.33 3.33-2 5-2s3.33.67 5 2c1.67 1.33 3.33 2 5 2s3.33-.67 5-2v2.5c-1.67 1.33-3.33 2-5 2s-3.33-.67-5-2c-1.67-1.33-3.33-2-5-2s-3.33.67-5 2V5z" />
+        </svg>
+      </span>
+      <span class="flex items-center">
+        <span class="text-primary-container">Zwem</span><span class="text-text-charcoal">kaart</span><span class="text-accent-seasonal">.nl</span>
+      </span>
     </a>
-    <nav aria-label="Hoofdnavigatie" class="hidden md:flex items-center gap-6 text-sm font-semibold text-text-muted">
-      <a href="/steden/amsterdam" class="hover:text-primary">Amsterdam</a>
-      <a href="/steden/amsterdam/banenzwemmen" class="hover:text-primary">Banenzwemmen</a>
-      <a href="/steden/amsterdam/zwemles" class="hover:text-primary">Zwemles A/B/C</a>
-      <a href="/steden/amsterdam/buitenwater" class="hover:text-primary">Buiten & Natuurwater</a>
-    </nav>
+
+    <!-- Desktop Center Search Capsule (Airbnb 3-Segment Capsule from Photo 1) -->
+    <div
+      id="header-search-capsule"
+      class="hidden lg:flex items-center border border-border-hairline hover:border-border-strong rounded-full py-1.5 pl-4 pr-2 shadow-sm hover:shadow-md transition-all duration-200 bg-surface-pure relative"
+    >
+      <!-- Segment 1: Waar -->
+      <div class="px-3 py-1 rounded-full hover:bg-surface-subtle transition-colors">
+        <label for="header-waar-input" class="block text-[11px] font-bold text-text-charcoal leading-tight cursor-pointer">
+          Waar
+        </label>
+        <input
+          id="header-waar-input"
+          type="text"
+          placeholder="Zoek stad of bad"
+          class="w-36 bg-transparent text-xs text-text-charcoal placeholder:text-text-muted focus:outline-none truncate"
+        />
+      </div>
+
+      <div class="h-7 w-px bg-border-hairline"></div>
+
+      <!-- Segment 2: Wat zoek je? -->
+      <div class="px-3 py-1 rounded-full hover:bg-surface-subtle transition-colors">
+        <label for="header-wat-select" class="block text-[11px] font-bold text-text-charcoal leading-tight cursor-pointer">
+          Wat zoek je?
+        </label>
+        <select
+          id="header-wat-select"
+          class="bg-transparent text-xs text-text-muted focus:text-text-charcoal focus:outline-none cursor-pointer pr-1"
+        >
+          <option value="ALL">Banen, Les, Subtropisch</option>
+          <option value="ZWEMLES">Zwemles A/B/C</option>
+          <option value="BANENZWEMMEN">Banenzwemmen (25m/50m)</option>
+          <option value="SUBTROPISCH">Subtropisch & Golfslag</option>
+          <option value="BUITEN">Buiten & Natuurwater</option>
+          <option value="BINNEN">Binnenbaden</option>
+        </select>
+      </div>
+
+      <div class="h-7 w-px bg-border-hairline"></div>
+
+      <!-- Segment 3: Wie? -->
+      <div class="px-3 py-1 rounded-full hover:bg-surface-subtle transition-colors">
+        <label for="header-wie-select" class="block text-[11px] font-bold text-text-charcoal leading-tight cursor-pointer">
+          Wie?
+        </label>
+        <select
+          id="header-wie-select"
+          class="bg-transparent text-xs text-text-muted focus:text-text-charcoal focus:outline-none cursor-pointer pr-1"
+        >
+          <option value="1v">Aantal pers.</option>
+          <option value="1v">1 Volwassene</option>
+          <option value="1v1k">1 Volw. + 1 Kind</option>
+          <option value="2v2k">Gezin (2 Volw. + 2 Kind)</option>
+          <option value="kind">1 Kind (Zwemles)</option>
+        </select>
+      </div>
+
+      <!-- Search Trigger Icon Button -->
+      <button
+        id="header-search-submit"
+        type="button"
+        aria-label="Zoeken"
+        class="w-10 h-10 bg-primary-container hover:bg-primary text-on-primary rounded-full flex items-center justify-center ml-2 shadow-sm transition-transform active:scale-95 cursor-pointer"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- SEO Main Navigation + Trailing Action Cluster -->
+    <div class="flex items-center gap-2 md:gap-3">
+      <nav aria-label="Hoofdnavigatie" class="hidden xl:flex items-center gap-4 text-xs font-semibold text-text-muted mr-1">
+        <a href="/steden/amsterdam" class="hover:text-primary transition-colors">Amsterdam</a>
+        <a href="/steden/amsterdam/banenzwemmen" class="hover:text-primary transition-colors">Banenzwemmen</a>
+        <a href="/steden/amsterdam/zwemles" class="hover:text-primary transition-colors">Zwemles A/B/C</a>
+        <a href="/steden/amsterdam/buitenwater" class="hover:text-primary transition-colors">Natuurwater</a>
+      </nav>
+
+      <a
+        href="/#aanbieder"
+        class="hidden sm:inline-flex text-xs font-bold text-text-charcoal hover:bg-surface-subtle px-3.5 py-2 rounded-full transition-colors"
+      >
+        Word Aanbieder
+      </a>
+
+      <!-- Globe Language Icon -->
+      <button
+        type="button"
+        aria-label="Taalkeuze (Nederlands)"
+        title="Nederland (NL)"
+        class="p-2 text-text-charcoal hover:bg-surface-subtle rounded-full transition-colors flex items-center justify-center"
+      >
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+      </button>
+
+      <!-- Airbnb User Menu Pill -->
+      <a
+        href="/#favorieten"
+        aria-label="Menu en opgeslagen favorieten"
+        class="flex items-center gap-2 border border-border-strong hover:shadow-sm rounded-full py-1.5 px-3 bg-surface-pure transition-all"
+      >
+        <svg class="w-4 h-4 text-text-charcoal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <span class="w-7 h-7 rounded-full bg-surface-subtle text-text-muted flex items-center justify-center">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+          </svg>
+        </span>
+      </a>
+    </div>
   </div>
 </header>
+
+<script>
+  function wireHeaderCapsule() {
+    const waarInput = document.getElementById('header-waar-input') as HTMLInputElement | null;
+    const watSelect = document.getElementById('header-wat-select') as HTMLSelectElement | null;
+    const wieSelect = document.getElementById('header-wie-select') as HTMLSelectElement | null;
+    const submitBtn = document.getElementById('header-search-submit');
+
+    if (!waarInput || !watSelect || !submitBtn) return;
+
+    // Populate initial values from URL if present
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('q')) waarInput.value = params.get('q')!;
+    if (params.get('cat')) watSelect.value = params.get('cat')!;
+
+    function triggerCapsuleSearch() {
+      const q = waarInput!.value.trim();
+      const cat = watSelect!.value;
+      const wie = wieSelect?.value || '1v';
+
+      // If on homepage, dispatch live event to SearchAndFilterIsland
+      if (window.location.pathname === '/') {
+        window.dispatchEvent(
+          new CustomEvent('zwemkaart:search', {
+            detail: { query: q, category: cat, visitors: wie },
+          })
+        );
+      } else {
+        const nextUrl = new URL('/', window.location.origin);
+        if (q) nextUrl.searchParams.set('q', q);
+        if (cat && cat !== 'ALL') nextUrl.searchParams.set('cat', cat);
+        window.location.href = nextUrl.toString();
+      }
+    }
+
+    waarInput.addEventListener('input', () => {
+      if (window.location.pathname === '/') {
+        triggerCapsuleSearch();
+      }
+    });
+
+    waarInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        triggerCapsuleSearch();
+      }
+    });
+
+    watSelect.addEventListener('change', () => {
+      if (window.location.pathname === '/') {
+        triggerCapsuleSearch();
+      }
+    });
+
+    submitBtn.addEventListener('click', triggerCapsuleSearch);
+  }
+
+  wireHeaderCapsule();
+</script>

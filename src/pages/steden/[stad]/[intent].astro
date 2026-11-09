@@ -74,8 +74,56 @@ const breadcrumbJsonLd = {
 >
   <Header />
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
-    <h1 class="text-3xl font-extrabold text-text-charcoal capitalize mb-6">{intent} in {cityName}</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <nav aria-label="Broodkruimelpad" class="text-xs text-text-muted mb-4 flex items-center gap-2">
+      <a href="/" class="hover:underline">Nederland</a>
+      <span>›</span>
+      <a href={`/steden/${stad}`} class="hover:underline">{cityName}</a>
+      <span>›</span>
+      <span class="text-text-charcoal font-semibold capitalize">{intent}</span>
+    </nav>
+
+    <h1 class="text-3xl font-extrabold text-text-charcoal capitalize mb-4">{intent} in {cityName}</h1>
+
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-5 mb-6 border-b border-border-hairline">
+      <a
+        href={`/steden/${stad}`}
+        class="px-4 py-1.5 rounded-full text-xs font-semibold bg-surface-subtle text-text-charcoal border border-border-hairline hover:border-text-charcoal"
+      >
+        Alle baden in {cityName}
+      </a>
+      <a
+        href={`/steden/${stad}/banenzwemmen`}
+        class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
+          intent === 'banenzwemmen'
+            ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
+            : 'bg-surface-subtle text-text-charcoal border-border-hairline'
+        }`}
+      >
+        Banenzwemmen
+      </a>
+      <a
+        href={`/steden/${stad}/zwemles`}
+        class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
+          intent === 'zwemles'
+            ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
+            : 'bg-surface-subtle text-text-charcoal border-border-hairline'
+        }`}
+      >
+        Zwemles A/B/C
+      </a>
+      <a
+        href={`/steden/${stad}/buitenwater`}
+        class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
+          intent === 'buitenwater'
+            ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
+            : 'bg-surface-subtle text-text-charcoal border-border-hairline'
+        }`}
+      >
+        Buiten &amp; Natuurwater
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
       {venues.map((v) => <VenueCard venue={v} />)}
     </div>
   </main>

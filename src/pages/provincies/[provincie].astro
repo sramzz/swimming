@@ -33,10 +33,17 @@ const { provinceName } = Astro.props;
 const db = getBuildDatabase();
 const venues = db
   .prepare(
-    `SELECT v.* FROM venues v
+    `SELECT
+       v.*,
+       COALESCE(
+         (SELECT b.target_temp_celsius FROM basins b WHERE b.venue_id = v.id AND b.is_default_basin = 1 LIMIT 1),
+         (SELECT oc.water_temp_celsius FROM outdoor_conditions oc WHERE oc.venue_id = v.id AND oc.is_current = 1 LIMIT 1)
+       ) AS default_temp_celsius,
+       (SELECT b.name_nl FROM basins b WHERE b.venue_id = v.id AND b.is_default_basin = 1 LIMIT 1) AS default_basin_name_nl
+     FROM venues v
      JOIN municipalities m ON v.municipality_slug = m.slug
      WHERE m.province_slug = ?
-     ORDER BY v.rating_score DESC`
+     ORDER BY (v.enrichment_tier = 'GOLD_STANDARD') DESC, (v.rating_score IS NOT NULL) DESC, v.rating_score DESC`
   )
   .all(provincie!) as VenueRow[];
 
@@ -93,7 +100,7 @@ const indoorCount = venues.length - outdoorCount;
 
     <div class="mb-8">
       <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">
-        Zwembaden & Zwemwater in {provinceName}
+        Zwembaden &amp; Zwemwater in {provinceName}
       </h1>
       <p class="text-sm text-text-muted max-w-3xl">
         In provincie {provinceName} vind je <strong>{venues.length} zwemlocaties</strong>, waaronder {indoorCount} overdekte zwembaden en {outdoorCount} officiële buitenwater- en recreatielocaties. Vergelijk hieronder actuele entreeprijzen, watertemperaturen en banenzwemmen tijden.
@@ -122,15 +129,45 @@ const indoorCount = venues.length - outdoorCount;
       </section>
     )}
 
-    {/* Venues Grid */}
+    {/* Interactive Filter Pills for Province */}
     <section>
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5 pb-4 border-b border-border-hairline">
         <h2 class="text-xl font-bold text-text-charcoal">
           Alle zwemlocaties in {provinceName} ({venues.length})
         </h2>
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <button
+            type="button"
+            data-filter="ALL"
+            class="prov-filter-pill px-3.5 py-1.5 rounded-full text-xs font-bold bg-text-charcoal text-surface-pure border border-text-charcoal cursor-pointer transition-all"
+          >
+            Alle ({venues.length})
+          </button>
+          <button
+            type="button"
+            data-filter="BINNEN"
+            class="prov-filter-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-subtle text-text-charcoal border border-border-hairline hover:border-text-charcoal cursor-pointer transition-all"
+          >
+            Binnenbaden ({indoorCount})
+          </button>
+          <button
+            type="button"
+            data-filter="BUITEN"
+            class="prov-filter-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-subtle text-text-charcoal border border-border-hairline hover:border-text-charcoal cursor-pointer transition-all"
+          >
+            Natuurwater ({outdoorCount})
+          </button>
+          <button
+            type="button"
+            data-filter="SALT_ELECTROLYSIS"
+            class="prov-filter-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-surface-pure text-text-charcoal border border-border-hairline hover:border-text-charcoal cursor-pointer transition-all"
+          >
+            💧 Zoutelektrolyse
+          </button>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
         {venues.map((venue) => (
           <VenueCard venue={venue} />
         ))}
@@ -140,3 +177,29 @@ const indoorCount = venues.length - outdoorCount;
 
   <Footer />
 </BaseLayout>
+
+<script>
+  const pills = document.querySelectorAll<HTMLButtonElement>('.prov-filter-pill');
+  const cards = document.querySelectorAll<HTMLElement>('.venue-card-item');
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const mode = pill.dataset.filter || 'ALL';
+      pills.forEach((p) => {
+        const active = p === pill;
+        p.classList.toggle('bg-text-charcoal', active);
+        p.classList.toggle('text-surface-pure', active);
+        p.classList.toggle('bg-surface-subtle', !active);
+        p.classList.toggle('text-text-charcoal', !active);
+      });
+      cards.forEach((card) => {
+        const cat = card.dataset.filterCategory;
+        const treat = card.dataset.waterTreatment;
+        let show = true;
+        if (mode === 'BINNEN') show = cat === 'BINNEN' || cat === 'SUBTROPISCH';
+        else if (mode === 'BUITEN') show = cat === 'BUITEN';
+        else if (mode === 'SALT_ELECTROLYSIS') show = treat === 'SALT_ELECTROLYSIS';
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+</script>

@@ -34,31 +34,225 @@ const homeJsonLd = {
   jsonLd={homeJsonLd}
 >
   <Header />
-  <div class="bg-badge-teal-bg/60 border-b border-primary/10 py-2.5 px-4 md:px-8">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs font-medium text-primary">
-      <span>✓ Officiële KNZB / NRZ Zwem-ABC Wachttijd Vergelijker & Rijkswaterstaat Waterdata</span>
-      <span>Laatste rooster- & tariefcontrole: Oktober 2026</span>
-    </div>
-  </div>
 
-  <main class="max-w-7xl mx-auto px-4 md:px-8 py-6 flex-1 w-full">
-    <div class="mb-6">
-      <h1 class="text-2xl md:text-3xl font-extrabold text-text-charcoal tracking-tight">
-        Zwembaden, Banenzwemmen & Zwemles in Nederland
-      </h1>
-      <p class="text-sm text-text-muted mt-1">
-        Vergelijk direct losse entree, 10-badenkaarten, zoutelektrolyse en actuele Zwem-ABC wachtlijsten.
-      </p>
-    </div>
+  <!-- SECONDARY STICKY 7-CATEGORY BAR (Exact Match to Photo 2) -->
+  <section class="sticky top-20 z-30 bg-surface-pure border-b border-border-hairline py-3 shadow-2xs">
+    <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 flex items-center justify-between gap-4">
+      <div id="category-scroll-rail" class="flex items-center gap-7 overflow-x-auto no-scrollbar scroll-smooth">
+        <!-- Category 1: Alle Baden -->
+        <a
+          href="/?cat=ALL"
+          data-cat="ALL"
+          class="cat-tab flex flex-col items-center gap-1.5 pb-2 text-text-charcoal border-b-2 border-text-charcoal transition-all shrink-0 cursor-pointer"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 15c1.67-1.33 3.33-2 5-2s3.33.67 5 2c1.67 1.33 3.33 2 5 2s3.33-.67 5-2" />
+            <path d="M2 19c1.67-1.33 3.33-2 5-2s3.33.67 5 2c1.67 1.33 3.33 2 5 2s3.33-.67 5-2" />
+            <circle cx="8" cy="7" r="2" />
+            <path d="M10 11l3-3 4 2" />
+          </svg>
+          <span class="text-xs font-bold">Alle Baden</span>
+        </a>
 
+        <!-- Category 2: Zwemles A/B/C -->
+        <a
+          href="/steden/amsterdam/zwemles"
+          data-cat="ZWEMLES"
+          class="cat-tab flex flex-col items-center gap-1.5 pb-2 text-text-muted hover:text-text-charcoal border-b-2 border-transparent transition-all shrink-0 cursor-pointer"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
+          <span class="text-xs font-semibold">Zwemles A/B/C</span>
+        </a>
+
+        <!-- Category 3: Banenzwemmen -->
+        <a
+          href="/steden/amsterdam/banenzwemmen"
+          data-cat="BANENZWEMMEN"
+          class="cat-tab flex flex-col items-center gap-1.5 pb-2 text-text-muted hover:text-text-charcoal border-b-2 border-transparent transition-all shrink-0 cursor-pointer"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="13" r="8" />
+            <path d="M12 9v4l2 2" />
+            <path d="M10 2h4" />
+          </svg>
+          <span class="text-xs font-semibold">Banenzwemmen</span>
+        </a>
+
+        <!-- Category 4: Subtropisch -->
+        <a
+          href="/?cat=SUBTROPISCH"
+          data-cat="SUBTROPISCH"
+          class="cat-tab flex flex-col items-center gap-1.5 pb-2 text-text-muted hover:text-text-charcoal border-b-2 border-transparent transition-all shrink-0 cursor-pointer"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 18c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0" />
+            <path d="M4 13c1.5-4 6-6 9-3 2 2 1 5-2 5-1.5 0-2.5-1-2-2.5" />
+          </svg>
+          <span class="text-xs font-semibold">Subtropisch</span>
+        </a>
+
+        <!-- Category 5: Buiten & Wetsuit (Herfst Seizoen) -->
+        <a
+          href="/steden/amsterdam/buitenwater"
+          data-cat="BUITEN"
+          class="cat-tab flex flex-col items-center gap-1.5 pb-2 text-text-muted hover:text-text-charcoal border-b-2 border-transparent transition-all shrink-0 cursor-pointer"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 8c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0" />
+            <path d="M2 13c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0" />
+            <path d="M2 18c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0" />
+          </svg>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-semibold">Buiten &amp; Wetsuit</span>
+            <span class="bg-badge-amber-bg text-accent-seasonal text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-accent-seasonal/30">
+              Herfst Seizoen
+            </span>
+          </div>
+        </a>
+
+        <!-- Category 6: Binnenbaden -->
+        <a
+          href="/?cat=BINNEN"
+          data-cat="BINNEN"
+          class="cat-tab flex flex-col items-center gap-1.5 pb-2 text-text-muted hover:text-text-charcoal border-b-2 border-transparent transition-all shrink-0 cursor-pointer"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+          <span class="text-xs font-semibold">Binnenbaden</span>
+        </a>
+
+        <!-- Category 7: Wellness -->
+        <a
+          href="/?cat=WELLNESS"
+          data-cat="WELLNESS"
+          class="cat-tab flex flex-col items-center gap-1.5 pb-2 text-text-muted hover:text-text-charcoal border-b-2 border-transparent transition-all shrink-0 cursor-pointer"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 6c0-2 2-2 2-4" />
+            <path d="M12 6c0-2 2-2 2-4" />
+            <path d="M16 6c0-2 2-2 2-4" />
+            <rect x="3" y="10" width="18" height="10" rx="3" />
+          </svg>
+          <span class="text-xs font-semibold">Wellness</span>
+        </a>
+      </div>
+
+      <!-- Right Action: Filters Modal Pill Trigger -->
+      <div class="shrink-0 pl-2">
+        <button
+          id="open-filters-modal-btn"
+          type="button"
+          class="flex items-center gap-2 border border-border-strong hover:border-text-charcoal text-text-charcoal text-xs font-bold px-4 py-2.5 rounded-xl transition-colors bg-surface-pure shadow-2xs cursor-pointer"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="21" x2="4" y2="14" />
+            <line x1="4" y1="10" x2="4" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12" y2="3" />
+            <line x1="20" y1="21" x2="20" y2="16" />
+            <line x1="20" y1="12" x2="20" y2="3" />
+            <line x1="1" y1="14" x2="7" y2="14" />
+            <line x1="9" y1="8" x2="15" y2="8" />
+            <line x1="17" y1="16" x2="23" y2="16" />
+          </svg>
+          <span>Filters</span>
+          <span
+            id="active-filters-badge"
+            class="w-5 h-5 rounded-full bg-text-charcoal text-surface-pure text-[10px] flex items-center justify-center font-bold"
+          >
+            0
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFICIAL ACCREDITATION TRUST BANNER (KNZB, NRZ & Rijkswaterstaat from Photo 2) -->
+  <aside class="bg-surface-subtle border-b border-border-hairline py-2">
+    <div class="w-full max-w-[1600px] mx-auto px-4 md:px-8 flex flex-wrap items-center justify-between text-xs text-text-muted gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center gap-1 text-primary-container font-bold">
+          <span>✓</span>
+          <span>Officieel Erkend Platform</span>
+        </span>
+        <span class="text-border-strong">•</span>
+        <span>Aangesloten bij <strong>KNZB</strong> &amp; <strong>NRZ Zwemveiligheid</strong></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-text-charcoal font-semibold">Zwemwater.nl Live Kwaliteit: 98% Schoon</span>
+        <span class="text-border-strong hidden sm:inline">•</span>
+        <span class="text-[11px] bg-badge-teal-bg text-primary-container px-2.5 py-0.5 rounded-full font-bold hidden sm:inline">
+          Rijkswaterstaat Synchroon
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN SPLIT VIEW CONTENT (58% LISTINGS GRID / 42% STICKY MAP ON DESKTOP) -->
+  <main class="w-full max-w-[1600px] mx-auto px-4 md:px-8 py-6 flex-1">
     <div class="flex flex-col lg:flex-row gap-8 items-start">
       <div class="w-full lg:w-[58%]">
         <SearchAndFilterIsland client:load venues={venues} />
       </div>
-      <aside class="w-full lg:w-[42%] lg:sticky lg:top-24">
+      <aside aria-label="Interactieve Kaart" class="w-full lg:w-[42%] lg:sticky lg:top-36">
         <ListingMapIsland client:visible venues={venues} />
       </aside>
     </div>
   </main>
+
   <Footer />
 </BaseLayout>
+
+<script>
+  function wireCategoryBar() {
+    const tabs = document.querySelectorAll<HTMLAnchorElement>('.cat-tab');
+    const filterBtn = document.getElementById('open-filters-modal-btn');
+    const badgeEl = document.getElementById('active-filters-badge');
+
+    function setActiveTabUi(activeCat: string) {
+      tabs.forEach((tab) => {
+        const isCurrent = tab.dataset.cat === activeCat;
+        if (isCurrent) {
+          tab.classList.remove('text-text-muted', 'border-transparent');
+          tab.classList.add('text-text-charcoal', 'border-text-charcoal');
+        } else {
+          tab.classList.remove('text-text-charcoal', 'border-text-charcoal');
+          tab.classList.add('text-text-muted', 'border-transparent');
+        }
+      });
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', (e) => {
+        // Intercept simple left-clicks for instant 0ms client-side filtering while keeping href crawlable for SEO
+        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        const cat = tab.dataset.cat || 'ALL';
+        setActiveTabUi(cat);
+        window.dispatchEvent(new CustomEvent('zwemkaart:set-category', { detail: { category: cat } }));
+      });
+    });
+
+    if (filterBtn) {
+      filterBtn.addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('zwemkaart:open-filters'));
+      });
+    }
+
+    window.addEventListener('zwemkaart:category-changed', (e) => {
+      const detail = (e as CustomEvent<{ category: string; activeFilterCount: number }>).detail;
+      if (detail?.category) setActiveTabUi(detail.category);
+      if (badgeEl && typeof detail?.activeFilterCount === 'number') {
+        badgeEl.textContent = String(detail.activeFilterCount);
+      }
+    });
+  }
+
+  wireCategoryBar();
+</script>
