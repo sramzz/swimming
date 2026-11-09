@@ -10,5 +10,6 @@ As we build POCs, scrapers, and features, log every mistake or failed experiment
 
 1. `docs/lessons/scraping-and-parsers.md` — Pool DOM quirks, Recreatex/Optisport API gotchas, PDF extraction edge cases, and Lightpanda/Obscura CDP lessons.
 2. `docs/lessons/seo-and-cwv.md` — Crawl budget traps, JSON-LD validation issues, and Lighthouse/CWV regressions.
-3. `docs/lessons/sqlite-d1-and-data.md` — D1 query patterns, SCD Type 2 edge cases, and Dutch holiday/timezone (`Europe/Amsterdam` DST) bugs.
+3. [`docs/lessons/sqlite-d1-and-data.md`](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/lessons/sqlite-d1-and-data.md) — D1 query patterns, SCD Type 2 edge cases, Zwemwater.nl `map-content.php` enrichment, and real official photo harvesting lessons.
 4. `docs/lessons/cloudflare-and-ops.md` — Worker limits, caching header pitfalls, and Turnstile/WAF configuration lessons.
+5. [`docs/lessons/frontend-islands-and-maplibre.md`](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/lessons/frontend-islands-and-maplibre.md) — MapLibre GL `Marker` DOM class preservation, Netherlands bounding-box guards, and zero-dead-link navigation rules.

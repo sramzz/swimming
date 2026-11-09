@@ -181,29 +181,36 @@ Your Git remote is already configured (`origin -> https://github.com/sramzz/swim
 - [ ] **2. Add Repository Secrets (`Settings -> Secrets and variables -> Actions`):**
   - **`CLOUDFLARE_API_TOKEN`** *(Required for automatic Cloudflare deployments — must be named `CLOUDFLARE_API_TOKEN`)*
   - **`ALERT_WEBHOOK_URL`** *(Optional — for Telegram Bot alerts, paste `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage?chat_id=<YOUR_CHAT_ID>`)*
-  - **`UPTIME_KUMA_PUSH_URL`** *(Optional — for your self-hosted Uptime Kuma "Push" monitor, paste the base Push URL `https://kuma.yourdomain.com/api/push/<SLUG>`)*
+  - **`UPTIME_KUMA_PUSH_URL`** *(Configured for Uptime Kuma Push Monitor: `https://uptimekuma.sramzz.com/api/push/Bjx5aTLohznySqFmPVHi17bMQTcG02AO?status=up&msg=OK&ping=`)*
 
 ---
 
 ## 6. How to Connect Telegram & Your Self-Hosted Uptime Kuma
 
-We support **both** your self-hosted Uptime Kuma and Telegram natively:
+We support **both** your self-hosted Uptime Kuma (`https://uptimekuma.sramzz.com`) and Telegram natively:
 
-### 1. Self-Hosted Uptime Kuma — Website & DB Readiness Monitor (`/api/health.json`)
-In your Uptime Kuma dashboard, click **Add New Monitor**:
-* **Monitor Type:** `HTTP(s) - Keyword`
-* **Friendly Name:** `AlleZwembaden.nl — Production Health`
-* **URL:** `https://allezwembaden.nl/api/health.json`
-* **Keyword:** `"ok": true`
-* **Heartbeat Interval:** `60` seconds
-* **Notifications:** Enable your Telegram notification inside Uptime Kuma!
+* **Uptime Kuma Dashboard:** [https://uptimekuma.sramzz.com/dashboard](https://uptimekuma.sramzz.com/dashboard)
+* **Monitor Group (`Zwemkaart.nl`):** [https://uptimekuma.sramzz.com/dashboard/5](https://uptimekuma.sramzz.com/dashboard/5)
+
+### 1. Self-Hosted Uptime Kuma — Website & DB Readiness Monitor (`/api/health`)
+* **Monitor Link:** [https://uptimekuma.sramzz.com/dashboard/6](https://uptimekuma.sramzz.com/dashboard/6)
+* **Monitor Type:** `HTTP(s)`
+* **Friendly Name:** `Zwemkaart.nl - Website & Edge API`
+* **URL:** `https://zwemkaart.nl/api/health`
+* **Heartbeat Interval:** `60` seconds (Retries: `2`)
+* **Group:** `Zwemkaart.nl`
 
 ### 2. Self-Hosted Uptime Kuma — Daily Scraper Push Monitor (`UPTIME_KUMA_PUSH_URL`)
 To track the daily `05:15 UTC` scraper cron job inside Uptime Kuma:
-* In Uptime Kuma, click **Add New Monitor** $\rightarrow$ **Monitor Type:** `Push`
-* **Heartbeat Interval:** `86400` seconds (24 hours)
-* Copy the Push URL (e.g., `https://kuma.yourdomain.com/api/push/abc123xyz`) and save it as the GitHub Actions secret **`UPTIME_KUMA_PUSH_URL`**.
-* When a scrape is quarantined, our `createMultiChannelAlertSender` automatically pings your Uptime Kuma Push URL with `?status=down&msg=...` (which also triggers Uptime Kuma's Telegram alert!).
+* **Monitor Link:** [https://uptimekuma.sramzz.com/dashboard/7](https://uptimekuma.sramzz.com/dashboard/7)
+* **Monitor Type:** `Push`
+* **Friendly Name:** `Zwemkaart.nl - Daily Ingestion Sync`
+* **Heartbeat Interval:** `108000` seconds (30 hours) (Retries: `1`)
+* **Group:** `Zwemkaart.nl`
+* **Push URL:** `https://uptimekuma.sramzz.com/api/push/Bjx5aTLohznySqFmPVHi17bMQTcG02AO?status=up&msg=OK&ping=`
+  *(Configured as GitHub Actions secret `UPTIME_KUMA_PUSH_URL`)*
+* When a scrape completes cleanly, `pingUptimeKumaHeartbeat` pings with `status=up&msg=OK&ping=...`.
+* When a scrape is quarantined, `createMultiChannelAlertSender` automatically pings with `?status=down&msg=...` to raise alerts.
 
 ### 3. Direct Telegram Bot Alert (`ALERT_WEBHOOK_URL`)
 If you also want the full multi-line Quarantine report (including the exact Mac recovery command `pnpm sync:venue --slug=... --inspect`) sent straight to a Telegram chat:
