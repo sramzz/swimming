@@ -53,6 +53,15 @@ describe('Cloudflare Worker Edge API & Asset Routing', () => {
     expect(data.venuesCount).toBe(1002);
   });
 
+  it('handles HEAD /api/health with 200 OK for monitoring probes', async () => {
+    const { env } = createMockEnv();
+    const req = new Request('https://zwemkaart.nl/api/health', { method: 'HEAD' });
+    const res = await handleApiRequest(req, env);
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('Content-Type')).toBe('application/json');
+  });
+
   it('rejects invalid lead submission with 400', async () => {
     const { env } = createMockEnv();
     const req = new Request('https://zwemkaart.nl/api/leads', {

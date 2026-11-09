@@ -33,34 +33,30 @@ export async function handleApiRequest(request: Request, env: Env): Promise<Resp
     });
   }
 
-  // GET /api/health or /api/health.json
-  if (request.method === 'GET' && (path === '/api/health' || path === '/api/health.json')) {
+  // GET or HEAD /api/health or /api/health.json (readiness check for monitoring)
+  if ((request.method === 'GET' || request.method === 'HEAD') && (path === '/api/health' || path === '/api/health.json')) {
     try {
       const row = await env.DB.prepare('SELECT COUNT(*) as c FROM venues').first<{ c: number }>();
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          dbConnected: true,
-          venuesCount: row?.c ?? 0,
-          timestamp: new Date().toISOString(),
-        }),
-        {
-          status: 200,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-        }
-      );
+      const body = request.method === 'HEAD' ? null : JSON.stringify({
+        ok: true,
+        dbConnected: true,
+        venuesCount: row?.c ?? 0,
+        timestamp: new Date().toISOString(),
+      });
+      return new Response(body, {
+        status: 200,
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      });
     } catch (err) {
-      return new Response(
-        JSON.stringify({
-          ok: false,
-          dbConnected: false,
-          error: err instanceof Error ? err.message : String(err),
-        }),
-        {
-          status: 500,
-          headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-        }
-      );
+      const body = request.method === 'HEAD' ? null : JSON.stringify({
+        ok: false,
+        dbConnected: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      return new Response(body, {
+        status: 500,
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      });
     }
   }
 
