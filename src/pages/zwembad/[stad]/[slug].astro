@@ -125,6 +125,28 @@ const breadcrumbJsonLd = {
 
 const isOpenWater = venue.venue_type === 'OPEN_WATER_NATURAL';
 const primaryWaitlistOffering = venue.offerings[0] ?? null;
+
+interface ZwemwaterMeta {
+  spotid: number;
+  statusTextNl: string | null;
+  recentMeasurementStatusNl: string | null;
+  entranceFeeCode: string | null;
+  isPaidAccess: boolean;
+  waterQuality4YearClassNl: 'uitstekend' | 'goed' | 'aanvaardbaar' | 'slecht' | null;
+  locationOwnerNl: string | null;
+  descriptionNl: string | null;
+  seasonTextNl: string | null;
+  waterProfileUrl: string | null;
+  infoBoardUrl: string | null;
+  officialPhotoUrls: string[];
+  featuresNl: string[];
+  restrictionsNl: string[];
+  warnings: Array<{ titleNl: string; bodyNl: string }>;
+}
+
+const zwemwaterMeta: ZwemwaterMeta | null = venue.zwemwater_metadata_json
+  ? JSON.parse(venue.zwemwater_metadata_json)
+  : null;
 ---
 <BaseLayout
   title={`${venue.name} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`}
@@ -645,9 +667,9 @@ const primaryWaitlistOffering = venue.offerings[0] ?? null;
                     </strong>
                   </p>
                 </div>
-                {o.registration_url && (
+                {(o.registration_url || venue.official_website_url) && (
                   <a
-                    href={o.registration_url}
+                    href={o.registration_url || venue.official_website_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="shrink-0 px-5 py-2.5 rounded-full bg-primary hover:bg-primary-container text-on-primary text-xs font-bold shadow-xs transition-all"
@@ -657,6 +679,141 @@ const primaryWaitlistOffering = venue.offerings[0] ?? null;
                 )}
               </div>
             ))}
+          </section>
+        )}
+
+        {/* DEDICATED SECTION FOR OPEN WATER: Officiële Zwemwater.nl Locatie-informatie, Restricties & Informatiebord */}
+        {isOpenWater && (
+          <section id="zwemwater-dossier" class="pt-8">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div>
+                <span class="text-[11px] text-primary uppercase tracking-wider font-extrabold">
+                  Rijkswaterstaat &amp; Provincie Register
+                </span>
+                <h2 class="text-xl font-extrabold text-text-charcoal mt-0.5">
+                  Officiële Zwemwater.nl Locatie, Restricties &amp; Informatiebord
+                </h2>
+              </div>
+              <a
+                href={venue.official_website_url || 'https://www.zwemwater.nl'}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-badge-teal-bg text-primary text-xs font-bold hover:underline"
+              >
+                <span>🌊</span>
+                <span>Geregistreerd op Zwemwater.nl ↗</span>
+              </a>
+            </div>
+
+            {zwemwaterMeta?.descriptionNl && (
+              <p class="text-sm text-text-muted mb-4 leading-relaxed">
+                {zwemwaterMeta.descriptionNl}
+              </p>
+            )}
+
+            {/* Active Warnings from Zwemwater.nl */}
+            {zwemwaterMeta?.warnings && zwemwaterMeta.warnings.length > 0 && (
+              <div class="space-y-2.5 mb-5">
+                {zwemwaterMeta.warnings.map((w) => (
+                  <div class="p-4 rounded-2xl border-2 border-amber-400 bg-amber-50 text-amber-950">
+                    <p class="text-xs font-extrabold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
+                      <span>⚠️</span>
+                      <span>{w.titleNl}</span>
+                    </p>
+                    {w.bodyNl && <p class="text-xs mt-1 leading-relaxed">{w.bodyNl}</p>}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Official Metadata Grid */}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+              <div class="p-3.5 rounded-xl border border-border-hairline bg-surface-subtle">
+                <span class="text-[11px] font-bold text-text-muted uppercase block">Toegang &amp; Terrein</span>
+                <p class="text-sm font-extrabold text-text-charcoal mt-0.5">
+                  {zwemwaterMeta?.isPaidAccess
+                    ? `Betaald terrein (${zwemwaterMeta.entranceFeeCode ?? 'Semi-openbaar'})`
+                    : 'Openbaar & Gratis toegankelijk'}
+                </p>
+              </div>
+              <div class="p-3.5 rounded-xl border border-border-hairline bg-surface-subtle">
+                <span class="text-[11px] font-bold text-text-muted uppercase block">EU 4-Jaars Waterkwaliteit</span>
+                <p class="text-sm font-extrabold text-emerald-800 capitalize mt-0.5">
+                  {zwemwaterMeta?.waterQuality4YearClassNl ?? 'Goedgekeurd zwemwater'}
+                </p>
+              </div>
+              {zwemwaterMeta?.locationOwnerNl && (
+                <div class="p-3.5 rounded-xl border border-border-hairline bg-surface-subtle">
+                  <span class="text-[11px] font-bold text-text-muted uppercase block">Waterbeheerder</span>
+                  <p class="text-sm font-bold text-text-charcoal mt-0.5">{zwemwaterMeta.locationOwnerNl}</p>
+                </div>
+              )}
+              {zwemwaterMeta?.recentMeasurementStatusNl && (
+                <div class="p-3.5 rounded-xl border border-border-hairline bg-surface-subtle">
+                  <span class="text-[11px] font-bold text-text-muted uppercase block">Controle Status</span>
+                  <p class="text-sm font-bold text-text-charcoal mt-0.5">
+                    {zwemwaterMeta.recentMeasurementStatusNl}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Restrictions & Facilities Pills */}
+            {zwemwaterMeta?.featuresNl && zwemwaterMeta.featuresNl.length > 0 && (
+              <div class="mb-5">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-text-muted mb-2.5">
+                  Voorzieningen, Afbakening &amp; Huisregels op Locatie
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  {zwemwaterMeta.featuresNl.map((feat) => {
+                    const isRestriction =
+                      feat.toLowerCase().includes('niet toegestaan') ||
+                      feat.toLowerCase().includes('verbod');
+                    return (
+                      <span
+                        class={`px-3 py-1.5 rounded-full text-xs font-bold border ${
+                          isRestriction
+                            ? 'bg-rose-50 text-rose-800 border-rose-200'
+                            : 'bg-surface-pure text-text-charcoal border-border-hairline'
+                        }`}
+                      >
+                        {isRestriction ? `🚫 ${feat}` : `✓ ${feat}`}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {zwemwaterMeta?.seasonTextNl && (
+              <p class="text-xs text-text-muted bg-surface-subtle p-3.5 rounded-xl border border-border-hairline mb-5 leading-relaxed">
+                {zwemwaterMeta.seasonTextNl}
+              </p>
+            )}
+
+            {/* Direct Official Documents: Informatiebord & Zwemwaterprofiel */}
+            <div class="flex flex-wrap gap-3">
+              {zwemwaterMeta?.infoBoardUrl && (
+                <a
+                  href={zwemwaterMeta.infoBoardUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="px-4 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-extrabold hover:bg-primary-container transition-colors shadow-xs"
+                >
+                  📋 Bekijk Officieel Informatiebord (Rijkswaterstaat) ↗
+                </a>
+              )}
+              {zwemwaterMeta?.waterProfileUrl && (
+                <a
+                  href={zwemwaterMeta.waterProfileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="px-4 py-2.5 rounded-xl border border-border-hairline bg-surface-pure hover:bg-surface-subtle text-text-charcoal text-xs font-extrabold transition-colors"
+                >
+                  📄 Bekijk Officieel Zwemwaterprofiel ↗
+                </a>
+              )}
+            </div>
           </section>
         )}
 
@@ -698,11 +855,19 @@ const primaryWaitlistOffering = venue.offerings[0] ?? null;
           childPriceCents={childTariff?.price_cents ?? venue.min_single_price_cents ?? 0}
           tenPassPriceCents={tenPassTariff?.price_cents ?? null}
           officialTicketsUrl={venue.official_tickets_url}
-          officialZwemlesUrl={primaryWaitlistOffering?.registration_url ?? null}
+          officialWebsiteUrl={venue.official_website_url}
+          officialZwemlesUrl={primaryWaitlistOffering?.registration_url ?? venue.official_website_url ?? null}
+          googleMapsRouteUrl={venue.google_maps_route_url}
           defaultPc4={venue.postcode_pc4 ?? '1079'}
           ratingScore={venue.rating_score}
           ratingCount={venue.rating_count}
           primaryWaterTreatment={venue.primary_water_treatment}
+          isOpenWater={isOpenWater}
+          isPaidAccess={zwemwaterMeta?.isPaidAccess ?? false}
+          infoBoardUrl={zwemwaterMeta?.infoBoardUrl ?? null}
+          waterProfileUrl={zwemwaterMeta?.waterProfileUrl ?? null}
+          waterQualityClassNl={zwemwaterMeta?.waterQuality4YearClassNl ?? null}
+          seasonTextNl={zwemwaterMeta?.seasonTextNl ?? null}
         />
       </aside>
     </div>

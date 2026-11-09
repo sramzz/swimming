@@ -4,6 +4,66 @@ export interface VenueHeroPhoto {
   badge_nl?: string;
 }
 
+const OFFICIAL_PHOTO_SLUGS = new Set([
+  'de-mirandabad',
+  'sportfondsenbad-oost',
+  'sloterparkbad',
+  'gaasperplas-open-water',
+  'ra-sports-swimming-utrecht',
+  'tongelreep-zwemparadijs',
+  'noorderparkbad',
+  'zuiderbad-amsterdam',
+  'het-marnix-amsterdam',
+  'flevoparkbad-amsterdam',
+  'bijlmer-sportcentrum',
+  'zwemcentrum-rotterdam',
+  'oostelijk-zwembad-rotterdam',
+  'van-maanenbad-rotterdam',
+  'hofbad-den-haag',
+  'de-blinkerd-scheveningen',
+  'tikibad-duinrell',
+  'zwembad-den-hommel',
+  'zwembad-de-kwakel-utrecht',
+  'krommerijn-zwembad-utrecht',
+  'amerena-amersfoort',
+  'ottenbad-eindhoven',
+  'recreatiebad-stappegoor',
+  'zwembad-sonsbeeck-breda',
+  'kardinge-sportcentrum-groningen',
+  'zwembad-de-vrolijkheid-zwolle',
+  'de-scheg-deventer',
+  'sportiom-den-bosch',
+  'geusseltbad-maastricht',
+  'de-blauwe-golf-leeuwarden',
+  'de-bonte-wever-assen',
+  'optisport-het-mineraal-almere',
+  'vrijburgbad-vlissingen',
+  'boschbad-apeldoorn',
+  'aquacentrum-malkander-apeldoorn',
+  'boerhaavebad-haarlem',
+  'skwa-hoofddorp',
+  'de-hoornse-vaart-alkmaar',
+  'sportboulevard-dordrecht',
+  'groenhovenbad-gouda',
+  'aquadrome-enschede',
+  'twentebad-hengelo',
+  'aquarena-emmen',
+  'de-koploper-lelystad',
+  'sportstad-heerenveen',
+  'de-grote-koppel-arnhem',
+  'erica-terpstra-nijmegen',
+  'de-goffert-nijmegen',
+  'sportfondsenbad-kerkpolder-delft',
+  'zwembad-de-veur-zoetermeer',
+  'zwembad-de-vallei-veenendaal',
+  'zwembad-dijnselburg-zeist',
+  'caribabad-gorinchem',
+  'de-warande-oosterhout',
+  'laco-glanerbrook-geleen',
+  'de-ijzeren-man-weert',
+  'omnium-goes',
+]);
+
 const SUBTROPICAL_PHOTOS: VenueHeroPhoto[] = [
   {
     url: '/images/venues/subtropical-dome-1.webp',
@@ -145,7 +205,7 @@ const BOUTIQUE_PHOTOS: VenueHeroPhoto[] = [
   },
 ];
 
-const OPEN_WATER_PHOTOS: VenueHeroPhoto[] = [
+const OPEN_WATER_BASE_PHOTOS: VenueHeroPhoto[] = [
   {
     url: '/images/venues/open-water-1.webp',
     alt_nl: 'Natuurwater zwemlocatie met houten zwemsteiger en open-water zwemmers',
@@ -188,6 +248,22 @@ const OPEN_WATER_PHOTOS: VenueHeroPhoto[] = [
   },
 ];
 
+function getOpenWaterPool(): VenueHeroPhoto[] {
+  const pool = [...OPEN_WATER_BASE_PHOTOS];
+  for (let i = 9; i <= 24; i++) {
+    pool.push({
+      url: `/images/venues/open-water-${i}.webp`,
+      alt_nl: `Officiële Rijkswaterstaat open-water zwemlocatie en natuurstrand (${i})`,
+      badge_nl: 'Rijkswaterstaat Zwemplek',
+    });
+  }
+  return pool;
+}
+
+function hasOfficialVenuePhotoOnDisk(slug: string): boolean {
+  return OFFICIAL_PHOTO_SLUGS.has(slug);
+}
+
 function hashSlug(slug: string): number {
   let h = 2166136261;
   for (let i = 0; i < slug.length; i++) {
@@ -201,255 +277,98 @@ function pick<T>(arr: T[], seed: number, offset = 0): T {
   return arr[(seed + offset) % arr.length];
 }
 
+function badgeForType(venueType: string): string {
+  switch (venueType) {
+    case 'SUBTROPICAL_PARADISE':
+      return 'Subtropisch Zwemparadijs';
+    case 'OUTDOOR_SEASONAL_POOL':
+      return 'Openluchtbad & Ligweide';
+    case 'INDOOR_AND_OUTDOOR':
+      return 'Binnen- & Buitenbad';
+    case 'BOUTIQUE_SWIM_SCHOOL_POOL':
+      return 'Zwemschool & Doelgroepenbad';
+    case 'OPEN_WATER_NATURAL':
+      return 'Officiële Zwemwaterlocatie';
+    default:
+      return 'Officiële Locatiefoto';
+  }
+}
+
 export function buildCuratedPhotosForVenue(params: {
   slug: string;
   name: string;
   venueType: string;
 }): VenueHeroPhoto[] {
   const { slug, name, venueType } = params;
-
-  // Explicit flagship overrides matching the DesignMockups 1:1
-  if (slug === 'de-mirandabad') {
-    return [
-      {
-        url: '/images/venues/subtropical-dome-1.webp',
-        alt_nl: `${name} - Subtropische Glazen Koepel met palmbomen en golfslagbad`,
-        badge_nl: 'Subtropische Glazen Koepel',
-      },
-      {
-        url: '/images/venues/lanes-50m-1.webp',
-        alt_nl: `${name} - 50m Olympisch Wedstrijdbad`,
-        badge_nl: '50m Wedstrijdbad',
-      },
-      {
-        url: '/images/venues/toddler-pool-1.webp',
-        alt_nl: `${name} - Verwarmd Peuterbad (32.5°C)`,
-        badge_nl: 'Verwarmd Peuterbad',
-      },
-      {
-        url: '/images/venues/zwemles-1.webp',
-        alt_nl: `${name} - Officiële NRZ Zwemles A/B/C`,
-        badge_nl: 'Zwemles A/B/C',
-      },
-      {
-        url: '/images/venues/outdoor-pool-1.webp',
-        alt_nl: `${name} - Buitenbad & Zonneweide`,
-        badge_nl: 'Buitenbad & Ligweide',
-      },
-    ];
-  }
-
-  if (slug === 'sportfondsenbad-oost') {
-    return [
-      {
-        url: '/images/venues/lanes-25m-1.webp',
-        alt_nl: `${name} - 25m Wedstrijdbad met daglicht`,
-        badge_nl: '25m Wedstrijdbad',
-      },
-      {
-        url: '/images/venues/zwemles-2.webp',
-        alt_nl: `${name} - Doelgroepenbad & Zwemles A/B/C`,
-        badge_nl: 'Zwemles A/B/C',
-      },
-      {
-        url: '/images/venues/toddler-pool-1.webp',
-        alt_nl: `${name} - Verwarmd Peuter- en Kleuterbad`,
-        badge_nl: 'Verwarmd Peuterbad',
-      },
-      {
-        url: '/images/venues/lanes-25m-2.webp',
-        alt_nl: `${name} - Banenzwemmen in Amsterdam-Oost`,
-        badge_nl: 'Banenzwemmen',
-      },
-      {
-        url: '/images/venues/boutique-pool-1.webp',
-        alt_nl: `${name} - Warmwater en instructiebassin`,
-        badge_nl: 'Instructiebad',
-      },
-    ];
-  }
-
-  if (slug === 'sloterparkbad') {
-    return [
-      {
-        url: '/images/venues/zwemles-2.webp',
-        alt_nl: `${name} - NRZ Licentiehouder Zwemles A/B/C`,
-        badge_nl: 'NRZ Licentiehouder',
-      },
-      {
-        url: '/images/venues/lanes-50m-2.webp',
-        alt_nl: `${name} - 50m Olympisch Binnenbad`,
-        badge_nl: '50m Wedstrijdbad',
-      },
-      {
-        url: '/images/venues/outdoor-pool-1.webp',
-        alt_nl: `${name} - Buitenbad & Ligweide`,
-        badge_nl: 'Buitenbad',
-      },
-      {
-        url: '/images/venues/toddler-pool-1.webp',
-        alt_nl: `${name} - Peuter- & Recreatiebad`,
-        badge_nl: 'Recreatiebad',
-      },
-      {
-        url: '/images/venues/zwemles-1.webp',
-        alt_nl: `${name} - Zwemles in kleine groepen`,
-        badge_nl: 'Zwemles Kleine Groepen',
-      },
-    ];
-  }
-
-  if (slug === 'gaasperplas-open-water') {
-    return [
-      {
-        url: '/images/venues/open-water-1.webp',
-        alt_nl: `${name} - Open water zwemlocatie met zwemsteiger`,
-        badge_nl: 'Natuurwater',
-      },
-      {
-        url: '/images/venues/open-water-4.webp',
-        alt_nl: `${name} - Zwemzone gecontroleerd door Rijkswaterstaat`,
-        badge_nl: 'Rijkswaterstaat Keurmerk',
-      },
-      {
-        url: '/images/venues/open-water-6.webp',
-        alt_nl: `${name} - Kleedsteigers en ligweide`,
-        badge_nl: 'Kleedsteigers',
-      },
-      {
-        url: '/images/venues/open-water-2.webp',
-        alt_nl: `${name} - Recreatiestrand Amsterdam Zuidoost`,
-        badge_nl: 'Zandstrand & Steigers',
-      },
-      {
-        url: '/images/venues/open-water-7.webp',
-        alt_nl: `${name} - Triatlon en koudwatertraining`,
-        badge_nl: 'Open Water Training',
-      },
-    ];
-  }
-
-  if (slug === 'tongelreep-zwemparadijs') {
-    return [
-      {
-        url: '/images/venues/lanes-50m-2.webp',
-        alt_nl: `${name} - 50m Olympisch Topsportbad Eindhoven`,
-        badge_nl: '50m Olympisch Bad',
-      },
-      {
-        url: '/images/venues/lanes-50m-1.webp',
-        alt_nl: `${name} - KNZB Trainings- en Wedstrijdbassin`,
-        badge_nl: 'Wedstrijdbassin',
-      },
-      {
-        url: '/images/venues/zwemles-3.webp',
-        alt_nl: `${name} - Instructiebad voor Zwemles A/B/C`,
-        badge_nl: 'Zwemles A/B/C',
-      },
-      {
-        url: '/images/venues/toddler-pool-2.webp',
-        alt_nl: `${name} - Doelgroepen- en Recreatiebad`,
-        badge_nl: 'Recreatiebad',
-      },
-      {
-        url: '/images/venues/lanes-25m-2.webp',
-        alt_nl: `${name} - 25m Inzwembad`,
-        badge_nl: '25m Bassin',
-      },
-    ];
-  }
-
-  if (slug === 'ra-sports-swimming-utrecht') {
-    return [
-      {
-        url: '/images/venues/boutique-pool-1.webp',
-        alt_nl: `${name} - Verwarmd 32°C zoutwater instructiebad in Utrecht`,
-        badge_nl: 'Direct Beschikbaar',
-      },
-      {
-        url: '/images/venues/zwemles-1.webp',
-        alt_nl: `${name} - Zwemles in kleine groepen (max 6 kinderen)`,
-        badge_nl: 'Kleine Groepen',
-      },
-      {
-        url: '/images/venues/zwemles-2.webp',
-        alt_nl: `${name} - Privéles & Zwem-ABC met diplomagarantie`,
-        badge_nl: 'Zwem-ABC Specialist',
-      },
-      {
-        url: '/images/venues/boutique-pool-2.webp',
-        alt_nl: `${name} - Zoutelektrolyse zwembad zonder chloorlucht`,
-        badge_nl: 'Zoutelektrolyse',
-      },
-      {
-        url: '/images/venues/toddler-pool-1.webp',
-        alt_nl: `${name} - Baby-, Peuter- en Kleuterzwemmen`,
-        badge_nl: 'Ouder & Kind',
-      },
-    ];
-  }
-
   const seed = hashSlug(slug);
 
+  let gallery: VenueHeroPhoto[];
+
   if (venueType === 'SUBTROPICAL_PARADISE') {
-    return [
+    gallery = [
       pick(SUBTROPICAL_PHOTOS, seed, 0),
       pick(LANES_25M_PHOTOS, seed, 1),
       pick(TODDLER_PHOTOS, seed, 0),
       pick(ZWEMLES_PHOTOS, seed, 1),
       pick(OUTDOOR_POOL_PHOTOS, seed, 2),
     ];
-  }
-
-  if (venueType === 'OPEN_WATER_NATURAL') {
-    return [
-      pick(OPEN_WATER_PHOTOS, seed, 0),
-      pick(OPEN_WATER_PHOTOS, seed, 1),
-      pick(OPEN_WATER_PHOTOS, seed, 2),
-      pick(OPEN_WATER_PHOTOS, seed, 3),
-      pick(OPEN_WATER_PHOTOS, seed, 4),
+  } else if (venueType === 'OPEN_WATER_NATURAL') {
+    const openWaterPhotos = getOpenWaterPool();
+    gallery = [
+      pick(openWaterPhotos, seed, 0),
+      pick(openWaterPhotos, seed, 1),
+      pick(openWaterPhotos, seed, 2),
+      pick(openWaterPhotos, seed, 3),
+      pick(openWaterPhotos, seed, 4),
     ];
-  }
-
-  if (venueType === 'OUTDOOR_SEASONAL_POOL') {
-    return [
+  } else if (venueType === 'OUTDOOR_SEASONAL_POOL') {
+    gallery = [
       pick(OUTDOOR_POOL_PHOTOS, seed, 0),
       pick(OUTDOOR_POOL_PHOTOS, seed, 1),
       pick(LANES_50M_PHOTOS, seed, 0),
       pick(TODDLER_PHOTOS, seed, 1),
       pick(OUTDOOR_POOL_PHOTOS, seed, 2),
     ];
-  }
-
-  if (venueType === 'INDOOR_AND_OUTDOOR') {
-    return [
+  } else if (venueType === 'INDOOR_AND_OUTDOOR') {
+    gallery = [
       pick(LANES_25M_PHOTOS, seed, 0),
       pick(OUTDOOR_POOL_PHOTOS, seed, 1),
       pick(LANES_50M_PHOTOS, seed, 2),
       pick(ZWEMLES_PHOTOS, seed, 0),
       pick(TODDLER_PHOTOS, seed, 1),
     ];
-  }
-
-  if (venueType === 'BOUTIQUE_SWIM_SCHOOL_POOL') {
-    return [
+  } else if (venueType === 'BOUTIQUE_SWIM_SCHOOL_POOL') {
+    gallery = [
       pick(BOUTIQUE_PHOTOS, seed, 0),
       pick(ZWEMLES_PHOTOS, seed, 1),
       pick(ZWEMLES_PHOTOS, seed, 2),
       pick(BOUTIQUE_PHOTOS, seed, 1),
       pick(TODDLER_PHOTOS, seed, 0),
     ];
+  } else {
+    const indoorLeadPool = [...LANES_25M_PHOTOS, ...LANES_50M_PHOTOS];
+    gallery = [
+      pick(indoorLeadPool, seed, 0),
+      pick(ZWEMLES_PHOTOS, seed, 1),
+      pick(TODDLER_PHOTOS, seed, 0),
+      pick(LANES_25M_PHOTOS, seed, 2),
+      pick(BOUTIQUE_PHOTOS, seed, 1),
+    ];
   }
 
-  // Default: INDOOR_ONLY
-  const indoorLeadPool = [...LANES_25M_PHOTOS, ...LANES_50M_PHOTOS];
-  return [
-    pick(indoorLeadPool, seed, 0),
-    pick(ZWEMLES_PHOTOS, seed, 1),
-    pick(TODDLER_PHOTOS, seed, 0),
-    pick(LANES_25M_PHOTOS, seed, 2),
-    pick(BOUTIQUE_PHOTOS, seed, 1),
-  ];
+  // If a dedicated official / Wikimedia venue photograph exists in public/images/venues/official/<slug>.webp,
+  // make it the primary hero photo (photos[0]) and keep 4 distinct supporting basin/facility photos!
+  if (hasOfficialVenuePhotoOnDisk(slug)) {
+    const officialLead: VenueHeroPhoto = {
+      url: `/images/venues/official/${slug}.webp`,
+      alt_nl: `${name} – Officiële foto zwemaccommodatie`,
+      badge_nl: badgeForType(venueType),
+    };
+    const supporting = gallery.filter((p) => p.url !== officialLead.url).slice(0, 4);
+    return [officialLead, ...supporting];
+  }
+
+  return gallery;
 }
 
 export function parseVenuePhotos(venue: {

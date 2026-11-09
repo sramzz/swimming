@@ -13,11 +13,19 @@ export interface StickyWidgetProps {
   childPriceCents: number;
   tenPassPriceCents: number | null;
   officialTicketsUrl: string | null;
+  officialWebsiteUrl?: string | null;
   officialZwemlesUrl: string | null;
+  googleMapsRouteUrl?: string | null;
   defaultPc4: string;
   ratingScore?: number | null;
   ratingCount?: number;
   primaryWaterTreatment?: string;
+  isOpenWater?: boolean;
+  isPaidAccess?: boolean;
+  infoBoardUrl?: string | null;
+  waterProfileUrl?: string | null;
+  waterQualityClassNl?: string | null;
+  seasonTextNl?: string | null;
 }
 
 interface RecommendedSchool {
@@ -38,6 +46,8 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('Vandaag, 14:00 - 16:30');
   const [visitorPickerOpen, setVisitorPickerOpen] = useState(true);
+
+  const outboundTicketUrl = props.officialTicketsUrl || props.officialWebsiteUrl || null;
 
   const breakdown = calculateTicketBreakdown({
     adultsCount: state.adultsCount,
@@ -116,8 +126,107 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
     }
   }
 
+  // Dedicated Open-Water Zwemwater.nl Dossier & Informatiebord Mode (No fake €0.00 cart!)
+  if (props.isOpenWater) {
+    return (
+      <div class="p-6 bg-surface-pure rounded-2xl border border-border-hairline shadow-xl space-y-4">
+        <div class="pb-4 border-b border-border-hairline flex items-start justify-between gap-2">
+          <div>
+            <span class="text-2xl font-extrabold text-text-charcoal block">
+              {props.isPaidAccess ? 'Betaald terrein' : 'Gratis toegang'}
+            </span>
+            <span class="text-xs text-text-muted block mt-0.5">
+              {props.isPaidAccess
+                ? 'Semi-openbaar of betaald recreatieterrein'
+                : 'Officiële openbare Rijkswaterstaat / Provincie zwemplek'}
+            </span>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-900 border border-cyan-200 text-[11px] font-bold">
+            🌊 Natuurwater
+          </span>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-badge-teal-bg/60 border border-primary/20 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-text-muted font-medium">EU 4-jaars kwaliteitsklasse:</span>
+            <span class="font-extrabold text-primary capitalize">
+              {props.waterQualityClassNl || 'Gecontroleerd'}
+            </span>
+          </div>
+          {props.seasonTextNl && (
+            <div class="flex items-center justify-between">
+              <span class="text-text-muted font-medium">Bewaakt seizoen:</span>
+              <span class="font-bold text-text-charcoal">1 mei – 30 sept</span>
+            </div>
+          )}
+        </div>
+
+        <div class="space-y-2.5 pt-1">
+          {props.infoBoardUrl && (
+            <a
+              href={props.infoBoardUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full h-11 rounded-full bg-primary hover:bg-primary-container text-on-primary text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
+            >
+              <span>📋 Bekijk Officieel Informatiebord</span>
+              <span>↗</span>
+            </a>
+          )}
+
+          {props.waterProfileUrl && (
+            <a
+              href={props.waterProfileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full h-11 rounded-full bg-surface-subtle hover:bg-surface-container text-text-charcoal border border-border-strong text-xs font-bold flex items-center justify-center gap-2 transition-all"
+            >
+              <span>📄 Officieel Zwemwaterprofiel (PDF)</span>
+              <span>↗</span>
+            </a>
+          )}
+
+          {outboundTicketUrl && (
+            <a
+              href={outboundTicketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleOfficialTicketClick}
+              class="w-full h-11 rounded-full bg-text-charcoal hover:bg-black text-surface-pure text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
+            >
+              <span>🌊 Bekijk op Zwemwater.nl</span>
+              <span>↗</span>
+            </a>
+          )}
+
+          {props.googleMapsRouteUrl && (
+            <a
+              href={props.googleMapsRouteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full h-10 rounded-full border border-border-hairline hover:border-text-charcoal text-text-charcoal text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
+            >
+              <span>📍 Plan route in Google Maps</span>
+              <span>↗</span>
+            </a>
+          )}
+        </div>
+
+        <div class="pt-3 border-t border-border-hairline space-y-1.5 text-[11px] text-text-muted">
+          <div class="flex items-center gap-2">
+            <span class="text-primary font-bold">✓</span>
+            <span>Gegevens gesynchroniseerd met Rijkswaterstaat &amp; Zwemwater.nl</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-primary font-bold">✓</span>
+            <span>Controleer voor vertrek altijd het informatiebord ter plaatse</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const isSalt = props.primaryWaterTreatment === 'SALT_ELECTROLYSIS';
-  const isNatural = props.primaryWaterTreatment === 'NATURAL_UNTREATED';
 
   return (
     <div class="p-6 bg-surface-pure rounded-2xl border border-border-hairline shadow-xl">
@@ -127,9 +236,7 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
           <span class="text-2xl font-extrabold text-text-charcoal">
             {props.adultPriceCents === 0 ? 'Gratis toegang' : `Vanaf ${formatEuroCentsNl(props.adultPriceCents)}`}
           </span>
-          <span class="text-xs text-text-muted block mt-0.5">
-            {props.adultPriceCents === 0 ? 'officiële zwemwaterlocatie' : 'per losse entree'}
-          </span>
+          <span class="text-xs text-text-muted block mt-0.5">per losse entree</span>
         </div>
         {props.ratingScore && (
           <div class="flex items-center text-xs">
@@ -148,13 +255,6 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
           <span class="text-emerald-600 shrink-0 text-sm">💧</span>
           <span>
             Waterbehandeling: <strong class="font-bold">Zoutelektrolyse</strong> (ideaal voor gevoelige huid en allergieën)
-          </span>
-        </div>
-      ) : isNatural ? (
-        <div class="mt-3 py-2.5 px-3 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center gap-2 text-xs text-cyan-900 font-medium">
-          <span class="text-cyan-600 shrink-0 text-sm">🌊</span>
-          <span>
-            Waterkwaliteit: <strong class="font-bold">Natuurwater</strong> gecontroleerd door Rijkswaterstaat
           </span>
         </div>
       ) : (
@@ -362,9 +462,9 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             </p>
           )}
 
-          {props.officialTicketsUrl ? (
+          {outboundTicketUrl ? (
             <a
-              href={props.officialTicketsUrl}
+              href={outboundTicketUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleOfficialTicketClick}
@@ -375,11 +475,13 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             </a>
           ) : (
             <a
-              href="#locatie"
+              href={props.googleMapsRouteUrl || '#locatie'}
+              target={props.googleMapsRouteUrl ? '_blank' : undefined}
+              rel={props.googleMapsRouteUrl ? 'noopener noreferrer' : undefined}
               class="w-full h-12 rounded-full bg-primary hover:bg-primary-container text-on-primary text-xs md:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-all"
             >
               <span>Bekijk locatie &amp; openingstijden</span>
-              <span>↓</span>
+              <span>↗</span>
             </a>
           )}
 
@@ -391,7 +493,7 @@ export default function StickyBookingWidgetIsland(props: StickyWidgetProps) {
             </div>
             <div class="flex items-center gap-2">
               <span class="text-primary font-bold">✓</span>
-              <span>Directe doorgang naar het officiële reserveringsportaal</span>
+              <span>Directe doorgang naar de officiële website van dit zwembad</span>
             </div>
           </div>
         </div>

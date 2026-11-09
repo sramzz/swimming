@@ -218,3 +218,18 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 - [x] **Task 6.3:** Wire Facility Detail Page (`src/pages/zwembad/[stad]/[slug].astro`) with `StickyBookingWidgetIsland`, `<AlertBanner />`, *Banenzwemmen* Timetable & Transit Chips
 - [x] **Task 6.4:** Expose `/api/health.json` Endpoint & GitHub Actions CI + Daily Sync Workflows (`.github/workflows/ci.yml` & `.github/workflows/daily-sync.yml`)
 - [x] **🛑 Milestone 6 Gate Verification:** `pnpm check && pnpm test && pnpm build` passes with 18 generated routes, islands are mounted on `/` and `/zwembad/[stad]/[slug]`, and `pnpm cf:profile:check` prevents accidental deployment to the `default` Cloudflare account.
+
+### [Milestone 7: Production Recovery — Real Official Photos, Navigation Integrity, Multi-City Discovery, MapLibre Pin Fix & Zwemwater.nl Alignment](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-7-recovery-real-photos-navigation-map-and-zwemwater.md)
+- [x] **Task 7.1:** Isolate MapLibre Marker Wrapper DOM Element & Enforce NL Geographic Bounds (`src/domain/map-bounds.ts`, `src/components/islands/ListingMapIsland.tsx`)
+- [x] **Task 7.2:** Sync Map Markers & Camera Bounds Strictly with Loaded Homepage Venues (`displayedVenues`)
+- [x] **Task 7.3:** Multi-City Default Homepage Ordering + Quick City & `"📍 Dichtbij mij"` Geolocation Switcher (`src/domain/multi-city-ranking.ts`)
+- [x] **Task 7.4:** Create `/aanbieder` (B2B Partner Portal) and `/steden` (All Municipalities & Provinces Directory)
+- [x] **Task 7.5:** Wire `Header.astro` (Globe Region/Language Modal, Favorites/Menu Drawer & Multi-City Nav) and `Footer.astro`
+- [x] **Task 7.6:** Fix Pool Detail Booking/Cart Widget (`StickyBookingWidgetIsland.tsx`) & Card CTAs Across All Page Types
+- [x] **Task 7.7:** Build the `Zwemwater.nl` Spot Detail Parser (`src/ingestion/zwemwater-detail-parser.ts`)
+- [x] **Task 7.8:** Harvest All 945 `Zwemwater.nl` Spot Details into `src/data/zwemwater-spots.json` & Sync SQLite Schema (`zwemwater_metadata_json`)
+- [x] **Task 7.9:** Display Official `Zwemwater.nl` Restrictions, Information Boards, Water Profiles & Warnings in UI
+- [x] **Task 7.10:** Harvest Real Official Photos for All 57 Curated/Flagship Pools (`public/images/venues/official/*.webp`)
+- [x] **Task 7.11:** Upgrade `src/domain/venue-photos.ts` with Official-First Priority & Zero-Repetition Guarantee
+- [x] **Task 7.12:** Full Build & Link Verification Gate (`tests/pages/navigation-and-links-audit.test.ts`) + Cloudflare Production Deployment
+- [x] **🛑 Milestone 7 Gate Verification:** Zero pins outside NL, pins remain stable on card hover, 0 dead links/buttons across all 6 page types, 100% unique primary photos across top 24 homepage cards, and all 945 `zwemwater.nl` locations aligned with official restrictions, information boards, and warnings.

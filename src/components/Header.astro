@@ -50,8 +50,8 @@
           <option value="ALL">Banen, Les, Subtropisch</option>
           <option value="ZWEMLES">Zwemles A/B/C</option>
           <option value="BANENZWEMMEN">Banenzwemmen (25m/50m)</option>
-          <option value="SUBTROPISCH">Subtropisch & Golfslag</option>
-          <option value="BUITEN">Buiten & Natuurwater</option>
+          <option value="SUBTROPISCH">Subtropisch &amp; Golfslag</option>
+          <option value="BUITEN">Buiten &amp; Natuurwater</option>
           <option value="BINNEN">Binnenbaden</option>
         </select>
       </div>
@@ -92,25 +92,27 @@
     <!-- SEO Main Navigation + Trailing Action Cluster -->
     <div class="flex items-center gap-2 md:gap-3">
       <nav aria-label="Hoofdnavigatie" class="hidden xl:flex items-center gap-4 text-xs font-semibold text-text-muted mr-1">
+        <a href="/steden" class="hover:text-primary transition-colors">Alle Steden</a>
         <a href="/steden/amsterdam" class="hover:text-primary transition-colors">Amsterdam</a>
-        <a href="/steden/amsterdam/banenzwemmen" class="hover:text-primary transition-colors">Banenzwemmen</a>
-        <a href="/steden/amsterdam/zwemles" class="hover:text-primary transition-colors">Zwemles A/B/C</a>
-        <a href="/steden/amsterdam/buitenwater" class="hover:text-primary transition-colors">Natuurwater</a>
+        <a href="/steden/rotterdam" class="hover:text-primary transition-colors">Rotterdam</a>
+        <a href="/steden/utrecht" class="hover:text-primary transition-colors">Utrecht</a>
+        <a href="/steden/eindhoven" class="hover:text-primary transition-colors">Eindhoven</a>
       </nav>
 
       <a
-        href="/#aanbieder"
+        href="/aanbieder"
         class="hidden sm:inline-flex text-xs font-bold text-text-charcoal hover:bg-surface-subtle px-3.5 py-2 rounded-full transition-colors"
       >
         Word Aanbieder
       </a>
 
-      <!-- Globe Language Icon -->
+      <!-- Globe Region & Language Selector Button -->
       <button
+        id="header-globe-btn"
         type="button"
-        aria-label="Taalkeuze (Nederlands)"
-        title="Nederland (NL)"
-        class="p-2 text-text-charcoal hover:bg-surface-subtle rounded-full transition-colors flex items-center justify-center"
+        aria-label="Regio, stad en taalkeuze"
+        title="Regio, stad & taal kiezen"
+        class="p-2 text-text-charcoal hover:bg-surface-subtle rounded-full transition-colors flex items-center justify-center cursor-pointer"
       >
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10"></circle>
@@ -119,11 +121,12 @@
         </svg>
       </button>
 
-      <!-- Airbnb User Menu Pill -->
-      <a
-        href="/#favorieten"
+      <!-- Airbnb User Menu & Saved Favorites Pill -->
+      <button
+        id="header-user-menu-btn"
+        type="button"
         aria-label="Menu en opgeslagen favorieten"
-        class="flex items-center gap-2 border border-border-strong hover:shadow-sm rounded-full py-1.5 px-3 bg-surface-pure transition-all"
+        class="flex items-center gap-2 border border-border-strong hover:shadow-sm rounded-full py-1.5 px-3 bg-surface-pure transition-all cursor-pointer relative"
       >
         <svg class="w-4 h-4 text-text-charcoal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -135,21 +138,216 @@
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
           </svg>
         </span>
-      </a>
+        <span
+          id="header-fav-count-badge"
+          class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-bold items-center justify-center"
+        >
+          0
+        </span>
+      </button>
     </div>
   </div>
 </header>
 
+<!-- Globe Modal: Region, City & Language Selector -->
+<dialog
+  id="header-globe-dialog"
+  class="backdrop:bg-black/60 bg-transparent p-0 max-w-2xl w-full rounded-3xl m-auto"
+>
+  <div class="bg-surface-pure p-6 rounded-3xl border border-border-hairline shadow-2xl space-y-6">
+    <div class="flex items-center justify-between border-b border-border-hairline pb-3">
+      <h2 class="text-lg font-extrabold text-text-charcoal">Regio, Stad &amp; Taal Kiezen</h2>
+      <button
+        id="close-globe-dialog-btn"
+        type="button"
+        class="w-8 h-8 rounded-full bg-surface-subtle flex items-center justify-center text-text-charcoal font-bold cursor-pointer"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="space-y-3">
+      <p class="text-xs font-bold uppercase tracking-wider text-text-muted">Taal &amp; Regio</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+        <div class="p-3 rounded-xl border-2 border-primary bg-badge-teal-bg/40 font-bold text-text-charcoal">
+          <div>🇳🇱 Nederlands (NL)</div>
+          <div class="text-[11px] font-normal text-text-muted mt-0.5">Standaard • Officiële data</div>
+        </div>
+        <a
+          href="/steden"
+          class="p-3 rounded-xl border border-border-hairline hover:border-primary bg-surface-subtle font-semibold text-text-charcoal block"
+        >
+          <div>🇬🇧 English Overview</div>
+          <div class="text-[11px] font-normal text-text-muted mt-0.5">Browse all 342 Dutch cities</div>
+        </a>
+        <a
+          href="/provincies/zeeland"
+          class="p-3 rounded-xl border border-border-hairline hover:border-primary bg-surface-subtle font-semibold text-text-charcoal block"
+        >
+          <div>🇩🇪 Kust &amp; Grensregio</div>
+          <div class="text-[11px] font-normal text-text-muted mt-0.5">Zeeland, Limburg &amp; Gelderland</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <p class="text-xs font-bold uppercase tracking-wider text-text-muted">Kies direct een grote stad</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-semibold">
+        <a href="/steden/amsterdam" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Amsterdam →</a>
+        <a href="/steden/rotterdam" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Rotterdam →</a>
+        <a href="/steden/den-haag" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Den Haag →</a>
+        <a href="/steden/utrecht" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Utrecht →</a>
+        <a href="/steden/eindhoven" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Eindhoven →</a>
+        <a href="/steden/groningen" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Groningen →</a>
+        <a href="/steden/maastricht" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Maastricht →</a>
+        <a href="/steden/tilburg" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Tilburg →</a>
+        <a href="/steden/almere" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Almere →</a>
+        <a href="/steden/breda" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Breda →</a>
+        <a href="/steden/nijmegen" class="p-2.5 rounded-xl border border-border-hairline hover:border-primary bg-surface-pure text-text-charcoal">Nijmegen →</a>
+        <a href="/steden" class="p-2.5 rounded-xl border border-primary bg-badge-teal-bg text-primary font-bold">Alle 342 steden →</a>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <p class="text-xs font-bold uppercase tracking-wider text-text-muted">Kies een provincie</p>
+      <div class="flex flex-wrap gap-2 text-xs font-semibold">
+        <a href="/provincies/noord-holland" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Noord-Holland</a>
+        <a href="/provincies/zuid-holland" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Zuid-Holland</a>
+        <a href="/provincies/utrecht" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Utrecht</a>
+        <a href="/provincies/noord-brabant" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Noord-Brabant</a>
+        <a href="/provincies/gelderland" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Gelderland</a>
+        <a href="/provincies/overijssel" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Overijssel</a>
+        <a href="/provincies/limburg" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Limburg</a>
+        <a href="/provincies/groningen" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Groningen</a>
+        <a href="/provincies/fryslan" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Fryslân</a>
+        <a href="/provincies/drenthe" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Drenthe</a>
+        <a href="/provincies/flevoland" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Flevoland</a>
+        <a href="/provincies/zeeland" class="px-3 py-1.5 rounded-full bg-surface-subtle hover:bg-badge-teal-bg text-text-charcoal">Zeeland</a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- User Menu & Saved Favorites Dialog -->
+<dialog
+  id="header-favorites-dialog"
+  class="backdrop:bg-black/60 bg-transparent p-0 max-w-lg w-full rounded-3xl m-auto"
+>
+  <div class="bg-surface-pure p-6 rounded-3xl border border-border-hairline shadow-2xl space-y-5">
+    <div class="flex items-center justify-between border-b border-border-hairline pb-3">
+      <h2 class="text-lg font-extrabold text-text-charcoal">Menu &amp; Opgeslagen Favorieten</h2>
+      <button
+        id="close-favorites-dialog-btn"
+        type="button"
+        class="w-8 h-8 rounded-full bg-surface-subtle flex items-center justify-center text-text-charcoal font-bold cursor-pointer"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="space-y-2">
+      <p class="text-xs font-bold uppercase tracking-wider text-text-muted">Opgeslagen Zwemlocaties</p>
+      <div id="header-favorites-list" class="text-xs text-text-muted p-3.5 rounded-xl bg-surface-subtle border border-border-hairline">
+        Klik op het hartje (♡) bij een zwembad om uw favoriete zwemlocaties hier te bewaren.
+      </div>
+    </div>
+
+    <div class="space-y-2 pt-2 border-t border-border-hairline">
+      <p class="text-xs font-bold uppercase tracking-wider text-text-muted">Snelmenu</p>
+      <div class="grid grid-cols-1 gap-1.5 text-sm font-semibold">
+        <a href="/" class="p-2.5 rounded-xl hover:bg-surface-subtle text-text-charcoal flex items-center justify-between">
+          <span>🏊 Alle Zwembaden &amp; Interactieve Kaart</span>
+          <span>→</span>
+        </a>
+        <a href="/steden" class="p-2.5 rounded-xl hover:bg-surface-subtle text-text-charcoal flex items-center justify-between">
+          <span>🏙️ Overzicht Alle 342 Gemeenten &amp; 12 Provincies</span>
+          <span>→</span>
+        </a>
+        <a href="/?cat=ZWEMLES" class="p-2.5 rounded-xl hover:bg-surface-subtle text-text-charcoal flex items-center justify-between">
+          <span>🎓 Zwemles A/B/C Wachttijd Vergelijker</span>
+          <span>→</span>
+        </a>
+        <a href="/?cat=BUITEN" class="p-2.5 rounded-xl hover:bg-surface-subtle text-text-charcoal flex items-center justify-between">
+          <span>🌊 Officiële Zwemwater.nl Buitenlocaties</span>
+          <span>→</span>
+        </a>
+        <a href="/aanbieder" class="p-2.5 rounded-xl bg-badge-teal-bg text-primary font-bold flex items-center justify-between">
+          <span>✓ Word Aanbieder (Zwembad of Zwemschool Claimen)</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
 <script>
-  function wireHeaderCapsule() {
+  function wireHeaderControls() {
     const waarInput = document.getElementById('header-waar-input') as HTMLInputElement | null;
     const watSelect = document.getElementById('header-wat-select') as HTMLSelectElement | null;
     const wieSelect = document.getElementById('header-wie-select') as HTMLSelectElement | null;
     const submitBtn = document.getElementById('header-search-submit');
 
+    const globeBtn = document.getElementById('header-globe-btn');
+    const globeDialog = document.getElementById('header-globe-dialog') as HTMLDialogElement | null;
+    const closeGlobeBtn = document.getElementById('close-globe-dialog-btn');
+
+    const userMenuBtn = document.getElementById('header-user-menu-btn');
+    const favDialog = document.getElementById('header-favorites-dialog') as HTMLDialogElement | null;
+    const closeFavBtn = document.getElementById('close-favorites-dialog-btn');
+    const favListEl = document.getElementById('header-favorites-list');
+    const favBadgeEl = document.getElementById('header-fav-count-badge');
+
+    function syncFavoritesUi() {
+      try {
+        const favs: string[] = JSON.parse(localStorage.getItem('zwemkaart_favorites') || '[]');
+        if (favBadgeEl) {
+          if (favs.length > 0) {
+            favBadgeEl.textContent = String(favs.length);
+            favBadgeEl.classList.remove('hidden');
+            favBadgeEl.classList.add('flex');
+          } else {
+            favBadgeEl.classList.add('hidden');
+            favBadgeEl.classList.remove('flex');
+          }
+        }
+        if (favListEl) {
+          if (favs.length === 0) {
+            favListEl.textContent =
+              'Klik op het hartje (♡) bij een zwembad om uw favoriete zwemlocaties hier te bewaren.';
+          } else {
+            favListEl.innerHTML = `<div class="font-bold text-text-charcoal mb-1">❤️ ${favs.length} opgeslagen zwemlocatie(s)</div><p class="text-xs text-text-muted">Uw opgeslagen favorieten zijn gemarkeerd met een rood hartje op de overzichtskaart.</p>`;
+          }
+        }
+      } catch {
+        // Ignore storage errors
+      }
+    }
+
+    syncFavoritesUi();
+
+    globeBtn?.addEventListener('click', () => {
+      globeDialog?.showModal();
+    });
+    closeGlobeBtn?.addEventListener('click', () => {
+      globeDialog?.close();
+    });
+    globeDialog?.addEventListener('click', (e) => {
+      if (e.target === globeDialog) globeDialog.close();
+    });
+
+    userMenuBtn?.addEventListener('click', () => {
+      syncFavoritesUi();
+      favDialog?.showModal();
+    });
+    closeFavBtn?.addEventListener('click', () => {
+      favDialog?.close();
+    });
+    favDialog?.addEventListener('click', (e) => {
+      if (e.target === favDialog) favDialog.close();
+    });
+
     if (!waarInput || !watSelect || !submitBtn) return;
 
-    // Populate initial values from URL if present
     const params = new URLSearchParams(window.location.search);
     if (params.get('q')) waarInput.value = params.get('q')!;
     if (params.get('cat')) watSelect.value = params.get('cat')!;
@@ -159,7 +357,6 @@
       const cat = watSelect!.value;
       const wie = wieSelect?.value || '1v';
 
-      // If on homepage, dispatch live event to SearchAndFilterIsland
       if (window.location.pathname === '/') {
         window.dispatchEvent(
           new CustomEvent('zwemkaart:search', {
@@ -196,5 +393,5 @@
     submitBtn.addEventListener('click', triggerCapsuleSearch);
   }
 
-  wireHeaderCapsule();
+  wireHeaderControls();
 </script>

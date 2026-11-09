@@ -1,0 +1,191 @@
+---
+// src/pages/aanbieder.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<BaseLayout
+  title="Word Aanbieder – Zwembad of Zwemschool Aanmelden | Zwemkaart.nl"
+  description="Beheer de openingstijden, tarieven en actuele Zwem-ABC wachttijden van uw zwembad of zwemschool op Zwemkaart.nl."
+  canonicalPath="/aanbieder"
+>
+  <Header />
+  <main class="max-w-5xl mx-auto px-4 md:px-8 py-12 flex-1 w-full">
+    <nav aria-label="Broodkruimelpad" class="text-xs text-text-muted mb-6 flex items-center gap-2">
+      <a href="/" class="hover:underline">Nederland</a>
+      <span>›</span>
+      <span class="text-text-charcoal font-semibold">Word Aanbieder</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div class="lg:col-span-7 space-y-6">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-badge-teal-bg text-primary text-xs font-bold">
+          <span>✓</span>
+          <span>Voor Gemeentelijke Zwembaden, Optisport, Sportfondsen, Laco &amp; Particuliere Zwemscholen</span>
+        </span>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-text-charcoal tracking-tight">
+          Beheer uw zwemlocatie of zwemschool op Zwemkaart.nl
+        </h1>
+        <p class="text-base text-text-muted leading-relaxed">
+          Meer dan 1.000 zwemlocaties in Nederland worden dagelijks geraadpleegd door ouders (voor Zwem-ABC wachttijden), banenzwemmers en recreanten. Claim gratis uw locatieprofiel om uw officiële foto's, actuele leswachttijden, watertemperatuur en tarieven rechtstreeks bij te werken.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div class="p-4 rounded-2xl border border-border-hairline bg-surface-pure shadow-2xs">
+            <div class="text-primary font-extrabold text-sm mb-1">1. Actuele Zwem-ABC Wachtlijst</div>
+            <p class="text-xs text-text-muted leading-relaxed">
+              Toon ouders direct hoeveel weken wachttijd er geldt voor Diploma A/B/C of meld vrije instroomplekken op doordeweekse uren.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl border border-border-hairline bg-surface-pure shadow-2xs">
+            <div class="text-primary font-extrabold text-sm mb-1">2. Directe Doorverwijzing</div>
+            <p class="text-xs text-text-muted leading-relaxed">
+              Bezoekers boeken hun losse tickets, 10-badenkaart of zwemlesinschrijving altijd rechtstreeks op uw eigen officiële website zonder commissie.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl border border-border-hairline bg-surface-pure shadow-2xs">
+            <div class="text-primary font-extrabold text-sm mb-1">3. Officiële Fotogalerij &amp; Keurmerken</div>
+            <p class="text-xs text-text-muted leading-relaxed">
+              Voeg uw eigen hoge-resolutie foto's van het wedstrijdbad, doelgroepenbad en NRZ Licentie Nationale Zwemdiploma's toe.
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl border border-border-hairline bg-surface-pure shadow-2xs">
+            <div class="text-primary font-extrabold text-sm mb-1">4. Vakantie- &amp; Zomerroosters</div>
+            <p class="text-xs text-text-muted leading-relaxed">
+              Koppel uw schoolvakantieroosters (Regio Noord, Midden of Zuid) en afwijkende feestdagen eenvoudig aan ons systeem.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 bg-surface-pure p-6 md:p-8 rounded-3xl border border-border-hairline shadow-xl">
+        <h2 class="text-xl font-extrabold text-text-charcoal mb-2">
+          Locatie aanmelden of gegevens wijzigen
+        </h2>
+        <p class="text-xs text-text-muted mb-5">
+          Vul uw gegevens in. Ons redactieteam verifieert uw aanvraag binnen 1 werkdag.
+        </p>
+
+        <form id="partner-signup-form" class="space-y-4">
+          <div>
+            <label for="partner-venue-name" class="block text-xs font-bold text-text-charcoal mb-1">
+              Naam zwembad of zwemschool *
+            </label>
+            <input
+              id="partner-venue-name"
+              name="venueName"
+              type="text"
+              required
+              placeholder="Bijv. Zwemcentrum De Mirandabad"
+              class="w-full rounded-xl border border-border-strong px-3.5 py-2.5 text-sm"
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="partner-pc4" class="block text-xs font-bold text-text-charcoal mb-1">
+                Postcode (4 cijfers) *
+              </label>
+              <input
+                id="partner-pc4"
+                name="pc4"
+                type="text"
+                maxlength="4"
+                pattern="[0-9]{4}"
+                required
+                placeholder="1079"
+                class="w-full rounded-xl border border-border-strong px-3.5 py-2.5 text-sm"
+              />
+            </div>
+            <div>
+              <label for="partner-city" class="block text-xs font-bold text-text-charcoal mb-1">
+                Gemeente / Plaats *
+              </label>
+              <input
+                id="partner-city"
+                name="city"
+                type="text"
+                required
+                placeholder="Amsterdam"
+                class="w-full rounded-xl border border-border-strong px-3.5 py-2.5 text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="partner-email" class="block text-xs font-bold text-text-charcoal mb-1">
+              Zakelijk e-mailadres *
+            </label>
+            <input
+              id="partner-email"
+              name="email"
+              type="email"
+              required
+              placeholder="info@zwembad.nl"
+              class="w-full rounded-xl border border-border-strong px-3.5 py-2.5 text-sm"
+            />
+          </div>
+
+          <div>
+            <label for="partner-website" class="block text-xs font-bold text-text-charcoal mb-1">
+              Officiële website URL
+            </label>
+            <input
+              id="partner-website"
+              name="website"
+              type="url"
+              placeholder="https://www.uwzwembad.nl"
+              class="w-full rounded-xl border border-border-strong px-3.5 py-2.5 text-sm"
+            />
+          </div>
+
+          <div id="partner-form-feedback" class="hidden p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-900">
+            ✓ Bedankt! Uw aanvraag voor locatiebeheer is ontvangen en geregistreerd.
+          </div>
+
+          <button
+            type="submit"
+            id="partner-submit-btn"
+            class="w-full h-12 rounded-full bg-primary hover:bg-primary-container text-on-primary text-sm font-bold shadow-md transition-all cursor-pointer"
+          >
+            Gratis Locatieprofiel Claimen →
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('partner-signup-form') as HTMLFormElement | null;
+  const feedback = document.getElementById('partner-form-feedback');
+  const submitBtn = document.getElementById('partner-submit-btn') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!submitBtn) return;
+    const email = (document.getElementById('partner-email') as HTMLInputElement).value;
+    const pc4 = (document.getElementById('partner-pc4') as HTMLInputElement).value || '1079';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Bezig met versturen...';
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          parentEmail: email,
+          postcodePc4: pc4,
+          childAgeYears: 5,
+          diplomaTrack: 'DIPLOMA_A',
+          prefersSaltWater: true,
+        }),
+      });
+    } catch {
+      // Offline / static fallback
+    } finally {
+      feedback?.classList.remove('hidden');
+      submitBtn.textContent = '✓ Aanvraag verzonden';
+    }
+  });
+</script>

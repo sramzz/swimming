@@ -36,6 +36,7 @@ export interface VenueRow {
   min_single_price_cents: number | null;
   featured_badge_nl: string | null;
   hero_photos_json?: string;
+  zwemwater_metadata_json?: string | null;
   lastmod_at: string;
   default_temp_celsius?: number | null;
   default_basin_name_nl?: string | null;

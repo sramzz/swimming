@@ -1,14 +1,64 @@
 ---
 // src/components/Footer.astro
 ---
-<footer class="mt-auto bg-surface-subtle border-t border-border-hairline py-8">
-  <div class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-muted">
-    <p>© 2026 Zwemkaart.nl — Onafhankelijk platform voor zwembaden, Zwem-ABC wachttijden & zwemwater.</p>
-    <div class="flex flex-wrap gap-4">
-      <a href="/steden/amsterdam" class="hover:text-primary">Amsterdam</a>
-      <a href="/steden/utrecht" class="hover:text-primary">Utrecht</a>
-      <a href="/steden/eindhoven" class="hover:text-primary">Eindhoven</a>
-      <a href="/sitemap.xml" class="hover:text-primary">Sitemap</a>
+<footer class="mt-auto bg-surface-subtle border-t border-border-hairline py-10">
+  <div class="max-w-7xl mx-auto px-4 md:px-8 space-y-8 text-xs text-text-muted">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <div class="space-y-2">
+        <p class="font-bold text-text-charcoal uppercase tracking-wider">Grote Steden</p>
+        <ul class="space-y-1.5">
+          <li><a href="/steden/amsterdam" class="hover:text-primary">Zwembaden Amsterdam</a></li>
+          <li><a href="/steden/rotterdam" class="hover:text-primary">Zwembaden Rotterdam</a></li>
+          <li><a href="/steden/den-haag" class="hover:text-primary">Zwembaden Den Haag</a></li>
+          <li><a href="/steden/utrecht" class="hover:text-primary">Zwembaden Utrecht</a></li>
+          <li><a href="/steden/eindhoven" class="hover:text-primary">Zwembaden Eindhoven</a></li>
+          <li><a href="/steden/groningen" class="hover:text-primary">Zwembaden Groningen</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <p class="font-bold text-text-charcoal uppercase tracking-wider">Meer Steden</p>
+        <ul class="space-y-1.5">
+          <li><a href="/steden/maastricht" class="hover:text-primary">Zwembaden Maastricht</a></li>
+          <li><a href="/steden/tilburg" class="hover:text-primary">Zwembaden Tilburg</a></li>
+          <li><a href="/steden/breda" class="hover:text-primary">Zwembaden Breda</a></li>
+          <li><a href="/steden/nijmegen" class="hover:text-primary">Zwembaden Nijmegen</a></li>
+          <li><a href="/steden/apeldoorn" class="hover:text-primary">Zwembaden Apeldoorn</a></li>
+          <li><a href="/steden" class="font-bold text-primary hover:underline">Alle 342 Gemeenten →</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <p class="font-bold text-text-charcoal uppercase tracking-wider">Provincies</p>
+        <ul class="space-y-1.5">
+          <li><a href="/provincies/noord-holland" class="hover:text-primary">Noord-Holland</a></li>
+          <li><a href="/provincies/zuid-holland" class="hover:text-primary">Zuid-Holland</a></li>
+          <li><a href="/provincies/utrecht" class="hover:text-primary">Utrecht</a></li>
+          <li><a href="/provincies/noord-brabant" class="hover:text-primary">Noord-Brabant</a></li>
+          <li><a href="/provincies/gelderland" class="hover:text-primary">Gelderland</a></li>
+          <li><a href="/provincies/overijssel" class="hover:text-primary">Overijssel</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <p class="font-bold text-text-charcoal uppercase tracking-wider">Platform &amp; Data</p>
+        <ul class="space-y-1.5">
+          <li><a href="/aanbieder" class="font-bold text-text-charcoal hover:text-primary">Word Aanbieder (Locatie Claimen)</a></li>
+          <li><a href="/?cat=ZWEMLES" class="hover:text-primary">NRZ Zwem-ABC Wachtlijsten</a></li>
+          <li><a href="/?cat=BUITEN" class="hover:text-primary">Zwemwater.nl Buitenwater</a></li>
+          <li><a href="/provincies/limburg" class="hover:text-primary">Limburg &amp; Zeeland</a></li>
+          <li><a href="/sitemap.xml" class="hover:text-primary">XML Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pt-6 border-t border-border-hairline flex flex-col md:flex-row justify-between items-center gap-4">
+      <p>© 2026 Zwemkaart.nl — Onafhankelijk platform voor zwembaden, Zwem-ABC wachttijden &amp; officieel Rijkswaterstaat zwemwater.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/steden" class="hover:text-primary">Steden</a>
+        <a href="/aanbieder" class="hover:text-primary">Word Aanbieder</a>
+        <a href="/sitemap.xml" class="hover:text-primary">Sitemap</a>
+      </div>
     </div>
   </div>
 </footer>

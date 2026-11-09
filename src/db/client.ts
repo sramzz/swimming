@@ -20,4 +20,9 @@ export function applyDetailedSchema(
 ): void {
   const sql = fs.readFileSync(schemaPath, 'utf-8');
   db.exec(sql);
+  // Idempotent migration guard for existing SQLite databases created before zwemwater_metadata_json
+  const cols = db.prepare('PRAGMA table_info(venues)').all() as Array<{ name: string }>;
+  if (!cols.some((c) => c.name === 'zwemwater_metadata_json')) {
+    db.exec('ALTER TABLE venues ADD COLUMN zwemwater_metadata_json TEXT');
+  }
 }

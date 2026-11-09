@@ -1,0 +1,131 @@
+---
+// src/pages/steden/index.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getBuildDatabase } from '../../db/runtime-db';
+
+const db = getBuildDatabase();
+
+const provinces = db
+  .prepare(
+    `SELECT m.province_slug, m.province_name, COUNT(v.id) as venue_count
+     FROM municipalities m
+     JOIN venues v ON v.municipality_slug = m.slug
+     GROUP BY m.province_slug
+     ORDER BY m.province_name ASC`
+  )
+  .all() as Array<{ province_slug: string; province_name: string; venue_count: number }>;
+
+const cities = db
+  .prepare(
+    `SELECT m.slug, m.name, m.province_name, COUNT(v.id) as venue_count,
+            SUM(CASE WHEN v.venue_type != 'OPEN_WATER_NATURAL' THEN 1 ELSE 0 END) as indoor_count,
+            SUM(CASE WHEN v.venue_type = 'OPEN_WATER_NATURAL' THEN 1 ELSE 0 END) as outdoor_count
+     FROM municipalities m
+     JOIN venues v ON v.municipality_slug = m.slug
+     GROUP BY m.slug
+     ORDER BY venue_count DESC, m.name ASC`
+  )
+  .all() as Array<{
+    slug: string;
+    name: string;
+    province_name: string;
+    venue_count: number;
+    indoor_count: number;
+    outdoor_count: number;
+  }>;
+
+db.close();
+---
+<BaseLayout
+  title="Alle Steden & Provincies – Zwembaden in Nederland | Zwemkaart.nl"
+  description={`Overzicht van alle ${cities.length} Nederlandse gemeenten en 12 provincies met zwembaden, banenzwemmen, Zwem-ABC zwemles en natuurwater.`}
+  canonicalPath="/steden"
+>
+  <Header />
+  <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
+    <nav aria-label="Broodkruimelpad" class="text-xs text-text-muted mb-4 flex items-center gap-2">
+      <a href="/" class="hover:underline">Nederland</a>
+      <span>›</span>
+      <span class="text-text-charcoal font-semibold">Alle Steden &amp; Provincies</span>
+    </nav>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">
+        Zwembaden &amp; Zwemwater per Stad en Provincie
+      </h1>
+      <p class="text-sm text-text-muted max-w-3xl">
+        Kies uw provincie of gemeente om direct binnenbaden, subtropische zwemparadijzen, Zwem-ABC wachttijden en officiële Rijkswaterstaat buitenzwemplekken te bekijken.
+      </p>
+    </div>
+
+    {/* 12 Provinces Grid */}
+    <section class="mb-10">
+      <h2 class="text-lg font-extrabold text-text-charcoal mb-4">
+        12 Provincies van Nederland
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {provinces.map((p) => (
+          <a
+            href={`/provincies/${p.province_slug}`}
+            class="p-4 rounded-2xl border border-border-hairline bg-surface-pure hover:border-primary hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <span class="font-bold text-sm text-text-charcoal">{p.province_name}</span>
+            <span class="text-xs text-primary font-semibold mt-1">{p.venue_count} locaties →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    {/* Searchable All Municipalities Directory */}
+    <section>
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-5 pb-4 border-b border-border-hairline">
+        <h2 class="text-lg font-extrabold text-text-charcoal">
+          Alle Gemeenten met Zwemlocaties ({cities.length})
+        </h2>
+        <div class="w-full sm:w-80">
+          <label for="city-directory-search" class="sr-only">Zoek gemeente</label>
+          <input
+            id="city-directory-search"
+            type="search"
+            placeholder="Filter op gemeente of provincie..."
+            class="w-full px-4 py-2 rounded-full border border-border-strong bg-surface-pure text-xs md:text-sm"
+          />
+        </div>
+      </div>
+
+      <div id="city-directory-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        {cities.map((c) => (
+          <a
+            href={`/steden/${c.slug}`}
+            data-city-name={`${c.name.toLowerCase()} ${c.province_name.toLowerCase()}`}
+            class="city-directory-card p-3.5 rounded-xl border border-border-hairline bg-surface-pure hover:border-primary hover:shadow-xs transition-all flex items-center justify-between gap-2"
+          >
+            <div class="min-w-0">
+              <div class="font-bold text-sm text-text-charcoal truncate">{c.name}</div>
+              <div class="text-[11px] text-text-muted truncate">{c.province_name}</div>
+            </div>
+            <span class="shrink-0 px-2.5 py-1 rounded-full bg-badge-teal-bg text-primary text-xs font-bold">
+              {c.venue_count}
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('city-directory-search') as HTMLInputElement | null;
+  const cityCards = document.querySelectorAll<HTMLElement>('.city-directory-card');
+
+  searchInput?.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    cityCards.forEach((card) => {
+      const name = card.dataset.cityName || '';
+      card.style.display = q === '' || name.includes(q) ? '' : 'none';
+    });
+  });
+</script>

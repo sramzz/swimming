@@ -79,6 +79,24 @@ interface ZwemwaterSpot {
   name: string;
 }
 
+interface ZwemwaterDetailRecord {
+  spotid: number;
+  statusTextNl: string | null;
+  recentMeasurementStatusNl: string | null;
+  entranceFeeCode: string | null;
+  isPaidAccess: boolean;
+  waterQuality4YearClassNl: 'uitstekend' | 'goed' | 'aanvaardbaar' | 'slecht' | null;
+  locationOwnerNl: string | null;
+  descriptionNl: string | null;
+  seasonTextNl: string | null;
+  waterProfileUrl: string | null;
+  infoBoardUrl: string | null;
+  officialPhotoUrls: string[];
+  featuresNl: string[];
+  restrictionsNl: string[];
+  warnings: Array<{ titleNl: string; bodyNl: string }>;
+}
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -180,7 +198,7 @@ export async function runNationalIngestion(): Promise<{
       parking_info_nl, ev_chargers_count, transit_chips_json,
       municipal_pass_name, municipal_pass_discount_nl,
       google_maps_embed_url, google_maps_route_url, official_website_url, official_tickets_url,
-      rating_score, rating_count, min_single_price_cents, featured_badge_nl, hero_photos_json, content_hash
+      rating_score, rating_count, min_single_price_cents, featured_badge_nl, hero_photos_json, zwemwater_metadata_json, content_hash
     ) VALUES (
       @id, @slug, @municipality_slug, @name, @venue_type, @enrichment_tier, @operational_state,
       @street_address, @postcode_pc6, @postcode_pc4, @neighborhood_name, @lat, @lng,
@@ -189,15 +207,17 @@ export async function runNationalIngestion(): Promise<{
       @parking_info_nl, @ev_chargers_count, @transit_chips_json,
       @municipal_pass_name, @municipal_pass_discount_nl,
       @google_maps_embed_url, @google_maps_route_url, @official_website_url, @official_tickets_url,
-      @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl, @hero_photos_json, @content_hash
+      @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl, @hero_photos_json, @zwemwater_metadata_json, @content_hash
     )
     ON CONFLICT(id) DO UPDATE SET
       name = excluded.name,
+      operator_name = excluded.operator_name,
       rating_score = excluded.rating_score,
       rating_count = excluded.rating_count,
       min_single_price_cents = excluded.min_single_price_cents,
       operational_state = excluded.operational_state,
-      hero_photos_json = excluded.hero_photos_json
+      hero_photos_json = excluded.hero_photos_json,
+      zwemwater_metadata_json = excluded.zwemwater_metadata_json
   `);
 
   const upsertBasin = db.prepare(`
@@ -342,6 +362,7 @@ export async function runNationalIngestion(): Promise<{
             venueType: pool.venue_type,
           })
         ),
+        zwemwater_metadata_json: null,
         content_hash: contentHash,
       });
 
@@ -439,41 +460,24 @@ export async function runNationalIngestion(): Promise<{
   console.log(`✅ Ingested ${indoorCount} curated municipal/indoor pool venues.`);
 
   // 5. Ingest Zwemwater.nl Official Outdoor Bathing Spots
-  console.log('🌊 Fetching 945 official Dutch outdoor swimming locations from Zwemwater.nl...');
+  console.log('🌊 Loading 945 official Dutch outdoor swimming locations and Rijkswaterstaat details from Zwemwater.nl...');
   let spots: ZwemwaterSpot[] = [];
   const addressBySpotId = new Map<string, string>();
+  const detailBySpotId = new Map<string, ZwemwaterDetailRecord>();
 
   const fallbackSpotsPath = path.resolve(process.cwd(), 'src/data/zwemwater-spots.json');
-
-  try {
-    const zwRes = await fetch('https://www.zwemwater.nl', { signal: AbortSignal.timeout(10000) });
-    if (!zwRes.ok) throw new Error(`HTTP ${zwRes.status}`);
-    const zwHtml = await zwRes.text();
-    const spotsMatch = zwHtml.match(/data-swimming-spots='([^']+)'/);
-    if (!spotsMatch) throw new Error('data-swimming-spots not found');
-    spots = JSON.parse(spotsMatch[1]);
-
-    const cardRegex =
-      /<div class="card"[\s\S]*?data-spotid="([0-9]+)"[\s\S]*?<span class="spot-address"><i[^>]*><\/i>\s*([\s\S]*?)\s*<\/span>/g;
-    let cardMatch: RegExpExecArray | null;
-    while ((cardMatch = cardRegex.exec(zwHtml)) !== null) {
-      const spotid = cardMatch[1];
-      const rawAddr = cardMatch[2].replace(/\s+/g, ' ').trim();
-      addressBySpotId.set(spotid, rawAddr);
+  if (fs.existsSync(fallbackSpotsPath)) {
+    const cached = JSON.parse(fs.readFileSync(fallbackSpotsPath, 'utf-8'));
+    spots = cached.spots || [];
+    for (const [k, v] of Object.entries(cached.addresses || {})) {
+      addressBySpotId.set(k, v as string);
     }
-    console.log(`Live fetched ${spots.length} spots from Zwemwater.nl.`);
-  } catch (err) {
-    console.warn(`Could not reach live Zwemwater.nl (${(err as Error).message}), loading bundled cache...`);
-    if (fs.existsSync(fallbackSpotsPath)) {
-      const cached = JSON.parse(fs.readFileSync(fallbackSpotsPath, 'utf-8'));
-      spots = cached.spots;
-      for (const [k, v] of Object.entries(cached.addresses || {})) {
-        addressBySpotId.set(k, v as string);
-      }
-      console.log(`Loaded ${spots.length} spots from bundled fallback cache.`);
-    } else {
-      throw err;
+    for (const [k, v] of Object.entries(cached.details || {})) {
+      detailBySpotId.set(k, v as ZwemwaterDetailRecord);
     }
+    console.log(
+      `Loaded ${spots.length} spots and ${detailBySpotId.size} detailed Rijkswaterstaat dossiers from zwemwater-spots.json.`
+    );
   }
 
   // Track slugs per municipality to ensure uniqueness
@@ -560,27 +564,35 @@ export async function runNationalIngestion(): Promise<{
       let badgeNl = 'Officiële Zwemplek';
       let wetsuitAdviceNl = 'Natuurwater gecontroleerd door Rijkswaterstaat / Waterschap';
 
+      const detail = detailBySpotId.get(String(spot.spotid)) ?? null;
+      const isPaidAccess = detail?.isPaidAccess ?? false;
+      const operatorName = detail?.locationOwnerNl
+        ? detail.locationOwnerNl.split(',')[0].trim()
+        : 'Rijkswaterstaat / Waterschap';
+
       if (spot.status === 'WAARSCHUWING' || spot.status === 'NADER_ONDERZOEK') {
         operationalState = 'WARNING_WATER_QUALITY';
         waterQualityState = 'WARNING_BLAUWALG';
         badgeNl = 'Waarschuwing Blauwalg';
-        wetsuitAdviceNl = 'Waarschuwing blauwalg of verhoogd risico actief';
+        wetsuitAdviceNl =
+          detail?.warnings?.[0]?.bodyNl || 'Waarschuwing blauwalg of verhoogd risico actief';
       } else if (spot.status === 'NEGATIEF_ZWEMADVIES') {
         operationalState = 'WARNING_WATER_QUALITY';
         waterQualityState = 'NEGATIVE_SWIM_ADVICE';
         badgeNl = 'Negatief Zwemadvies';
-        wetsuitAdviceNl = 'Negatief zwemadvies van kracht';
+        wetsuitAdviceNl = detail?.warnings?.[0]?.bodyNl || 'Negatief zwemadvies van kracht';
       } else if (spot.status === 'ZWEMVERBOD') {
         operationalState = 'CLOSED_UNSAFE_OR_WEATHER';
         waterQualityState = 'SWIMMING_BAN';
         badgeNl = 'Zwemverbod';
-        wetsuitAdviceNl = 'Zwemverbod van kracht vanwege waterkwaliteit of gevaar';
+        wetsuitAdviceNl =
+          detail?.warnings?.[0]?.bodyNl || 'Zwemverbod van kracht vanwege waterkwaliteit of gevaar';
       }
 
       const venueId = `venue-zw-${spot.spotid}`;
       const contentHash = crypto
         .createHash('sha256')
-        .update(`${cleanName}:${lat}:${lng}:${spot.status}`)
+        .update(`${cleanName}:${lat}:${lng}:${spot.status}:${isPaidAccess ? 'paid' : 'free'}`)
         .digest('hex');
 
       const embedUrl = `https://maps.google.com/maps?q=${lat},${lng}&hl=nl&z=14&output=embed`;
@@ -601,14 +613,18 @@ export async function runNationalIngestion(): Promise<{
         neighborhood_name: matchedMun.name,
         lat,
         lng,
-        operator_name: 'Rijkswaterstaat / Waterschap',
+        operator_name: operatorName,
         is_nrz_licensed: 0,
         is_knzb_affiliated: 0,
-        municipal_keurmerk_label: 'Officiële Zwemwaterlocatie',
+        municipal_keurmerk_label: detail?.waterQuality4YearClassNl
+          ? `EU Waterkwaliteit: ${detail.waterQuality4YearClassNl}`
+          : 'Officiële Zwemwaterlocatie',
         primary_water_treatment: 'NATURAL_UNTREATED',
         has_wheelchair_lift: 0,
         has_accessible_changing: 0,
-        parking_info_nl: null,
+        parking_info_nl: detail?.featuresNl?.some((f) => f.toLowerCase().includes('parkeer'))
+          ? 'Parkeergelegenheid aanwezig bij zwemlocatie'
+          : null,
         ev_chargers_count: 0,
         transit_chips_json: '[]',
         municipal_pass_name: null,
@@ -619,7 +635,7 @@ export async function runNationalIngestion(): Promise<{
         official_tickets_url: null,
         rating_score: null,
         rating_count: 0,
-        min_single_price_cents: 0,
+        min_single_price_cents: isPaidAccess ? null : 0,
         featured_badge_nl: badgeNl,
         hero_photos_json: JSON.stringify(
           buildCuratedPhotosForVenue({
@@ -628,6 +644,7 @@ export async function runNationalIngestion(): Promise<{
             venueType: 'OPEN_WATER_NATURAL',
           })
         ),
+        zwemwater_metadata_json: detail ? JSON.stringify(detail) : null,
         content_hash: contentHash,
       });
 

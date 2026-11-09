@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { buildCuratedPhotosForVenue, parseVenuePhotos } from '@/domain/venue-photos';
+import { rankVenuesMultiCityRecommended } from '@/domain/multi-city-ranking';
 import { getBuildDatabase } from '@/db/runtime-db';
 import { listAllVenues } from '@/db/queries';
 
@@ -49,6 +50,18 @@ describe('Airbnb Aquatic Discovery UI & Self-Hosted Photo Library', () => {
     // All 5 photos within a single venue's 5-photo hero grid must be distinct
     const uniqueUrlsA = new Set(openWaterA.map((p) => p.url));
     expect(uniqueUrlsA.size).toBe(5);
+  });
+
+  it('guarantees 100% unique primary cover photos across the top 24 multi-city homepage cards (zero repetition)', () => {
+    const db = getBuildDatabase();
+    const venues = listAllVenues(db);
+    db.close();
+
+    const top24 = rankVenuesMultiCityRecommended(venues).slice(0, 24);
+    expect(top24.length).toBe(24);
+    const primaryPhotoUrls = top24.map((v) => parseVenuePhotos(v)[0]!.url);
+    const uniquePrimaryUrls = new Set(primaryPhotoUrls);
+    expect(uniquePrimaryUrls.size).toBe(24);
   });
 
   it('verifies Homepage, Detail Page, City/Province filters, and MapLibre colorful style invariants', () => {

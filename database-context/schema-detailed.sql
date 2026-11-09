@@ -151,6 +151,7 @@ CREATE TABLE IF NOT EXISTS venues (
     min_single_price_cents  INTEGER,                    -- e.g. 820 (€ 8,20) for card display; 0 for free open water
     featured_badge_nl       TEXT,                       -- e.g. 'Populairste Keuze', 'Direct Beschikbaar'
     hero_photos_json        TEXT NOT NULL DEFAULT '[]', -- JSON array of {url, alt_nl, badge_nl} (5-photo grid)
+    zwemwater_metadata_json TEXT,                       -- JSON object of official Zwemwater.nl dossier (Informatiebord, Zwemwaterprofiel, restrictions, warnings, 4-year EU quality)
     -- SEO & Sitemap Tracking
     content_hash            TEXT,                       -- Only bump lastmod_at when content_hash changes!
     lastmod_at              TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),

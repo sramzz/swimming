@@ -7,7 +7,7 @@
 ## 1. The Core 3-Entity Grain (Why We Don't Put Everything in One `pools` Table)
 
 In the real Dutch swimming world, three things are often confused as "a pool":
-1. **A Building / Location (`venues`):** e.g., *Zwemcentrum De Mirandabad* at De Mirandalaan 9, Amsterdam (`lat`, `lng`, postcode `1079 PA`, municipality `Amsterdam`, school holiday region `noord`, parking/OV info, Google Maps `<iframe>` URL).
+1. **A Building / Location (`venues`):** e.g., *Zwemcentrum De Mirandabad* at De Mirandalaan 9, Amsterdam (`lat`, `lng`, postcode `1079 PA`, municipality `Amsterdam`, school holiday region `noord`, parking/OV info, Google Maps `<iframe>` URL, `hero_photos_json`, and `zwemwater_metadata_json` for official Rijkswaterstaat `zwemwater.nl` dossier metadata: `Informatiebord`, `Zwemwaterprofiel`, restrictions, facilities, 4-year EU water quality class, and active warnings).
 2. **A Water Basin inside that Location (`basins`):** *De Mirandabad* has a **50m Wedstrijdbad (`27.8°C`)**, a **Subtropisch Golfslagbad (`31.0°C`)**, a **Peuterbad (`32.5°C`)**, and a **Buitenbad (open May–Sept)**.
    * Why separate `basins`? Because **water temperature**, **water treatment (`Zoutelektrolyse` vs. `Klassiek Chloor` vs. `Natuurwater`)**, and **lane length (25m vs. 50m)** belong to the basin!
    * *Pragmatic rule:* If a simple pool doesn't list separate basins on its website, we automatically create 1 default basin (`is_default_basin = 1`) so we never get stuck.

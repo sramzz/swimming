@@ -3,6 +3,14 @@ import type { Map as MapLibreMap, Marker as MapLibreMarker } from 'maplibre-gl';
 import type { VenueRow } from '../../db/queries';
 import { formatEuroCentsNl } from '../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../domain/venue-photos';
+import {
+  filterValidMapVenues,
+  formatMapMarkerLabel,
+  getMapMarkerButtonClasses,
+  NL_DEFAULT_CENTER,
+  NL_DEFAULT_ZOOM,
+  NL_MAP_MAX_BOUNDS,
+} from '../../domain/map-bounds';
 
 type MapLibreModule = typeof import('maplibre-gl');
 
@@ -11,39 +19,72 @@ export interface ListingMapIslandProps {
   styleUrl?: string;
 }
 
+interface ActiveMarkerRecord {
+  id: string;
+  marker: MapLibreMarker;
+  wrapperEl: HTMLDivElement;
+  buttonEl: HTMLButtonElement;
+}
+
+function fitMapToVenues(maplibregl: MapLibreModule, map: MapLibreMap, list: VenueRow[]) {
+  if (list.length === 0) return;
+  try {
+    if (list.length === 1) {
+      map.flyTo({ center: [list[0].lng, list[0].lat], zoom: 13, duration: 500 });
+      return;
+    }
+    const bounds = new maplibregl.LngLatBounds();
+    for (const v of list) {
+      bounds.extend([v.lng, v.lat]);
+    }
+    map.fitBounds(bounds, { padding: 54, maxZoom: 13.2, duration: 550 });
+  } catch {
+    // Ignore bounds error in headless mode
+  }
+}
+
 export default function ListingMapIsland({
   venues,
   styleUrl = 'https://tiles.openfreemap.org/styles/liberty',
 }: ListingMapIslandProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const markersRef = useRef<Array<{ id: string; marker: MapLibreMarker; el: HTMLButtonElement }>>([]);
-  const [filteredVenues, setFilteredVenues] = useState<VenueRow[]>(venues);
-  const [selectedVenue, setSelectedVenue] = useState<VenueRow | null>(
-    venues.find((v) => v.slug === 'de-mirandabad') ?? venues[0] ?? null
-  );
+  const markersRef = useRef<ActiveMarkerRecord[]>([]);
+
+  // Only show the loaded/displayed venues on the homepage (initially 24)
+  const initialLoaded = filterValidMapVenues(venues).slice(0, 24);
+  const [loadedVenues, setLoadedVenues] = useState<VenueRow[]>(initialLoaded);
+  const [selectedVenue, setSelectedVenue] = useState<VenueRow | null>(null);
   const [hoveredVenueId, setHoveredVenueId] = useState<string | null>(null);
   const [mobileMapOpen, setMobileMapOpen] = useState(false);
-  const [regionLabel, setRegionLabel] = useState('Amsterdam & Randstad');
+  const [regionLabel, setRegionLabel] = useState('Heel Nederland (24 geladen)');
 
   // Listen for filter & hover events from SearchAndFilterIsland
   useEffect(() => {
     function onFiltered(e: Event) {
-      const detail = (e as CustomEvent<{ venues: VenueRow[]; query: string }>).detail;
+      const detail = (
+        e as CustomEvent<{
+          venues: VenueRow[];
+          totalFiltered?: number;
+          query: string;
+          cityLabel?: string;
+        }>
+      ).detail;
       if (!detail) return;
-      setFilteredVenues(detail.venues);
-      if (detail.query && detail.query.trim() !== '') {
-        setRegionLabel(`Zoekgebied: ${detail.query.trim()}`);
+      const validLoaded = filterValidMapVenues(detail.venues);
+      setLoadedVenues(validLoaded);
+
+      if (detail.cityLabel && detail.cityLabel !== 'ALL') {
+        setRegionLabel(`${detail.cityLabel} (${validLoaded.length} op kaart)`);
+      } else if (detail.query && detail.query.trim() !== '') {
+        setRegionLabel(`Zoekgebied: "${detail.query.trim()}" (${validLoaded.length} op kaart)`);
       } else {
-        setRegionLabel('Amsterdam & Randstad');
+        setRegionLabel(`Heel Nederland (${validLoaded.length} geladen op kaart)`);
       }
-      if (detail.venues.length > 0) {
-        setSelectedVenue((prev) =>
-          prev && detail.venues.some((v) => v.id === prev.id) ? prev : detail.venues[0]
-        );
-      } else {
-        setSelectedVenue(null);
-      }
+
+      setSelectedVenue((prev) =>
+        prev && validLoaded.some((v) => v.id === prev.id) ? prev : null
+      );
     }
 
     function onHover(e: Event) {
@@ -59,7 +100,7 @@ export default function ListingMapIsland({
     };
   }, []);
 
-  // Initialize MapLibre with colorful aquatic overrides
+  // Initialize MapLibre with colorful aquatic overrides & strict Netherlands bounds
   useEffect(() => {
     let mapInstance: MapLibreMap | null = null;
 
@@ -69,8 +110,11 @@ export default function ListingMapIsland({
       const map = new maplibregl.Map({
         container: mapContainerRef.current,
         style: styleUrl,
-        center: [4.9021, 52.345],
-        zoom: 11.4,
+        center: NL_DEFAULT_CENTER,
+        zoom: NL_DEFAULT_ZOOM,
+        minZoom: 6.6,
+        maxZoom: 17,
+        maxBounds: NL_MAP_MAX_BOUNDS,
       });
       mapInstance = map;
       mapRef.current = map;
@@ -80,11 +124,20 @@ export default function ListingMapIsland({
           const layers = map.getStyle()?.layers ?? [];
           for (const layer of layers) {
             const id = layer.id.toLowerCase();
-            if (layer.type === 'fill' && (id.includes('water') || id.includes('ocean') || id.includes('river') || id.includes('lake'))) {
+            if (
+              layer.type === 'fill' &&
+              (id.includes('water') || id.includes('ocean') || id.includes('river') || id.includes('lake'))
+            ) {
               map.setPaintProperty(layer.id, 'fill-color', '#76c8ff');
-            } else if (layer.type === 'line' && (id.includes('water') || id.includes('river') || id.includes('canal'))) {
+            } else if (
+              layer.type === 'line' &&
+              (id.includes('water') || id.includes('river') || id.includes('canal'))
+            ) {
               map.setPaintProperty(layer.id, 'line-color', '#5bb8fe');
-            } else if (layer.type === 'fill' && (id.includes('park') || id.includes('green') || id.includes('wood') || id.includes('grass'))) {
+            } else if (
+              layer.type === 'fill' &&
+              (id.includes('park') || id.includes('green') || id.includes('wood') || id.includes('grass'))
+            ) {
               map.setPaintProperty(layer.id, 'fill-color', '#dff2e1');
             }
           }
@@ -93,7 +146,8 @@ export default function ListingMapIsland({
         }
       });
 
-      renderMarkers(maplibregl, map, filteredVenues);
+      renderMarkers(maplibregl, map, loadedVenues);
+      fitMapToVenues(maplibregl, map, loadedVenues);
     }
 
     initMap().catch(() => {
@@ -106,41 +160,24 @@ export default function ListingMapIsland({
     };
   }, [styleUrl]);
 
-  // Update markers and camera bounds when filteredVenues or selected/hovered state changes
+  // Update markers and camera bounds when loadedVenues changes
   useEffect(() => {
     async function syncMarkers() {
       if (!mapRef.current) return;
       const maplibregl = await import('maplibre-gl');
-      renderMarkers(maplibregl, mapRef.current, filteredVenues);
-
-      // Fit bounds if user filtered to a specific city/subset (<= 35 venues)
-      if (filteredVenues.length > 0 && filteredVenues.length <= 35 && filteredVenues.length < venues.length) {
-        try {
-          const bounds = new maplibregl.LngLatBounds();
-          for (const v of filteredVenues.slice(0, 25)) {
-            bounds.extend([v.lng, v.lat]);
-          }
-          mapRef.current.fitBounds(bounds, { padding: 60, maxZoom: 13, duration: 600 });
-        } catch {
-          // Ignore bounds error in headless mode
-        }
-      }
+      renderMarkers(maplibregl, mapRef.current, loadedVenues);
+      fitMapToVenues(maplibregl, mapRef.current, loadedVenues);
     }
     syncMarkers().catch(() => {});
-  }, [filteredVenues]);
+  }, [loadedVenues]);
 
-  // Highlight active/hovered marker classes without recreating DOM nodes
+  // Highlight active/hovered marker classes on INNER button ONLY (never touch wrapperEl.className!)
   useEffect(() => {
     for (const item of markersRef.current) {
       const isSelected = selectedVenue?.id === item.id;
       const isHovered = hoveredVenueId === item.id;
-      if (isSelected || isHovered) {
-        item.el.className =
-          'px-3 py-1.5 rounded-full bg-text-charcoal text-surface-pure font-extrabold text-xs shadow-xl ring-4 ring-primary-container/30 scale-110 z-30 transition-all cursor-pointer flex items-center gap-1';
-      } else {
-        item.el.className =
-          'px-2.5 py-1 rounded-full bg-surface-pure text-text-charcoal font-bold text-xs shadow-md border border-border-strong hover:bg-text-charcoal hover:text-surface-pure hover:scale-105 z-10 transition-all cursor-pointer';
-      }
+      item.buttonEl.className = getMapMarkerButtonClasses(isSelected, isHovered);
+      item.wrapperEl.style.zIndex = isSelected || isHovered ? '35' : '10';
     }
   }, [selectedVenue, hoveredVenueId]);
 
@@ -150,38 +187,34 @@ export default function ListingMapIsland({
     }
     markersRef.current = [];
 
-    // Cap active DOM markers to 45 for 60fps pan/zoom performance
-    const visibleSlice = list.slice(0, 45);
-    for (const venue of visibleSlice) {
-      const el = document.createElement('button');
-      el.type = 'button';
+    const validList = filterValidMapVenues(list);
+    for (const venue of validList) {
+      // Outer wrapper owned by MapLibre (.maplibregl-marker + inline transform: translate(...))
+      const wrapperEl = document.createElement('div');
+      wrapperEl.dataset.venueId = venue.id;
       const isSelected = selectedVenue?.id === venue.id;
-      el.className = isSelected
-        ? 'px-3 py-1.5 rounded-full bg-text-charcoal text-surface-pure font-extrabold text-xs shadow-xl ring-4 ring-primary-container/30 scale-110 z-30 transition-all cursor-pointer flex items-center gap-1'
-        : 'px-2.5 py-1 rounded-full bg-surface-pure text-text-charcoal font-bold text-xs shadow-md border border-border-strong hover:bg-text-charcoal hover:text-surface-pure hover:scale-105 z-10 transition-all cursor-pointer';
+      const isHovered = hoveredVenueId === venue.id;
+      wrapperEl.style.zIndex = isSelected || isHovered ? '35' : '10';
 
-      const pillLabel =
-        venue.min_single_price_cents === 0
-          ? venue.default_temp_celsius
-            ? `Natuur ${venue.default_temp_celsius.toFixed(0)}°C`
-            : 'Gratis'
-          : venue.min_single_price_cents
-            ? formatEuroCentsNl(venue.min_single_price_cents)
-            : venue.min_waitlist_weeks
-              ? `Zwemles (~${venue.min_waitlist_weeks}wk)`
-              : venue.name;
+      // Inner button owned by Preact for hover/active colors
+      const buttonEl = document.createElement('button');
+      buttonEl.type = 'button';
+      buttonEl.className = getMapMarkerButtonClasses(isSelected, isHovered);
+      buttonEl.textContent = formatMapMarkerLabel(venue);
+      buttonEl.setAttribute('aria-label', `${venue.name} (${formatMapMarkerLabel(venue)})`);
 
-      el.textContent = pillLabel;
-      el.addEventListener('click', (e) => {
+      buttonEl.addEventListener('click', (e) => {
         e.stopPropagation();
         setSelectedVenue(venue);
       });
 
-      const marker = new maplibregl.Marker({ element: el })
+      wrapperEl.appendChild(buttonEl);
+
+      const marker = new maplibregl.Marker({ element: wrapperEl, anchor: 'center' })
         .setLngLat([venue.lng, venue.lat])
         .addTo(map);
 
-      markersRef.current.push({ id: venue.id, marker, el });
+      markersRef.current.push({ id: venue.id, marker, wrapperEl, buttonEl });
     }
   }
 
@@ -199,7 +232,7 @@ export default function ListingMapIsland({
           <svg class="w-4 h-4 text-badge-teal-bg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" />
           </svg>
-          <span>{mobileMapOpen ? 'Lijst tonen' : `Kaart tonen (${filteredVenues.length})`}</span>
+          <span>{mobileMapOpen ? 'Lijst tonen' : `Kaart tonen (${loadedVenues.length})`}</span>
         </button>
       </div>
 
@@ -244,7 +277,7 @@ export default function ListingMapIsland({
         {/* Live MapLibre Vector Canvas */}
         <div ref={mapContainerRef} class="w-full h-full relative z-10" />
 
-        {/* Top-Left Floating Region Indicator (from Photo 2) */}
+        {/* Top-Left Floating Region Indicator */}
         <div class="absolute top-4 left-4 z-20 bg-surface-pure/95 backdrop-blur-md rounded-full px-3.5 py-1.5 shadow-md border border-border-hairline flex items-center gap-2">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span class="text-xs font-bold text-text-charcoal">{regionLabel}</span>
@@ -252,7 +285,7 @@ export default function ListingMapIsland({
 
         {/* Top-Right Quick Venue Pin Selector Pills */}
         <div class="absolute top-14 left-4 right-4 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 pointer-events-auto">
-          {filteredVenues.slice(0, 6).map((v) => {
+          {loadedVenues.slice(0, 6).map((v) => {
             const active = selectedVenue?.id === v.id;
             return (
               <button
@@ -268,24 +301,20 @@ export default function ListingMapIsland({
                     }
                   }
                 }}
-                class={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm border transition-all cursor-pointer ${
+                class={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm border transition-colors cursor-pointer ${
                   active
-                    ? 'bg-text-charcoal text-surface-pure border-text-charcoal scale-105'
+                    ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
                     : 'bg-surface-pure/95 text-text-charcoal border-border-strong hover:bg-text-charcoal hover:text-surface-pure'
                 }`}
               >
                 {v.name.replace(/^Zwemcentrum |^Zwembad |^Sportfondsenbad /i, '').split(' - ')[0]} •{' '}
-                {v.min_single_price_cents === 0
-                  ? 'Gratis'
-                  : v.min_single_price_cents
-                    ? formatEuroCentsNl(v.min_single_price_cents)
-                    : 'Les'}
+                {formatMapMarkerLabel(v)}
               </button>
             );
           })}
         </div>
 
-        {/* Airbnb Floating Preview Card with Photo, Rating, Treatment & Price (Photo 2) */}
+        {/* Airbnb Floating Preview Card with Photo, Rating, Treatment & Price */}
         {selectedVenue && (
           <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 w-72 sm:w-80 bg-surface-pure rounded-2xl p-3 shadow-2xl border border-border-hairline transition-all">
             <button
@@ -324,7 +353,7 @@ export default function ListingMapIsland({
                   <h4 class="font-bold text-sm text-text-charcoal truncate group-hover:text-primary transition-colors">
                     {selectedVenue.name}
                   </h4>
-                  <p class="text-xs text-text-muted truncate">
+                  <p class="text-xs text-text-muted truncate capitalize">
                     {selectedVenue.neighborhood_name ?? selectedVenue.municipality_slug}
                   </p>
                 </div>
@@ -341,7 +370,9 @@ export default function ListingMapIsland({
                     ? 'Gratis toegang'
                     : selectedVenue.min_single_price_cents
                       ? `${formatEuroCentsNl(selectedVenue.min_single_price_cents)} / entree`
-                      : 'Bekijk tarieven'}
+                      : selectedVenue.venue_type === 'OPEN_WATER_NATURAL'
+                        ? 'Betaald terrein'
+                        : 'Bekijk tarieven'}
                 </span>
                 <div class="flex items-center gap-1">
                   <span
@@ -371,11 +402,7 @@ export default function ListingMapIsland({
             {/* Active Pill Pointer Below Card */}
             <div class="mt-2.5 flex justify-center">
               <span class="inline-flex items-center gap-1 bg-text-charcoal text-surface-pure font-extrabold text-xs px-3 py-1 rounded-full shadow-md">
-                {selectedVenue.min_single_price_cents === 0
-                  ? 'Gratis ✓'
-                  : selectedVenue.min_single_price_cents
-                    ? `${formatEuroCentsNl(selectedVenue.min_single_price_cents)} ✓`
-                    : selectedVenue.name}
+                {formatMapMarkerLabel(selectedVenue)} ✓
               </span>
             </div>
           </div>
