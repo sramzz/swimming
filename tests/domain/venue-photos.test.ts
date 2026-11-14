@@ -96,7 +96,7 @@ describe('Airbnb Aquatic Discovery UI & Self-Hosted Photo Library', () => {
       path.resolve(process.cwd(), 'src/pages/zwembad/[stad]/[slug].astro'),
       'utf-8'
     );
-    expect(detailAstro).toContain("Toon alle 28 foto's");
+    expect(detailAstro).toContain("Toon alle foto's ({photos.length})");
     expect(detailAstro).toContain('photo-lightbox-modal');
     expect(detailAstro).toContain('Fase 1: Watergewenning');
     expect(detailAstro).toContain('Fase 4: Diploma C Complete Zwemveiligheid');

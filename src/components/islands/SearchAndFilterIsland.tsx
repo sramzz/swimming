@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import type { VenueRow } from '../../db/queries';
 import { formatEuroCentsNl } from '../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../domain/venue-photos';
@@ -45,6 +45,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   const [onlyWheelchairAccessible, setOnlyWheelchairAccessible] = useState(false);
   const [onlyNrzLicensed, setOnlyNrzLicensed] = useState(false);
+  const trackRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Hydrate initial URL query params and localStorage favorites
   useEffect(() => {
@@ -129,10 +130,32 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
   function stepPhoto(venueId: string, total: number, delta: number, e: Event) {
     e.preventDefault();
     e.stopPropagation();
+    const current = photoIndexByVenue[venueId] ?? 0;
+    const next = (current + delta + total) % total;
+    setPhotoIndexByVenue((prev) => ({ ...prev, [venueId]: next }));
+    const trackEl = trackRefs.current[venueId];
+    if (trackEl && trackEl.clientWidth > 0) {
+      trackEl.scrollTo({ left: next * trackEl.clientWidth, behavior: 'smooth' });
+    }
+  }
+
+  function jumpToPhoto(venueId: string, index: number, e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPhotoIndexByVenue((prev) => ({ ...prev, [venueId]: index }));
+    const trackEl = trackRefs.current[venueId];
+    if (trackEl && trackEl.clientWidth > 0) {
+      trackEl.scrollTo({ left: index * trackEl.clientWidth, behavior: 'smooth' });
+    }
+  }
+
+  function handleTrackScroll(venueId: string, total: number, e: Event) {
+    const el = e.currentTarget as HTMLDivElement;
+    if (!el || el.clientWidth <= 0) return;
+    const idx = Math.max(0, Math.min(total - 1, Math.round(el.scrollLeft / el.clientWidth)));
     setPhotoIndexByVenue((prev) => {
-      const current = prev[venueId] ?? 0;
-      const next = (current + delta + total) % total;
-      return { ...prev, [venueId]: next };
+      if ((prev[venueId] ?? 0) === idx) return prev;
+      return { ...prev, [venueId]: idx };
     });
   }
 
@@ -262,11 +285,10 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
     visibleCount,
   ]);
 
-  function renderCard(venue: VenueRow) {
+  function renderCard(venue: VenueRow, cardIndex: number) {
     const href = `/zwembad/${venue.municipality_slug}/${venue.slug}`;
     const photos = parseVenuePhotos(venue);
     const activeIdx = photoIndexByVenue[venue.id] ?? 0;
-    const currentPhoto = photos[activeIdx] ?? photos[0];
     const isFav = favorites.includes(venue.id);
 
     const cityLabel =
@@ -305,17 +327,40 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
         }}
         class="group flex flex-col transition-all"
       >
-        {/* Airbnb Aspect 20/19 Image Carousel Container */}
+        {/* Airbnb Aspect 20/19 Image Carousel Container with Native Horizontal Scroll-Snap */}
         <div class="relative aspect-[20/19] rounded-2xl overflow-hidden bg-surface-subtle mb-3 shadow-2xs">
-          <a href={href} class="block w-full h-full">
-            <img
-              src={currentPhoto.url}
-              alt={currentPhoto.alt_nl}
-              loading="lazy"
-              decoding="async"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          </a>
+          <div
+            ref={(el) => {
+              trackRefs.current[venue.id] = el;
+            }}
+            onScroll={(e) => handleTrackScroll(venue.id, photos.length, e)}
+            role="group"
+            aria-roledescription="carousel"
+            aria-label={`Foto's van ${venue.name}`}
+            class="carousel-scroll-track no-scrollbar w-full h-full"
+          >
+            {photos.map((photo, slideIdx) => (
+              <a
+                key={`${venue.id}-${slideIdx}`}
+                href={href}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`Foto ${slideIdx + 1} van ${photos.length}`}
+                class="carousel-scroll-slide block w-full h-full"
+              >
+                <img
+                  src={photo.url}
+                  alt={photo.alt_nl}
+                  width="800"
+                  height="760"
+                  loading={cardIndex === 0 && slideIdx === 0 ? undefined : 'lazy'}
+                  fetchpriority={cardIndex === 0 && slideIdx === 0 ? 'high' : slideIdx > 0 ? 'low' : undefined}
+                  decoding="async"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </a>
+            ))}
+          </div>
 
           {/* Top-Left Featured Badge */}
           {venue.featured_badge_nl && (
@@ -353,14 +398,14 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
             </svg>
           </button>
 
-          {/* Prev / Next Carousel Buttons on Hover */}
+          {/* Prev / Next Carousel Buttons on Hover & Keyboard Focus */}
           {photos.length > 1 && (
             <>
               <button
                 type="button"
                 aria-label="Vorige foto"
                 onClick={(e) => stepPhoto(venue.id, photos.length, -1, e)}
-                class="opacity-0 group-hover:opacity-100 absolute left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-all cursor-pointer"
+                class="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 absolute left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-all cursor-pointer z-10"
               >
                 ‹
               </button>
@@ -368,22 +413,26 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
                 type="button"
                 aria-label="Volgende foto"
                 onClick={(e) => stepPhoto(venue.id, photos.length, 1, e)}
-                class="opacity-0 group-hover:opacity-100 absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-all cursor-pointer"
+                class="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-all cursor-pointer z-10"
               >
                 ›
               </button>
             </>
           )}
 
-          {/* Carousel Dots Indicator */}
-          <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none">
-            {photos.slice(0, 4).map((_, idx) => (
-              <span
+          {/* Interactive Carousel Dots Indicator */}
+          <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none z-10">
+            {photos.slice(0, 5).map((_, idx) => (
+              <button
                 key={idx}
-                class={`rounded-full transition-all ${
-                  idx === activeIdx % 4
+                type="button"
+                aria-label={`Toon foto ${idx + 1}`}
+                aria-current={idx === activeIdx ? 'true' : undefined}
+                onClick={(e) => jumpToPhoto(venue.id, idx, e)}
+                class={`pointer-events-auto rounded-full transition-all cursor-pointer ${
+                  idx === activeIdx
                     ? 'w-2 h-2 bg-surface-pure shadow-xs'
-                    : 'w-1.5 h-1.5 bg-surface-pure/60'
+                    : 'w-1.5 h-1.5 bg-surface-pure/60 hover:bg-surface-pure/90'
                 }`}
               />
             ))}
@@ -546,10 +595,12 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
           {FEATURED_DUTCH_CITIES.map((city) => {
             const active = selectedCitySlug === city.slug;
             return (
-              <button
+              <a
                 key={city.slug}
-                type="button"
-                onClick={() => {
+                href={`/steden/${city.slug}`}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+                  e.preventDefault();
                   setSelectedCitySlug(active ? 'ALL' : city.slug);
                   if (sortMode === 'NEAREST_ME') setSortMode('RECOMMENDED');
                   setVisibleCount(24);
@@ -561,7 +612,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
                 }`}
               >
                 {city.labelNl}
-              </button>
+              </a>
             );
           })}
 
@@ -717,7 +768,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
 
       {/* First 4 Listing Cards (2x2 Grid) */}
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-8">
-        {firstFour.map(renderCard)}
+        {firstFour.map((v, idx) => renderCard(v, idx))}
       </div>
 
       {/* Native Editorial Seasonal Banner Embedded in the Feed (Photo 3) */}
@@ -764,7 +815,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       {/* Remaining Listing Cards */}
       {remainingAfterBanner.length > 0 && (
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-8">
-          {remainingAfterBanner.map(renderCard)}
+          {remainingAfterBanner.map((v, idx) => renderCard(v, idx + 4))}
         </div>
       )}
 

@@ -53,3 +53,17 @@ During the visual overhaul:
   2. An `id="..."` anchor that actually exists on the target page.
 - Every `<button type="button">` in static `.astro` components must have a wired event listener or `<dialog>` / popover controller tested in `tests/pages/navigation-and-links-audit.test.ts`.
 - On `/zwembad/[stad]/[slug]`, always adapt the right-hand sticky widget to the venue's domain type (`OPEN_WATER_NATURAL` shows the official `Zwemwater.nl` water-quality, access, & information board card; indoor/outdoor pools show the ticket & Zwem-ABC widget with fallback to `official_website_url`).
+
+---
+
+## Lesson 3: Render Image Galleries as Native Scroll-Snap Tracks in SSR HTML (Mobile Touch + Google Images)
+
+### What Happened
+Initially, card image carousels only rendered a single `<img src={photos[activeIdx].url}>` swapped in JavaScript when desktop hover arrows (`opacity-0 group-hover:opacity-100`) were clicked, and the facility detail page hid photos 2–5 on mobile (`hidden md:block`). This caused two problems:
+1. On mobile phones, horizontal touch swiping on pool images did nothing, and hover-only chevron arrows (`opacity-0 group-hover:opacity-100`) were invisible on touch devices.
+2. Googlebot and Google Images could only discover `photos[0]` on listing cards instead of all photos with their `alt` text and explicit dimensions.
+
+### Prevention Rule (Mandatory)
+- **Always use native CSS Scroll Snap (`overflow-x: auto; scroll-snap-type: x mandatory; scroll-snap-stop: always`)** with all `<img>` slides present in initial HTML (`.carousel-scroll-track` + `.carousel-scroll-slide`), giving each image explicit `width`, `height`, and Dutch `alt`, with `fetchpriority="high"` only on the single LCP hero/first-card image and `fetchpriority="low" loading="lazy"` on off-screen slides.
+- **Map preview cards** (`ListingMapIsland`) must expose the same horizontal swipe track plus always-visible Prev/Next controls and clickable dot indicators so touch and mouse users alike can browse pool photos directly on the map.
+- **Every interactive filter link that corresponds to a real SEO page** (like city pills) should render as an `<a href="/steden/...">` link (intercepting simple left-clicks in JS for instant filtering) rather than a `<button>` that hides internal links from Googlebot.

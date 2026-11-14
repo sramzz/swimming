@@ -6,10 +6,44 @@ import SearchAndFilterIsland from '../components/islands/SearchAndFilterIsland';
 import ListingMapIsland from '../components/islands/ListingMapIsland';
 import { getBuildDatabase } from '../db/runtime-db';
 import { listAllVenues } from '../db/queries';
+import { buildItemListJsonLd } from '../domain/seo-aggregator';
+import { rankVenuesMultiCityRecommended } from '../domain/multi-city-ranking';
+import { parseVenuePhotos } from '../domain/venue-photos';
 
 const db = getBuildDatabase();
 const venues = listAllVenues(db);
+const provinces = db
+  .prepare(
+    `SELECT m.province_slug, m.province_name, COUNT(v.id) as venue_count
+     FROM municipalities m
+     JOIN venues v ON v.municipality_slug = m.slug
+     GROUP BY m.province_slug
+     ORDER BY m.province_name ASC`
+  )
+  .all() as Array<{ province_slug: string; province_name: string; venue_count: number }>;
+
+const topCities = db
+  .prepare(
+    `SELECT m.slug, m.name, COUNT(v.id) as venue_count
+     FROM municipalities m
+     JOIN venues v ON v.municipality_slug = m.slug
+     GROUP BY m.slug
+     ORDER BY venue_count DESC, m.name ASC
+     LIMIT 24`
+  )
+  .all() as Array<{ slug: string; name: string; venue_count: number }>;
 db.close();
+
+const featuredForSeo = rankVenuesMultiCityRecommended(venues).slice(0, 24);
+const homeItemListJsonLd = buildItemListJsonLd({
+  name: 'Uitgelichte zwembaden en zwemwaterlocaties in Nederland',
+  url: '/',
+  items: featuredForSeo.map((v) => ({
+    name: v.name,
+    url: `/zwembad/${v.municipality_slug}/${v.slug}`,
+    image: parseVenuePhotos(v)[0]?.url,
+  })),
+});
 
 const homeJsonLd = {
   '@context': 'https://schema.org',
@@ -31,7 +65,9 @@ const homeJsonLd = {
   title="Zwemkaart.nl - Vind, vergelijk en boek zwembaden & zwemles in Nederland"
   description="Vergelijk binnenbaden, subtropische zwembaden, banenzwemmen tijden, zoutelektrolyse, Zwem-ABC wachttijden en natuurwater in Nederland."
   canonicalPath="/"
-  jsonLd={homeJsonLd}
+  ogImage="/images/venues/official/de-mirandabad.webp"
+  ogImageAlt="Overzicht van zwembaden en open water zwemlocaties in Nederland op Zwemkaart.nl"
+  jsonLd={[homeJsonLd, homeItemListJsonLd]}
 >
   <Header />
 
@@ -204,6 +240,70 @@ const homeJsonLd = {
         <ListingMapIsland client:visible venues={venues} />
       </aside>
     </div>
+
+    <!-- SSR INTERNAL-LINKING & CRAWLER HUB (All 12 Provinces, Top Cities & Category Hubs) -->
+    <section aria-label="Zwembaden per stad, provincie en categorie" class="mt-12 pt-10 border-t border-border-hairline space-y-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-text-charcoal">
+            Ontdek zwemlocaties in heel Nederland
+          </h2>
+          <p class="text-sm text-text-muted mt-1">
+            Blader rechtstreeks door alle {venues.length} gecontroleerde binnenbaden, subtropische zwemparadijzen, zwemscholen en officiële Rijkswaterstaat zwemzones.
+          </p>
+        </div>
+        <a
+          href="/steden"
+          class="text-xs font-extrabold text-primary hover:underline shrink-0"
+        >
+          Bekijk alle gemeenten en provincies →
+        </a>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-text-muted mb-3">
+          Alle 12 Provincies
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          {provinces.map((p) => (
+            <a
+              href={`/provincies/${p.province_slug}`}
+              class="px-3.5 py-1.5 rounded-full bg-surface-subtle border border-border-hairline hover:border-primary text-xs font-semibold text-text-charcoal hover:text-primary transition-colors"
+            >
+              {p.province_name} ({p.venue_count})
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-text-muted mb-3">
+          Populaire Gemeenten &amp; Categorieën
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {topCities.map((c) => (
+            <div class="p-3.5 rounded-2xl border border-border-hairline bg-surface-pure space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <a
+                  href={`/steden/${c.slug}`}
+                  class="font-bold text-sm text-text-charcoal hover:text-primary transition-colors truncate"
+                >
+                  Zwembaden {c.name}
+                </a>
+                <span class="text-[11px] font-bold text-text-muted shrink-0">
+                  {c.venue_count}
+                </span>
+              </div>
+              <div class="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-primary font-semibold">
+                <a href={`/steden/${c.slug}/banenzwemmen`} class="hover:underline">Banenzwemmen</a>
+                <a href={`/steden/${c.slug}/zwemles`} class="hover:underline">Zwemles A/B/C</a>
+                <a href={`/steden/${c.slug}/buitenwater`} class="hover:underline">Natuurwater</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   </main>
 
   <Footer />

@@ -55,9 +55,18 @@ export default function ListingMapIsland({
   const initialLoaded = filterValidMapVenues(venues).slice(0, 24);
   const [loadedVenues, setLoadedVenues] = useState<VenueRow[]>(initialLoaded);
   const [selectedVenue, setSelectedVenue] = useState<VenueRow | null>(null);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [hoveredVenueId, setHoveredVenueId] = useState<string | null>(null);
   const [mobileMapOpen, setMobileMapOpen] = useState(false);
   const [regionLabel, setRegionLabel] = useState('Heel Nederland (24 geladen)');
+  const mapCardTrackRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setSelectedPhotoIndex(0);
+    if (mapCardTrackRef.current) {
+      mapCardTrackRef.current.scrollLeft = 0;
+    }
+  }, [selectedVenue?.id]);
 
   // Listen for filter & hover events from SearchAndFilterIsland
   useEffect(() => {
@@ -218,7 +227,42 @@ export default function ListingMapIsland({
     }
   }
 
-  const selectedPhoto = selectedVenue ? parseVenuePhotos(selectedVenue)[0] : null;
+  const selectedPhotos = selectedVenue ? parseVenuePhotos(selectedVenue) : [];
+  const activeMapPhoto = selectedPhotos[selectedPhotoIndex] ?? selectedPhotos[0] ?? null;
+
+  function stepMapPhoto(delta: number, e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (selectedPhotos.length <= 1) return;
+    const next = (selectedPhotoIndex + delta + selectedPhotos.length) % selectedPhotos.length;
+    setSelectedPhotoIndex(next);
+    const trackEl = mapCardTrackRef.current;
+    if (trackEl && trackEl.clientWidth > 0) {
+      trackEl.scrollTo({ left: next * trackEl.clientWidth, behavior: 'smooth' });
+    }
+  }
+
+  function selectMapPhotoDot(index: number, e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedPhotoIndex(index);
+    const trackEl = mapCardTrackRef.current;
+    if (trackEl && trackEl.clientWidth > 0) {
+      trackEl.scrollTo({ left: index * trackEl.clientWidth, behavior: 'smooth' });
+    }
+  }
+
+  function handleMapCardScroll(e: Event) {
+    const el = e.currentTarget as HTMLDivElement;
+    if (!el || el.clientWidth <= 0 || selectedPhotos.length === 0) return;
+    const idx = Math.max(
+      0,
+      Math.min(selectedPhotos.length - 1, Math.round(el.scrollLeft / el.clientWidth))
+    );
+    if (idx !== selectedPhotoIndex) {
+      setSelectedPhotoIndex(idx);
+    }
+  }
 
   return (
     <>
@@ -314,40 +358,111 @@ export default function ListingMapIsland({
           })}
         </div>
 
-        {/* Airbnb Floating Preview Card with Photo, Rating, Treatment & Price */}
+        {/* Airbnb Floating Preview Card with Interactive Photo Switcher, Rating, Treatment & Price */}
         {selectedVenue && (
           <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 w-72 sm:w-80 bg-surface-pure rounded-2xl p-3 shadow-2xl border border-border-hairline transition-all">
-            <button
-              type="button"
-              aria-label="Sluit kaartvoorbeeld"
-              onClick={() => setSelectedVenue(null)}
-              class="absolute top-5 right-5 z-10 w-6 h-6 rounded-full bg-text-charcoal/70 text-surface-pure text-xs flex items-center justify-center hover:bg-text-charcoal cursor-pointer"
-            >
-              ✕
-            </button>
+            {selectedPhotos.length > 0 && (
+              <div class="relative aspect-[16/10] rounded-xl overflow-hidden mb-2.5 bg-surface-subtle group/mapcard">
+                <div
+                  ref={mapCardTrackRef}
+                  onScroll={handleMapCardScroll}
+                  role="group"
+                  aria-roledescription="carousel"
+                  aria-label={`Foto's van ${selectedVenue.name}`}
+                  class="carousel-scroll-track no-scrollbar w-full h-full"
+                >
+                  {selectedPhotos.map((photo, idx) => (
+                    <a
+                      key={`${selectedVenue.id}-map-photo-${idx}`}
+                      href={`/zwembad/${selectedVenue.municipality_slug}/${selectedVenue.slug}`}
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label={`Kaartfoto ${idx + 1} van ${selectedPhotos.length}`}
+                      class="carousel-scroll-slide block w-full h-full"
+                    >
+                      <img
+                        src={photo.url}
+                        alt={photo.alt_nl}
+                        width="640"
+                        height="400"
+                        loading={idx === 0 ? 'eager' : 'lazy'}
+                        decoding="async"
+                        class="w-full h-full object-cover"
+                      />
+                    </a>
+                  ))}
+                </div>
+
+                <span class="absolute top-2 left-2 z-10 pointer-events-none bg-text-charcoal/85 backdrop-blur-xs text-surface-pure text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                  {selectedVenue.venue_type === 'SUBTROPICAL_PARADISE'
+                    ? 'Subtropisch'
+                    : selectedVenue.venue_type === 'OPEN_WATER_NATURAL'
+                      ? 'Natuurwater'
+                      : activeMapPhoto?.badge_nl || 'Binnenbad'}
+                </span>
+
+                <button
+                  type="button"
+                  aria-label="Sluit kaartvoorbeeld"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedVenue(null);
+                  }}
+                  class="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-text-charcoal/75 text-surface-pure text-xs flex items-center justify-center hover:bg-text-charcoal cursor-pointer"
+                >
+                  ✕
+                </button>
+
+                {selectedPhotos.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      data-testid="map-card-prev-photo"
+                      aria-label="Vorige kaartfoto"
+                      onClick={(e) => stepMapPhoto(-1, e)}
+                      class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-transform cursor-pointer"
+                    >
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="map-card-next-photo"
+                      aria-label="Volgende kaartfoto"
+                      onClick={(e) => stepMapPhoto(1, e)}
+                      class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-transform cursor-pointer"
+                    >
+                      ›
+                    </button>
+
+                    <span class="absolute bottom-2 right-2 z-10 pointer-events-none bg-text-charcoal/75 text-surface-pure text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      {selectedPhotoIndex + 1}/{selectedPhotos.length}
+                    </span>
+
+                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 pointer-events-none">
+                      {selectedPhotos.slice(0, 5).map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          aria-label={`Kaartfoto ${idx + 1}`}
+                          aria-current={idx === selectedPhotoIndex ? 'true' : undefined}
+                          onClick={(e) => selectMapPhotoDot(idx, e)}
+                          class={`pointer-events-auto rounded-full transition-all cursor-pointer ${
+                            idx === selectedPhotoIndex
+                              ? 'w-2 h-2 bg-surface-pure shadow-xs'
+                              : 'w-1.5 h-1.5 bg-surface-pure/60 hover:bg-surface-pure/90'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
             <a
               href={`/zwembad/${selectedVenue.municipality_slug}/${selectedVenue.slug}`}
               class="block group"
             >
-              {selectedPhoto && (
-                <div class="relative aspect-[16/10] rounded-xl overflow-hidden mb-2.5 bg-surface-subtle">
-                  <img
-                    src={selectedPhoto.url}
-                    alt={selectedPhoto.alt_nl}
-                    loading="lazy"
-                    decoding="async"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <span class="absolute top-2 left-2 bg-text-charcoal/85 backdrop-blur-xs text-surface-pure text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                    {selectedVenue.venue_type === 'SUBTROPICAL_PARADISE'
-                      ? 'Subtropisch'
-                      : selectedVenue.venue_type === 'OPEN_WATER_NATURAL'
-                        ? 'Natuurwater'
-                        : selectedPhoto.badge_nl || 'Binnenbad'}
-                  </span>
-                </div>
-              )}
-
               <div class="flex items-start justify-between gap-2">
                 <div class="min-w-0">
                   <h4 class="font-bold text-sm text-text-charcoal truncate group-hover:text-primary transition-colors">

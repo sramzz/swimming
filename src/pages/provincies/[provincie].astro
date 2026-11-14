@@ -6,6 +6,8 @@ import Footer from '../../components/Footer.astro';
 import VenueCard from '../../components/VenueCard.astro';
 import { getBuildDatabase } from '../../db/runtime-db';
 import type { VenueRow } from '../../db/queries';
+import { buildItemListJsonLd } from '../../domain/seo-aggregator';
+import { parseVenuePhotos } from '../../domain/venue-photos';
 
 export async function getStaticPaths() {
   const db = getBuildDatabase();
@@ -81,12 +83,24 @@ const breadcrumbJsonLd = {
 
 const outdoorCount = venues.filter((v) => v.primary_water_treatment === 'NATURAL_UNTREATED').length;
 const indoorCount = venues.length - outdoorCount;
+const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
+const provinceItemListJsonLd = buildItemListJsonLd({
+  name: `Zwembaden & Zwemwater in ${provinceName}`,
+  url: `/provincies/${provincie}`,
+  items: venues.slice(0, 40).map((v) => ({
+    name: v.name,
+    url: `/zwembad/${v.municipality_slug}/${v.slug}`,
+    image: parseVenuePhotos(v)[0]?.url,
+  })),
+});
 ---
 <BaseLayout
   title={`Zwembaden in ${provinceName} (${venues.length} locaties) | Zwemkaart.nl`}
   description={`Overzicht van alle ${venues.length} zwembaden, subtropische paradijzen en open water zwemlocaties in ${provinceName}. Vergelijk entreeprijzen, banenzwemmen en zwemles.`}
   canonicalPath={`/provincies/${provincie}`}
-  jsonLd={breadcrumbJsonLd}
+  ogImage={leadPhoto?.url}
+  ogImageAlt={leadPhoto?.alt_nl}
+  jsonLd={[breadcrumbJsonLd, provinceItemListJsonLd]}
 >
   <Header />
 

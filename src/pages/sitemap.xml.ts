@@ -1,7 +1,8 @@
 // src/pages/sitemap.xml.ts
 import type { APIRoute } from 'astro';
 import { getBuildDatabase } from '../db/runtime-db';
-import { listAllVenues } from '../db/queries';
+import { listAllVenues, listVenuesByCity } from '../db/queries';
+import { shouldGenerateIndexableFacetPage } from '../domain/seo-aggregator';
 
 export const GET: APIRoute = () => {
   const db = getBuildDatabase();
@@ -16,16 +17,39 @@ export const GET: APIRoute = () => {
        ORDER BY slug`
     )
     .all() as Array<{ slug: string }>;
+
+  const intents = ['banenzwemmen', 'zwemles', 'buitenwater'] as const;
+  const intentUrls: string[] = [];
+  for (const city of cities) {
+    const cityVenues = listVenuesByCity(db, city.slug);
+    for (const intent of intents) {
+      const matching =
+        intent === 'buitenwater'
+          ? cityVenues.filter(
+              (v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR'
+            )
+          : cityVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
+      if (shouldGenerateIndexableFacetPage(matching.length)) {
+        intentUrls.push(
+          `<url><loc>https://zwemkaart.nl/steden/${city.slug}/${intent}</loc></url>`
+        );
+      }
+    }
+  }
+
   db.close();
 
   const urls = [
     `<url><loc>https://zwemkaart.nl/</loc></url>`,
+    `<url><loc>https://zwemkaart.nl/steden</loc></url>`,
+    `<url><loc>https://zwemkaart.nl/aanbieder</loc></url>`,
     ...provinces.map(
       (p) => `<url><loc>https://zwemkaart.nl/provincies/${p.province_slug}</loc></url>`
     ),
     ...cities.map(
       (c) => `<url><loc>https://zwemkaart.nl/steden/${c.slug}</loc></url>`
     ),
+    ...intentUrls,
     ...venues.map(
       (v) =>
         `<url><loc>https://zwemkaart.nl/zwembad/${v.municipality_slug}/${v.slug}</loc><lastmod>${v.lastmod_at}</lastmod></url>`

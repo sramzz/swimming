@@ -83,46 +83,6 @@ const dayNamesNl: Record<number, string> = {
   7: 'Zondag',
 };
 
-const venueJsonLd = buildVenueJsonLd({
-  name: venue.name,
-  slug: venue.slug,
-  citySlug: venue.municipality_slug,
-  cityName: venue.municipality_slug,
-  streetAddress: venue.street_address,
-  postcode: venue.postcode_pc6,
-  lat: venue.lat,
-  lng: venue.lng,
-  ratingScore: venue.rating_score,
-  ratingCount: venue.rating_count,
-  minPriceCents: venue.min_single_price_cents,
-  waterTreatment: venue.primary_water_treatment,
-});
-
-const breadcrumbJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Nederland',
-      item: 'https://zwemkaart.nl/',
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: venue.municipality_slug.charAt(0).toUpperCase() + venue.municipality_slug.slice(1),
-      item: `https://zwemkaart.nl/steden/${venue.municipality_slug}/banenzwemmen`,
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: venue.name,
-      item: `https://zwemkaart.nl/zwembad/${venue.municipality_slug}/${venue.slug}`,
-    },
-  ],
-};
-
 const isOpenWater = venue.venue_type === 'OPEN_WATER_NATURAL';
 const primaryWaitlistOffering = venue.offerings[0] ?? null;
 
@@ -147,11 +107,59 @@ interface ZwemwaterMeta {
 const zwemwaterMeta: ZwemwaterMeta | null = venue.zwemwater_metadata_json
   ? JSON.parse(venue.zwemwater_metadata_json)
   : null;
+
+const pageDescription = `Bekijk actuele entreeprijzen, banenzwemmen tijden, watertemperatuur en Zwem-ABC wachttijden bij ${venue.name}.`;
+
+const venueJsonLd = buildVenueJsonLd({
+  name: venue.name,
+  slug: venue.slug,
+  citySlug: venue.municipality_slug,
+  cityName: venue.municipality_slug,
+  streetAddress: venue.street_address,
+  postcode: venue.postcode_pc6,
+  lat: venue.lat,
+  lng: venue.lng,
+  ratingScore: venue.rating_score,
+  ratingCount: venue.rating_count,
+  minPriceCents: venue.min_single_price_cents,
+  waterTreatment: venue.primary_water_treatment,
+  images: photos.map((p) => p.url),
+  description: zwemwaterMeta?.descriptionNl || pageDescription,
+  officialWebsiteUrl: venue.official_website_url,
+});
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Nederland',
+      item: 'https://zwemkaart.nl/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: venue.municipality_slug.charAt(0).toUpperCase() + venue.municipality_slug.slice(1),
+      item: `https://zwemkaart.nl/steden/${venue.municipality_slug}`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: venue.name,
+      item: `https://zwemkaart.nl/zwembad/${venue.municipality_slug}/${venue.slug}`,
+    },
+  ],
+};
 ---
 <BaseLayout
   title={`${venue.name} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`}
-  description={`Bekijk actuele entreeprijzen, banenzwemmen tijden, watertemperatuur en Zwem-ABC wachttijden bij ${venue.name}.`}
+  description={pageDescription}
   canonicalPath={`/zwembad/${venue.municipality_slug}/${venue.slug}`}
+  ogImage={mainPhoto.url}
+  ogImageAlt={mainPhoto.alt_nl}
+  ogType="place"
   jsonLd={[venueJsonLd, breadcrumbJsonLd]}
 >
   <Header />
@@ -248,16 +256,92 @@ const zwemwaterMeta: ZwemwaterMeta | null = venue.zwemwater_metadata_json
       </div>
     </div>
 
-    {/* AIRBNB 5-PHOTO HERO GRID (Photo 4) */}
+    {/* MOBILE HORIZONTAL SCROLL-SNAP HERO CAROUSEL (< md) */}
+    <section
+      aria-label="Mobiele fotogalerij"
+      class="md:hidden relative h-[300px] sm:h-[360px] rounded-2xl overflow-hidden mb-8 shadow-xs bg-surface-container"
+    >
+      <div
+        id="detail-mobile-carousel-track"
+        role="group"
+        aria-roledescription="carousel"
+        aria-label={`Foto's van ${venue.name}`}
+        class="carousel-scroll-track no-scrollbar w-full h-full"
+      >
+        {photos.map((photo, idx) => (
+          <div
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`Foto ${idx + 1} van ${photos.length}`}
+            class="carousel-scroll-slide relative overflow-hidden cursor-pointer open-lightbox-trigger"
+          >
+            <img
+              src={photo.url}
+              alt={photo.alt_nl}
+              width="960"
+              height="640"
+              fetchpriority={idx === 0 ? 'high' : 'low'}
+              loading={idx === 0 ? undefined : 'lazy'}
+              decoding="async"
+              class="w-full h-full object-cover"
+            />
+            {photo.badge_nl && (
+              <span class="absolute top-3 left-3 bg-surface-pure/95 backdrop-blur-xs px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                {photo.badge_nl}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Live Slide Counter Pill */}
+      <div
+        id="detail-mobile-photo-counter"
+        class="absolute top-3 right-3 bg-text-charcoal/80 text-surface-pure text-[11px] font-bold px-2.5 py-1 rounded-full pointer-events-none"
+      >
+        1 / {photos.length}
+      </div>
+
+      {/* Pagination Dots */}
+      <div
+        id="detail-mobile-carousel-dots"
+        class="absolute bottom-3.5 left-4 flex items-center gap-1.5 pointer-events-none"
+      >
+        {photos.map((_, idx) => (
+          <button
+            type="button"
+            data-detail-dot={idx}
+            aria-label={`Ga naar foto ${idx + 1}`}
+            aria-current={idx === 0 ? 'true' : undefined}
+            class={`pointer-events-auto rounded-full transition-all cursor-pointer ${
+              idx === 0 ? 'w-2 h-2 bg-surface-pure shadow-xs' : 'w-1.5 h-1.5 bg-surface-pure/60'
+            }`}
+          ></button>
+        ))}
+      </div>
+
+      {/* Mobile Show All Photos Pill */}
+      <button
+        type="button"
+        class="open-lightbox-trigger absolute bottom-3 right-3 bg-surface-pure/95 text-text-charcoal text-xs font-bold px-3.5 py-2 rounded-full border border-border-hairline shadow-md flex items-center gap-1.5 cursor-pointer"
+      >
+        <span>☷</span>
+        <span>Alle {photos.length} foto's</span>
+      </button>
+    </section>
+
+    {/* DESKTOP AIRBNB 5-PHOTO BENTO HERO GRID (md+) */}
     <section
       aria-label="Fotogalerij"
-      class="relative grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-2.5 h-[320px] md:h-[460px] rounded-2xl overflow-hidden mb-10 shadow-xs"
+      class="relative hidden md:grid md:grid-cols-4 md:grid-rows-2 gap-2.5 h-[460px] rounded-2xl overflow-hidden mb-10 shadow-xs"
     >
       {/* 1. Large Left Hero Tile (Spans 2 cols, 2 rows) */}
       <div class="relative md:col-span-2 md:row-span-2 overflow-hidden group cursor-pointer bg-surface-container open-lightbox-trigger">
         <img
           src={mainPhoto.url}
           alt={mainPhoto.alt_nl}
+          width="960"
+          height="640"
           fetchpriority="high"
           decoding="async"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -272,10 +356,12 @@ const zwemwaterMeta: ZwemwaterMeta | null = venue.zwemwater_metadata_json
 
       {/* 2–5. Four Right Sub-Tiles */}
       {sidePhotos.map((photo, idx) => (
-        <div class="relative overflow-hidden group cursor-pointer bg-surface-container hidden md:block open-lightbox-trigger">
+        <div class="relative overflow-hidden group cursor-pointer bg-surface-container open-lightbox-trigger">
           <img
             src={photo.url}
             alt={photo.alt_nl}
+            width="480"
+            height="320"
             loading="lazy"
             decoding="async"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -292,20 +378,11 @@ const zwemwaterMeta: ZwemwaterMeta | null = venue.zwemwater_metadata_json
               class="open-lightbox-trigger absolute bottom-3.5 right-3.5 bg-surface-pure text-text-charcoal text-xs font-bold px-3.5 py-2 rounded-full border border-border-hairline shadow-md hover:scale-105 transition-transform flex items-center gap-1.5 cursor-pointer"
             >
               <span>☷</span>
-              <span>Toon alle 28 foto's</span>
+              <span>Toon alle foto's ({photos.length})</span>
             </button>
           )}
         </div>
       ))}
-
-      {/* Mobile Show All Photos Pill */}
-      <button
-        type="button"
-        class="open-lightbox-trigger md:hidden absolute bottom-3 right-3 bg-surface-pure/95 text-text-charcoal text-xs font-bold px-3.5 py-2 rounded-full border border-border-hairline shadow-md flex items-center gap-1.5"
-      >
-        <span>☷</span>
-        <span>Toon alle foto's ({photos.length})</span>
-      </button>
     </section>
 
     {/* MAIN CONTENT SPLIT: Left 8 Cols (65%) vs Right 4 Cols (35% Sticky Booking Widget) */}
@@ -976,4 +1053,56 @@ const zwemwaterMeta: ZwemwaterMeta | null = venue.zwemwater_metadata_json
       // Ignore
     }
   });
+
+  // Mobile horizontal swipe counter & dots sync
+  const mobileTrack = document.getElementById('detail-mobile-carousel-track');
+  const mobileCounter = document.getElementById('detail-mobile-photo-counter');
+  const mobileDots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-detail-dot]'));
+
+  if (mobileTrack && mobileDots.length > 0) {
+    const syncMobileCarouselUi = (activeIdx: number) => {
+      if (mobileCounter) {
+        mobileCounter.textContent = `${activeIdx + 1} / ${mobileDots.length}`;
+      }
+      mobileDots.forEach((dot, idx) => {
+        const isActive = idx === activeIdx;
+        dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+        dot.classList.toggle('w-2', isActive);
+        dot.classList.toggle('h-2', isActive);
+        dot.classList.toggle('bg-surface-pure', isActive);
+        dot.classList.toggle('shadow-xs', isActive);
+        dot.classList.toggle('w-1.5', !isActive);
+        dot.classList.toggle('h-1.5', !isActive);
+        dot.classList.toggle('bg-surface-pure/60', !isActive);
+      });
+    };
+
+    mobileDots.forEach((dot, idx) => {
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (mobileTrack.clientWidth > 0) {
+          mobileTrack.scrollTo({ left: idx * mobileTrack.clientWidth, behavior: 'smooth' });
+          syncMobileCarouselUi(idx);
+        }
+      });
+    });
+
+    let detailRafId = 0;
+    mobileTrack.addEventListener(
+      'scroll',
+      () => {
+        if (detailRafId) return;
+        detailRafId = window.requestAnimationFrame(() => {
+          detailRafId = 0;
+          if (mobileTrack.clientWidth <= 0) return;
+          const idx = Math.max(
+            0,
+            Math.min(mobileDots.length - 1, Math.round(mobileTrack.scrollLeft / mobileTrack.clientWidth))
+          );
+          syncMobileCarouselUi(idx);
+        });
+      },
+      { passive: true }
+    );
+  }
 </script>

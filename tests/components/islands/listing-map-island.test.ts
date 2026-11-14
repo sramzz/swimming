@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   isWithinNetherlandsBounds,
   filterValidMapVenues,
@@ -121,5 +123,21 @@ describe('Phase 1: MapLibre NL Bounds, Marker Wrapper Isolation & Loaded Venues 
     expect(idleClasses).toContain('bg-surface-pure');
     // Must not use transition-all which fights MapLibre transform if applied to root
     expect(idleClasses).not.toContain('transition-all');
+  });
+
+  it('implements Airbnb-style horizontal swipe & button photo switching on the map preview card', () => {
+    const mapIslandPath = path.resolve(
+      process.cwd(),
+      'src/components/islands/ListingMapIsland.tsx'
+    );
+    const content = fs.readFileSync(mapIslandPath, 'utf-8');
+
+    expect(content).toContain('selectedPhotoIndex');
+    expect(content).toContain('carousel-scroll-track');
+    expect(content).toContain('carousel-scroll-slide');
+    expect(content).toContain('Vorige kaartfoto');
+    expect(content).toContain('Volgende kaartfoto');
+    expect(content).toContain('map-card-prev-photo');
+    expect(content).toContain('map-card-next-photo');
   });
 });

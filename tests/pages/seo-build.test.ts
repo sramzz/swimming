@@ -101,4 +101,57 @@ describe('Static Page & Sitemap Data Generation', () => {
     );
     expect(mapIsland).toContain('https://tiles.openfreemap.org/styles/liberty');
   });
+
+  it('provides native horizontal scroll-snap photo carousels on mobile across SearchAndFilterIsland, VenueCard, and Detail page', () => {
+    const searchIsland = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/components/islands/SearchAndFilterIsland.tsx'),
+      'utf-8'
+    );
+    const venueCard = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/components/VenueCard.astro'),
+      'utf-8'
+    );
+    const detailPage = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/zwembad/[stad]/[slug].astro'),
+      'utf-8'
+    );
+    const globalCss = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/styles/global.css'),
+      'utf-8'
+    );
+
+    expect(globalCss).toContain('scroll-snap-type: x mandatory');
+    expect(globalCss).toContain('.carousel-scroll-slide');
+    expect(searchIsland).toContain('carousel-scroll-track');
+    expect(searchIsland).toContain('carousel-scroll-slide');
+    expect(venueCard).toContain('carousel-scroll-track');
+    expect(venueCard).toContain('carousel-scroll-slide');
+    expect(detailPage).toContain('id="detail-mobile-carousel-track"');
+    expect(detailPage).toContain('carousel-scroll-slide');
+  });
+
+  it('hardens BaseLayout, sitemap.xml, and index.astro for Google crawlers and Google Images', () => {
+    const baseLayout = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/layouts/BaseLayout.astro'),
+      'utf-8'
+    );
+    const sitemap = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/sitemap.xml.ts'),
+      'utf-8'
+    );
+    const indexAstro = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/index.astro'),
+      'utf-8'
+    );
+
+    expect(baseLayout).toContain('max-image-preview:large');
+    expect(baseLayout).toContain('hreflang="nl-NL"');
+    expect(baseLayout).toContain('property="og:image"');
+    expect(baseLayout).toContain('name="twitter:card"');
+    expect(sitemap).toContain('/steden');
+    expect(sitemap).toContain('/aanbieder');
+    expect(sitemap).toContain("'banenzwemmen', 'zwemles', 'buitenwater'");
+    expect(indexAstro).toContain('buildItemListJsonLd');
+    expect(indexAstro).toContain('/provincies/');
+  });
 });

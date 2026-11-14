@@ -6,7 +6,8 @@ import Footer from '../../../components/Footer.astro';
 import VenueCard from '../../../components/VenueCard.astro';
 import { getBuildDatabase } from '../../../db/runtime-db';
 import { listVenuesByCity } from '../../../db/queries';
-import { buildCitySeoSummaryNl } from '../../../domain/seo-aggregator';
+import { buildCitySeoSummaryNl, buildItemListJsonLd } from '../../../domain/seo-aggregator';
+import { parseVenuePhotos } from '../../../domain/venue-photos';
 
 export async function getStaticPaths() {
   const db = getBuildDatabase();
@@ -34,11 +35,45 @@ const summaryNl = buildCitySeoSummaryNl({
   cheapestVenueName: cheapest?.name ?? null,
   shortestWaitlistWeeks: 4,
 });
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Nederland',
+      item: 'https://zwemkaart.nl/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: cityName,
+      item: `https://zwemkaart.nl/steden/${stad}`,
+    },
+  ],
+};
+
+const cityItemListJsonLd = buildItemListJsonLd({
+  name: `Zwembaden & Zwemwater in ${cityName}`,
+  url: `/steden/${stad}`,
+  items: venues.map((v) => ({
+    name: v.name,
+    url: `/zwembad/${v.municipality_slug}/${v.slug}`,
+    image: parseVenuePhotos(v)[0]?.url,
+  })),
+});
+
+const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
 ---
 <BaseLayout
   title={`Zwembaden in ${cityName} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`}
   description={summaryNl}
   canonicalPath={`/steden/${stad}`}
+  ogImage={leadPhoto?.url}
+  ogImageAlt={leadPhoto?.alt_nl}
+  jsonLd={[breadcrumbJsonLd, cityItemListJsonLd]}
 >
   <Header />
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
@@ -49,7 +84,29 @@ const summaryNl = buildCitySeoSummaryNl({
     </nav>
 
     <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">Zwembaden in {cityName}</h1>
-    <p class="text-sm text-text-muted mb-5">{summaryNl}</p>
+    <p class="text-sm text-text-muted mb-4">{summaryNl}</p>
+
+    {/* Crawlable SEO Intent Hub Links */}
+    <nav aria-label={`Categorieën in ${cityName}`} class="flex flex-wrap items-center gap-2 mb-4">
+      <a
+        href={`/steden/${stad}/banenzwemmen`}
+        class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-teal-bg text-primary hover:underline"
+      >
+        Banenzwemmen in {cityName}
+      </a>
+      <a
+        href={`/steden/${stad}/zwemles`}
+        class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-teal-bg text-primary hover:underline"
+      >
+        Zwemles A/B/C in {cityName}
+      </a>
+      <a
+        href={`/steden/${stad}/buitenwater`}
+        class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-amber-bg text-accent-seasonal hover:underline"
+      >
+        Buitenzwemmen &amp; Natuurwater
+      </a>
+    </nav>
 
     <!-- Interactive Filter Pills for City Overview -->
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-5 mb-6 border-b border-border-hairline" data-static-filter-bar>

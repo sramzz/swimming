@@ -10,7 +10,6 @@ interface Props {
 const { venue } = Astro.props;
 const href = `/zwembad/${venue.municipality_slug}/${venue.slug}`;
 const photos = parseVenuePhotos(venue);
-const mainPhoto = photos[0];
 const isOpenWater = venue.venue_type === 'OPEN_WATER_NATURAL';
 const temp = venue.default_temp_celsius;
 const filterCategory =
@@ -28,19 +27,38 @@ const filterCategory =
   data-nrz={venue.is_nrz_licensed ? '1' : '0'}
   data-rating={venue.rating_score ?? 0}
 >
-  <div class="relative aspect-[20/19] rounded-2xl overflow-hidden bg-surface-subtle mb-3 shadow-2xs">
-    <a href={href} class="block w-full h-full">
-      <img
-        src={mainPhoto.url}
-        alt={mainPhoto.alt_nl}
-        loading="lazy"
-        decoding="async"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      />
-    </a>
+  <div class="relative aspect-[20/19] rounded-2xl overflow-hidden bg-surface-subtle mb-3 shadow-2xs" data-venue-card-carousel>
+    <div
+      data-venue-card-track
+      role="group"
+      aria-roledescription="carousel"
+      aria-label={`Foto's van ${venue.name}`}
+      class="carousel-scroll-track no-scrollbar w-full h-full"
+    >
+      {photos.map((photo, idx) => (
+        <a
+          href={href}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`Foto ${idx + 1} van ${photos.length}`}
+          class="carousel-scroll-slide block w-full h-full"
+        >
+          <img
+            src={photo.url}
+            alt={photo.alt_nl}
+            width="800"
+            height="760"
+            loading="lazy"
+            fetchpriority={idx > 0 ? 'low' : undefined}
+            decoding="async"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </a>
+      ))}
+    </div>
     {venue.featured_badge_nl && (
       <span
-        class={`absolute top-3 left-3 text-[11px] px-2.5 py-1 rounded-full font-bold shadow-sm ${
+        class={`absolute top-3 left-3 text-[11px] px-2.5 py-1 rounded-full font-bold shadow-sm pointer-events-none z-10 ${
           venue.venue_type === 'OPEN_WATER_NATURAL'
             ? 'bg-accent-seasonal text-on-primary'
             : venue.featured_badge_nl === 'Populairste Keuze'
@@ -51,10 +69,38 @@ const filterCategory =
         {venue.featured_badge_nl}
       </span>
     )}
-    <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none">
-      <span class="w-2 h-2 rounded-full bg-surface-pure shadow-xs"></span>
-      <span class="w-1.5 h-1.5 rounded-full bg-surface-pure/60"></span>
-      <span class="w-1.5 h-1.5 rounded-full bg-surface-pure/60"></span>
+    {photos.length > 1 && (
+      <>
+        <button
+          type="button"
+          data-card-carousel-prev
+          aria-label="Vorige foto"
+          class="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 absolute left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-all cursor-pointer z-10"
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          data-card-carousel-next
+          aria-label="Volgende foto"
+          class="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-surface-pure/90 text-text-charcoal shadow-md flex items-center justify-center text-xs font-bold hover:scale-105 transition-all cursor-pointer z-10"
+        >
+          ›
+        </button>
+      </>
+    )}
+    <div data-card-carousel-dots class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none z-10">
+      {photos.slice(0, 5).map((_, idx) => (
+        <button
+          type="button"
+          data-card-carousel-dot={idx}
+          aria-label={`Toon foto ${idx + 1}`}
+          aria-current={idx === 0 ? 'true' : undefined}
+          class={`card-carousel-dot pointer-events-auto rounded-full transition-all cursor-pointer ${
+            idx === 0 ? 'w-2 h-2 bg-surface-pure shadow-xs' : 'w-1.5 h-1.5 bg-surface-pure/60'
+          }`}
+        ></button>
+      ))}
     </div>
   </div>
 
@@ -105,3 +151,75 @@ const filterCategory =
     </a>
   </div>
 </article>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-venue-card-carousel]').forEach((root) => {
+    if (root.dataset.carouselWired === 'true') return;
+    root.dataset.carouselWired = 'true';
+
+    const track = root.querySelector<HTMLElement>('[data-venue-card-track]');
+    const prevBtn = root.querySelector<HTMLButtonElement>('[data-card-carousel-prev]');
+    const nextBtn = root.querySelector<HTMLButtonElement>('[data-card-carousel-next]');
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-card-carousel-dot]'));
+    if (!track || dots.length === 0) return;
+
+    function syncDots(activeIdx: number) {
+      dots.forEach((dot, idx) => {
+        const isActive = idx === activeIdx;
+        dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+        dot.classList.toggle('w-2', isActive);
+        dot.classList.toggle('h-2', isActive);
+        dot.classList.toggle('bg-surface-pure', isActive);
+        dot.classList.toggle('shadow-xs', isActive);
+        dot.classList.toggle('w-1.5', !isActive);
+        dot.classList.toggle('h-1.5', !isActive);
+        dot.classList.toggle('bg-surface-pure/60', !isActive);
+      });
+    }
+
+    function currentIndex(): number {
+      if (!track || track.clientWidth <= 0) return 0;
+      return Math.max(0, Math.min(dots.length - 1, Math.round(track.scrollLeft / track.clientWidth)));
+    }
+
+    function goTo(index: number) {
+      if (!track || track.clientWidth <= 0) return;
+      const wrapped = (index + dots.length) % dots.length;
+      track.scrollTo({ left: wrapped * track.clientWidth, behavior: 'smooth' });
+      syncDots(wrapped);
+    }
+
+    prevBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      goTo(currentIndex() - 1);
+    });
+
+    nextBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      goTo(currentIndex() + 1);
+    });
+
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        goTo(idx);
+      });
+    });
+
+    let rafId = 0;
+    track.addEventListener(
+      'scroll',
+      () => {
+        if (rafId) return;
+        rafId = window.requestAnimationFrame(() => {
+          rafId = 0;
+          syncDots(currentIndex());
+        });
+      },
+      { passive: true }
+    );
+  });
+</script>

@@ -6,7 +6,12 @@ import Footer from '../../../components/Footer.astro';
 import VenueCard from '../../../components/VenueCard.astro';
 import { getBuildDatabase } from '../../../db/runtime-db';
 import { listVenuesByCity } from '../../../db/queries';
-import { shouldGenerateIndexableFacetPage } from '../../../domain/seo-aggregator';
+import {
+  buildCityIntentSeoMeta,
+  buildItemListJsonLd,
+  shouldGenerateIndexableFacetPage,
+} from '../../../domain/seo-aggregator';
+import { parseVenuePhotos } from '../../../domain/venue-photos';
 
 export async function getStaticPaths() {
   const db = getBuildDatabase();
@@ -41,6 +46,9 @@ const venues =
     ? allVenues.filter((v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR')
     : allVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
 
+const seoMeta = buildCityIntentSeoMeta(cityName, intent!, venues.length);
+const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
+
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -55,7 +63,7 @@ const breadcrumbJsonLd = {
       '@type': 'ListItem',
       position: 2,
       name: cityName,
-      item: `https://zwemkaart.nl/steden/${stad}/banenzwemmen`,
+      item: `https://zwemkaart.nl/steden/${stad}`,
     },
     {
       '@type': 'ListItem',
@@ -65,12 +73,24 @@ const breadcrumbJsonLd = {
     },
   ],
 };
+
+const intentItemListJsonLd = buildItemListJsonLd({
+  name: seoMeta.h1,
+  url: `/steden/${stad}/${intent}`,
+  items: venues.map((v) => ({
+    name: v.name,
+    url: `/zwembad/${v.municipality_slug}/${v.slug}`,
+    image: parseVenuePhotos(v)[0]?.url,
+  })),
+});
 ---
 <BaseLayout
-  title={`${intent} in ${cityName} | Zwemkaart.nl`}
-  description={`Overzicht voor ${intent} in ${cityName}.`}
+  title={seoMeta.title}
+  description={seoMeta.description}
   canonicalPath={`/steden/${stad}/${intent}`}
-  jsonLd={breadcrumbJsonLd}
+  ogImage={leadPhoto?.url}
+  ogImageAlt={leadPhoto?.alt_nl}
+  jsonLd={[breadcrumbJsonLd, intentItemListJsonLd]}
 >
   <Header />
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">
@@ -82,7 +102,8 @@ const breadcrumbJsonLd = {
       <span class="text-text-charcoal font-semibold capitalize">{intent}</span>
     </nav>
 
-    <h1 class="text-3xl font-extrabold text-text-charcoal capitalize mb-4">{intent} in {cityName}</h1>
+    <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">{seoMeta.h1}</h1>
+    <p class="text-sm text-text-muted mb-5">{seoMeta.description}</p>
 
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-5 mb-6 border-b border-border-hairline">
       <a

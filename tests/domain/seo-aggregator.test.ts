@@ -3,6 +3,8 @@ import {
   shouldGenerateIndexableFacetPage,
   buildCitySeoSummaryNl,
   buildVenueJsonLd,
+  buildItemListJsonLd,
+  buildCityIntentSeoMeta,
 } from '@/domain/seo-aggregator';
 
 describe('Programmatic SEO Quality Gate & Structured Data Builder', () => {
@@ -26,7 +28,7 @@ describe('Programmatic SEO Quality Gate & Structured Data Builder', () => {
     expect(summary).toContain('4 weken');
   });
 
-  it('builds valid Schema.org SportsActivityLocation JSON-LD', () => {
+  it('builds valid Schema.org PublicSwimmingPool JSON-LD with images, sameAs, and free access flag', () => {
     const ld = buildVenueJsonLd({
       name: 'Zwemcentrum De Mirandabad',
       slug: 'de-mirandabad',
@@ -40,10 +42,38 @@ describe('Programmatic SEO Quality Gate & Structured Data Builder', () => {
       ratingCount: 312,
       minPriceCents: 820,
       waterTreatment: 'SALT_ELECTROLYSIS',
+      images: ['/images/venues/official/de-mirandabad.webp'],
+      description: 'Subtropisch zwembad in Amsterdam Zuid.',
+      officialWebsiteUrl: 'https://www.amsterdam.nl/demirandabad/',
     });
 
     expect(ld['@type']).toBe('PublicSwimmingPool');
     expect(ld.url).toBe('https://zwemkaart.nl/zwembad/amsterdam/de-mirandabad');
     expect(ld.aggregateRating?.ratingValue).toBe(4.92);
+    expect(ld.image).toEqual(['https://zwemkaart.nl/images/venues/official/de-mirandabad.webp']);
+    expect(ld.sameAs).toBe('https://www.amsterdam.nl/demirandabad/');
+    expect(ld.isAccessibleForFree).toBe(false);
+  });
+
+  it('builds Schema.org ItemList JSON-LD and rich Dutch city intent SEO metadata', () => {
+    const itemList = buildItemListJsonLd({
+      name: 'Zwembaden in Amsterdam',
+      url: '/steden/amsterdam',
+      items: [
+        {
+          name: 'De Mirandabad',
+          url: '/zwembad/amsterdam/de-mirandabad',
+          image: '/images/venues/official/de-mirandabad.webp',
+        },
+      ],
+    });
+    expect(itemList['@type']).toBe('ItemList');
+    expect(itemList.url).toBe('https://zwemkaart.nl/steden/amsterdam');
+    expect(itemList.numberOfItems).toBe(1);
+
+    const intentMeta = buildCityIntentSeoMeta('Amsterdam', 'banenzwemmen', 12);
+    expect(intentMeta.title).toContain('Banenzwemmen in Amsterdam');
+    expect(intentMeta.h1).toBe('Banenzwemmen in Amsterdam');
+    expect(intentMeta.description).toContain('12 zwembaden');
   });
 });
