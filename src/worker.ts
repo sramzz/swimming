@@ -243,24 +243,67 @@ export async function handleApiRequest(request: Request, env: Env): Promise<Resp
   });
 }
 
+const SECURITY_HEADERS: Record<string, string> = {
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+  'X-Content-Type-Options': 'nosniff',
+};
+
+function withSecurityHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
+    if (!headers.has(k)) {
+      headers.set(k, v);
+    }
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    const forwardedProto = request.headers.get('x-forwarded-proto');
+    const isPlainHttp = url.protocol === 'http:' || forwardedProto === 'http';
+    const isLocalhost = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+    const needsHttps = !isLocalhost && isPlainHttp;
+    const isWww = url.hostname === 'www.zwemkaart.nl';
+    const hasTrailingSlash = url.pathname.length > 1 && url.pathname.endsWith('/');
 
-    // 301 Permanent Redirect: www.zwemkaart.nl -> zwemkaart.nl (SEO host consolidation)
-    if (url.hostname === 'www.zwemkaart.nl') {
-      url.hostname = 'zwemkaart.nl';
-      return Response.redirect(url.toString(), 301);
+    // Single-hop 301 Permanent Redirect: enforce HTTPS, canonical apex host, and drop-trailing-slash
+    if (needsHttps || isWww || hasTrailingSlash) {
+      const canonicalUrl = new URL(url.toString());
+      if (needsHttps || isWww) {
+        canonicalUrl.protocol = 'https:';
+      }
+      if (isWww) {
+        canonicalUrl.hostname = 'zwemkaart.nl';
+      }
+      if (hasTrailingSlash) {
+        canonicalUrl.pathname = canonicalUrl.pathname.replace(/\/+$/, '');
+      }
+      return new Response(null, {
+        status: 301,
+        headers: {
+          Location: canonicalUrl.toString(),
+          ...SECURITY_HEADERS,
+          'Cache-Control': 'public, max-age=3600',
+        },
+      });
     }
 
     if (url.pathname.startsWith('/api/')) {
-      return handleApiRequest(request, env);
+      const apiRes = await handleApiRequest(request, env);
+      return withSecurityHeaders(apiRes);
     }
 
     if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
+      const assetRes = await env.ASSETS.fetch(request);
+      return withSecurityHeaders(assetRes);
     }
 
-    return new Response('Not found', { status: 404 });
+    return withSecurityHeaders(new Response('Not found', { status: 404 }));
   },
 };

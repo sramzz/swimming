@@ -119,16 +119,45 @@ describe('Cloudflare Worker Edge API & Asset Routing', () => {
     expect(runMock).toHaveBeenCalled();
   });
 
-  it('redirects www.zwemkaart.nl permanently (301) to zwemkaart.nl', async () => {
+  it('redirects http://zwemkaart.nl/steden permanently (301) to https://zwemkaart.nl/steden with HSTS', async () => {
     const { env } = createMockEnv();
-    const req = new Request('https://www.zwemkaart.nl/steden/amsterdam', { method: 'GET' });
+    const req = new Request('http://zwemkaart.nl/steden', { method: 'GET' });
     const res = await worker.fetch(req, env);
 
     expect(res.status).toBe(301);
-    expect(res.headers.get('Location')).toBe('https://zwemkaart.nl/steden/amsterdam');
+    expect(res.headers.get('Location')).toBe('https://zwemkaart.nl/steden');
+    expect(res.headers.get('Strict-Transport-Security')).toContain('max-age=31536000');
   });
 
-  it('delegates non-API requests to env.ASSETS.fetch', async () => {
+  it('collapses http://www.zwemkaart.nl/provincies/drenthe/ to canonical HTTPS apex without trailing slash in a single 301 hop', async () => {
+    const { env } = createMockEnv();
+    const req = new Request('http://www.zwemkaart.nl/provincies/drenthe/', { method: 'GET' });
+    const res = await worker.fetch(req, env);
+
+    expect(res.status).toBe(301);
+    expect(res.headers.get('Location')).toBe('https://zwemkaart.nl/provincies/drenthe');
+    expect(res.headers.get('Strict-Transport-Security')).toContain('max-age=31536000');
+  });
+
+  it('redirects https://www.zwemkaart.nl/aanbieder permanently (301) to https://zwemkaart.nl/aanbieder', async () => {
+    const { env } = createMockEnv();
+    const req = new Request('https://www.zwemkaart.nl/aanbieder', { method: 'GET' });
+    const res = await worker.fetch(req, env);
+
+    expect(res.status).toBe(301);
+    expect(res.headers.get('Location')).toBe('https://zwemkaart.nl/aanbieder');
+  });
+
+  it('redirects https://zwemkaart.nl/steden/ permanently (301) to https://zwemkaart.nl/steden', async () => {
+    const { env } = createMockEnv();
+    const req = new Request('https://zwemkaart.nl/steden/', { method: 'GET' });
+    const res = await worker.fetch(req, env);
+
+    expect(res.status).toBe(301);
+    expect(res.headers.get('Location')).toBe('https://zwemkaart.nl/steden');
+  });
+
+  it('delegates canonical HTTPS requests to env.ASSETS.fetch with HSTS and nosniff security headers', async () => {
     const { env } = createMockEnv();
     const req = new Request('https://zwemkaart.nl/zwembad/amsterdam/noorderparkbad', { method: 'GET' });
     const res = await worker.fetch(req, env);
@@ -137,5 +166,7 @@ describe('Cloudflare Worker Edge API & Asset Routing', () => {
     const html = await res.text();
     expect(html).toBe('<html>Static Asset</html>');
     expect(env.ASSETS?.fetch).toHaveBeenCalled();
+    expect(res.headers.get('Strict-Transport-Security')).toContain('max-age=31536000');
+    expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff');
   });
 });

@@ -154,4 +154,19 @@ describe('Static Page & Sitemap Data Generation', () => {
     expect(indexAstro).toContain('buildItemListJsonLd');
     expect(indexAstro).toContain('/provincies/');
   });
+
+  it('configures Cloudflare Worker Build Output v0 with runWorkerFirst, ASSETS binding, drop-trailing-slash, and 404.astro', () => {
+    const prepareCf = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/cli/prepare-cf-output.ts'),
+      'utf-8'
+    );
+    expect(prepareCf).toContain("htmlHandling: 'drop-trailing-slash'");
+    expect(prepareCf).toContain('runWorkerFirst: true');
+    expect(prepareCf).toContain("type: 'assets'");
+
+    const page404 = path.resolve(process.cwd(), 'src/pages/404.astro');
+    expect(fs.existsSync(page404)).toBe(true);
+    const content404 = fs.readFileSync(page404, 'utf-8');
+    expect(content404).toContain('robots="noindex, follow"');
+  });
 });

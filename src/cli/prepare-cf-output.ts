@@ -57,10 +57,14 @@ export async function prepareCloudflareBuildOutput(rootDir = process.cwd()): Pro
     workersDev: true,
     domains: ['zwemkaart.nl', 'www.zwemkaart.nl'],
     assets: {
-      htmlHandling: 'auto-trailing-slash',
+      htmlHandling: 'drop-trailing-slash',
       notFoundHandling: '404-page',
+      runWorkerFirst: true,
     },
     env: {
+      ASSETS: {
+        type: 'assets',
+      },
       DB: {
         type: 'd1',
         name: 'allezwembaden-db',

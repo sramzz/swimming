@@ -67,3 +67,25 @@ Initially, card image carousels only rendered a single `<img src={photos[activeI
 - **Always use native CSS Scroll Snap (`overflow-x: auto; scroll-snap-type: x mandatory; scroll-snap-stop: always`)** with all `<img>` slides present in initial HTML (`.carousel-scroll-track` + `.carousel-scroll-slide`), giving each image explicit `width`, `height`, and Dutch `alt`, with `fetchpriority="high"` only on the single LCP hero/first-card image and `fetchpriority="low" loading="lazy"` on off-screen slides.
 - **Map preview cards** (`ListingMapIsland`) must expose the same horizontal swipe track plus always-visible Prev/Next controls and clickable dot indicators so touch and mouse users alike can browse pool photos directly on the map.
 - **Every interactive filter link that corresponds to a real SEO page** (like city pills) should render as an `<a href="/steden/...">` link (intercepting simple left-clicks in JS for instant filtering) rather than a `<button>` that hides internal links from Googlebot.
+
+---
+
+## Lesson 4: Cloudflare Workers Static Assets Must Enable `runWorkerFirst` + `ASSETS` Binding + `drop-trailing-slash` for Clean Google Search Console Indexing
+
+### What Happened
+Google Search Console flagged `zwemkaart.nl` and `www.zwemkaart.nl` with:
+- **"HTTPS not evaluated — These pages are not served over HTTPS"** on `https://www.zwemkaart.nl/*`
+- **343 pages as "Alternative page with proper canonical tag"**
+- **914 pages as "Discovered – currently not indexed"** and redirect errors on `/steden` & `/provincies/*`
+
+### Root Cause
+1. In `src/cli/prepare-cf-output.ts`, `worker.config.json` omitted `assets.runWorkerFirst: true` and `env.ASSETS: { type: 'assets' }`. Cloudflare's asset router intercepted all static HTML routes before `src/worker.ts` could run, so the `www.zwemkaart.nl` → `zwemkaart.nl` 301 redirect in `src/worker.ts` was completely bypassed (returning `HTTP/2 200` on `www.zwemkaart.nl` with `<link rel="canonical" href="https://zwemkaart.nl/...">`).
+2. `src/worker.ts` only checked `url.hostname === 'www.zwemkaart.nl'` and did not enforce HTTPS (`url.protocol === 'http:'`), allowing plain HTTP requests (`http://zwemkaart.nl/` and `http://www.zwemkaart.nl/`) to return `200 OK` without HSTS.
+3. `assets.htmlHandling` was set to `'auto-trailing-slash'`, causing every extensionless Astro directory URL in `sitemap.xml` and `<link rel="canonical">` (such as `/steden` and `/provincies/drenthe`) to return `HTTP/2 307` → `/steden/` before serving `<link rel="canonical" href="https://zwemkaart.nl/steden">`, creating a `307` ↔ canonical loop.
+4. `notFoundHandling: '404-page'` lacked `src/pages/404.astro` (`dist/404.html`).
+
+### Prevention Rule (Mandatory)
+- **Always set `assets: { htmlHandling: 'drop-trailing-slash', notFoundHandling: '404-page', runWorkerFirst: true }` and `env.ASSETS: { type: 'assets' }`** in `src/cli/prepare-cf-output.ts` so `src/worker.ts` handles every HTTP/HTTPS request first.
+- **Always enforce a single-hop `301 Moved Permanently` in `src/worker.ts`** combining `http://` → `https://`, `www.` → apex (`zwemkaart.nl`), and trailing-slash removal (`/foo/` → `/foo`), and attach `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` on all responses.
+- **Always keep `src/pages/404.astro`** with `robots="noindex, follow"` so `404-page` handling serves a valid crawl-friendly 404 page.
+- Verify live edge headers with `curl -I` across `http://`, `www.`, apex, and trailing-slash variants after every deployment.

@@ -9,6 +9,7 @@ interface Props {
   ogImage?: string;
   ogImageAlt?: string;
   ogType?: 'website' | 'place';
+  robots?: string;
   jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
@@ -19,6 +20,7 @@ const {
   ogImage,
   ogImageAlt,
   ogType = 'website',
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   jsonLd,
 } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, 'https://zwemkaart.nl').toString();
@@ -40,11 +42,11 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <meta name="description" content={description} />
     <meta
       name="robots"
-      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      content={robots}
     />
     <meta
       name="googlebot"
-      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      content={robots}
     />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" hreflang="nl-NL" href={canonicalUrl} />

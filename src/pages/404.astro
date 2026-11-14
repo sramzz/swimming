@@ -1,0 +1,78 @@
+---
+// src/pages/404.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getBuildDatabase } from '../db/runtime-db';
+
+const db = getBuildDatabase();
+const provinces = db
+  .prepare(
+    `SELECT m.province_slug, m.province_name, COUNT(v.id) as venue_count
+     FROM municipalities m
+     JOIN venues v ON v.municipality_slug = m.slug
+     GROUP BY m.province_slug
+     ORDER BY m.province_name ASC`
+  )
+  .all() as Array<{ province_slug: string; province_name: string; venue_count: number }>;
+db.close();
+---
+<BaseLayout
+  title="Pagina niet gevonden (404) | Zwemkaart.nl"
+  description="Deze pagina bestaat niet of is verplaatst. Bekijk alle zwembaden, zwemlessen en buitenwater in Nederland op Zwemkaart.nl."
+  canonicalPath="/404"
+  robots="noindex, follow"
+>
+  <Header />
+  <main class="max-w-5xl mx-auto px-4 md:px-8 py-12 flex-1 w-full">
+    <div class="rounded-3xl border border-border-hairline bg-surface-pure p-8 md:p-10 shadow-sm mb-10">
+      <span class="inline-flex items-center px-3 py-1 rounded-full bg-badge-teal-bg text-primary text-xs font-bold mb-4">
+        404 — Pagina niet gevonden
+      </span>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-text-charcoal tracking-tight mb-3">
+        Deze zwempagina kon niet worden gevonden
+      </h1>
+      <p class="text-base text-text-muted max-w-2xl mb-6">
+        De opgevraagde URL bestaat niet of is verplaatst. Gebruik de onderstaande links om direct zwembaden, Zwem-ABC wachttijden of officieel buitenzwemwater in uw regio te bekijken.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/"
+          class="inline-flex items-center px-5 py-2.5 rounded-full bg-primary hover:bg-primary-container text-on-primary text-sm font-bold transition-colors"
+        >
+          Terug naar Zwemkaart.nl →
+        </a>
+        <a
+          href="/steden"
+          class="inline-flex items-center px-5 py-2.5 rounded-full border border-border-strong bg-surface-pure hover:border-primary text-text-charcoal text-sm font-bold transition-colors"
+        >
+          Alle 342 Gemeenten
+        </a>
+        <a
+          href="/aanbieder"
+          class="inline-flex items-center px-5 py-2.5 rounded-full border border-border-strong bg-surface-pure hover:border-primary text-text-charcoal text-sm font-bold transition-colors"
+        >
+          Word Aanbieder
+        </a>
+      </div>
+    </div>
+
+    <section>
+      <h2 class="text-lg font-extrabold text-text-charcoal mb-4">
+        Ontdek zwemlocaties per provincie
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        {provinces.map((p) => (
+          <a
+            href={`/provincies/${p.province_slug}`}
+            class="p-4 rounded-2xl border border-border-hairline bg-surface-pure hover:border-primary hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <span class="font-bold text-sm text-text-charcoal">{p.province_name}</span>
+            <span class="text-xs text-primary font-semibold mt-1">{p.venue_count} locaties →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
