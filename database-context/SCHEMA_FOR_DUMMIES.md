@@ -17,6 +17,10 @@ In the real Dutch swimming world, three things are often confused as "a pool":
 
 ```mermaid
 erDiagram
+    MUNICIPALITIES ||--o{ WOONPLAATSEN : "contains (1..N)"
+    MUNICIPALITIES ||--o{ POSTCODE_PC4 : "contains (1..N)"
+    WOONPLAATSEN ||--o{ POSTCODE_PC4 : "spans (1..N)"
+    WOONPLAATSEN ||--o{ VENUES : "locates"
     VENUES ||--o{ BASINS : "has 1..N basins (default=1)"
     VENUES ||--o{ SCHEDULE_PERIODS : "has regular & holiday rosters"
     SCHEDULE_PERIODS ||--o{ SCHEDULE_SLOTS : "contains daily time slots"
@@ -29,7 +33,19 @@ erDiagram
 
 ---
 
-## 2. How History Works (Slowly Changing Dimensions — SCD Type 2)
+## 2. The 4-Tier Dutch Geographic & Administrative Hierarchy
+
+To resolve settlements, postcodes, and municipal boundaries without ambiguity, the database implements a strict 4-tier hierarchy:
+1. **Provincie (12 Provinces):** Top-level region (`province_slug`, e.g. `noord-holland`, `zuid-holland`) used for provincial KNMI weather warnings (`weather_alerts`).
+2. **CBS Gemeente (`municipalities`, ~342 rows):** Official Dutch administrative municipalities with CBS code (e.g. `GM0363`), name, centroid, and Rijksoverheid school vacation region (`noord`, `midden`, `zuid`).
+3. **BAG Woonplaats (`woonplaatsen`, ~2,503 rows):** Official settlement boundaries maintained by the Dutch Cadastre (BAG). Every record has an immutable internal `id = 'wpl-' || bag_id` (e.g. `wpl-3594` for Amsterdam, `wpl-1065` for Scheveningen inside Den Haag), unique `bag_id`, unique `slug`, centroid, and foreign key to `municipalities(slug)`.
+4. **Postcode PC4 (`postcode_pc4`, ~4,000 rows):** 4-digit postal code centroids for sub-millisecond bounding box distance calculations, linked directly to both `municipalities(slug)` and `woonplaatsen(id)`.
+
+*Venue association rule:* Every venue references its administrative CBS Gemeente (`municipality_slug`) and BAG Woonplaats (`woonplaats_id`, `woonplaats_slug`, `woonplaats_name`). The `neighborhood_name` field is strictly reserved for sub-city districts/wijken (e.g. *Amsterdam Zuid (Rivierenbuurt)*).
+
+---
+
+## 3. How History Works (Slowly Changing Dimensions — SCD Type 2)
 
 Instead of overwriting old prices, schedules, or waitlists when a new season starts, we use **SCD Type 2** (`valid_from`, `valid_to`, `is_current`):
 * **`tariffs` (Prices):** When Amsterdam raises *De Mirandabad*'s single ticket from `€ 8,20` (2025) to `€ 8,60` (2026), we close the 2025 row (`valid_to = '2025-12-31'`, `is_current = 0`) and insert the 2026 row (`valid_from = '2026-01-01'`, `is_current = 1`).
@@ -40,7 +56,7 @@ Instead of overwriting old prices, schedules, or waitlists when a new season sta
 
 ---
 
-## 3. How the Dutch Calendar & Weather Context Tables Work
+## 4. How the Dutch Calendar & Weather Context Tables Work
 
 Three tiny reference tables power automatic user warnings across the entire site:
 1. **`nl_public_holidays` (*Feestdagen*):** Koningsdag, Pasen, Pinksteren, Kerst, etc.
@@ -49,7 +65,7 @@ Three tiny reference tables power automatic user warnings across the entire site
 
 ---
 
-## 4. How Day-1 Leads, Clicks & Quarantine Logs Work
+## 5. How Day-1 Leads, Clicks & Quarantine Logs Work
 
 * **`lead_requests`:** Stores parents' *"Kortste Wachttijd Vergelijker & Alert"* requests (AVG-minimal: only parent email, PC4 postcode, child age in years, target diploma `A/B/C`, and preferred days—never child full name or exact DOB) governed by an explicit **Lead FSM**.
 * **`outbound_clicks`:** Counts every click on *"Koop Tickets op Officiële Website ↗"* and *"Direct inschrijven bij Zwemschool ↗"* so we have hard demand proof when approaching B2B swim school partners later.

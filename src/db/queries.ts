@@ -12,6 +12,9 @@ export interface VenueRow {
   street_address: string | null;
   postcode_pc6: string | null;
   postcode_pc4: string | null;
+  woonplaats_id?: string | null;
+  woonplaats_slug?: string | null;
+  woonplaats_name?: string | null;
   neighborhood_name: string | null;
   lat: number;
   lng: number;
@@ -255,3 +258,111 @@ export function findShortestWaitlistOfferingsNearPc4(
     distance_km: distanceByVenueId.get(r.venue_id) ?? 0,
   }));
 }
+
+export interface MunicipalityRow {
+  slug: string;
+  cbs_code: string;
+  name: string;
+  province_slug: string;
+  province_name: string;
+  school_vacation_region: 'noord' | 'midden' | 'zuid';
+  center_lat: number;
+  center_lng: number;
+}
+
+export interface WoonplaatsRow {
+  id: string;
+  bag_id: string;
+  slug: string;
+  name: string;
+  municipality_slug: string;
+  province_slug: string;
+  center_lat: number;
+  center_lng: number;
+}
+
+export interface WoonplaatsWithCountRow extends WoonplaatsRow {
+  venue_count: number;
+}
+
+export function getMunicipalityBySlug(db: SqliteDatabase, slug: string): MunicipalityRow | null {
+  const row = db
+    .prepare(
+      `SELECT slug, cbs_code, name, province_slug, province_name, school_vacation_region, center_lat, center_lng
+       FROM municipalities
+       WHERE slug = ?`
+    )
+    .get(slug) as MunicipalityRow | undefined;
+  return row ?? null;
+}
+
+export function getWoonplaatsBySlug(db: SqliteDatabase, slug: string): WoonplaatsRow | null {
+  const row = db
+    .prepare(
+      `SELECT id, bag_id, slug, name, municipality_slug, province_slug, center_lat, center_lng
+       FROM woonplaatsen
+       WHERE slug = ?`
+    )
+    .get(slug) as WoonplaatsRow | undefined;
+  return row ?? null;
+}
+
+export function listWoonplaatsenByMunicipality(
+  db: SqliteDatabase,
+  municipalitySlug: string
+): WoonplaatsWithCountRow[] {
+  return db
+    .prepare(
+      `SELECT
+         w.id,
+         w.bag_id,
+         w.slug,
+         w.name,
+         w.municipality_slug,
+         w.province_slug,
+         w.center_lat,
+         w.center_lng,
+         COUNT(v.id) AS venue_count
+       FROM woonplaatsen w
+       JOIN venues v ON v.woonplaats_id = w.id
+       WHERE w.municipality_slug = ?
+       GROUP BY w.id
+       HAVING COUNT(v.id) >= 1
+       ORDER BY venue_count DESC, w.name ASC`
+    )
+    .all(municipalitySlug) as WoonplaatsWithCountRow[];
+}
+
+export function listIndexableWoonplaatsen(db: SqliteDatabase): WoonplaatsWithCountRow[] {
+  return db
+    .prepare(
+      `SELECT
+         w.id,
+         w.bag_id,
+         w.slug,
+         w.name,
+         w.municipality_slug,
+         w.province_slug,
+         w.center_lat,
+         w.center_lng,
+         COUNT(v.id) AS venue_count
+       FROM woonplaatsen w
+       JOIN venues v ON v.woonplaats_id = w.id
+       WHERE w.slug != w.municipality_slug
+       GROUP BY w.id
+       HAVING COUNT(v.id) >= 1
+       ORDER BY venue_count DESC, w.name ASC`
+    )
+    .all() as WoonplaatsWithCountRow[];
+}
+
+export function listVenuesByWoonplaats(db: SqliteDatabase, woonplaatsSlug: string): VenueRow[] {
+  return db
+    .prepare(
+      `${VENUE_ENRICHED_SELECT}
+       WHERE v.woonplaats_slug = ?
+       ORDER BY (v.enrichment_tier = 'GOLD_STANDARD') DESC, v.rating_score DESC`
+    )
+    .all(woonplaatsSlug) as VenueRow[];
+}
+

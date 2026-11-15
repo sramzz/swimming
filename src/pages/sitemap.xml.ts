@@ -1,8 +1,13 @@
 // src/pages/sitemap.xml.ts
 import type { APIRoute } from 'astro';
 import { getBuildDatabase } from '../db/runtime-db';
-import { listAllVenues, listVenuesByCity } from '../db/queries';
-import { shouldGenerateIndexableFacetPage } from '../domain/seo-aggregator';
+import {
+  listAllVenues,
+  listVenuesByCity,
+  listIndexableWoonplaatsen,
+  listVenuesByWoonplaats,
+} from '../db/queries';
+import { matchesIntent, shouldGenerateIndexableFacetPage } from '../domain/seo-aggregator';
 
 export const GET: APIRoute = () => {
   const db = getBuildDatabase();
@@ -20,18 +25,39 @@ export const GET: APIRoute = () => {
 
   const intents = ['banenzwemmen', 'zwemles', 'buitenwater'] as const;
   const intentUrls: string[] = [];
+  const cityUrls: string[] = [];
+  const seenStadSlugs = new Set<string>();
+
   for (const city of cities) {
+    seenStadSlugs.add(city.slug);
+    cityUrls.push(`<url><loc>https://zwemkaart.nl/steden/${city.slug}</loc></url>`);
+
     const cityVenues = listVenuesByCity(db, city.slug);
     for (const intent of intents) {
-      const matching =
-        intent === 'buitenwater'
-          ? cityVenues.filter(
-              (v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR'
-            )
-          : cityVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
+      const matching = cityVenues.filter((v) => matchesIntent(v, intent));
       if (shouldGenerateIndexableFacetPage(matching.length)) {
         intentUrls.push(
           `<url><loc>https://zwemkaart.nl/steden/${city.slug}/${intent}</loc></url>`
+        );
+      }
+    }
+  }
+
+  const indexableWoonplaatsen = listIndexableWoonplaatsen(db);
+  const woonplaatsUrls: string[] = [];
+
+  for (const wp of indexableWoonplaatsen) {
+    if (seenStadSlugs.has(wp.slug)) continue;
+    seenStadSlugs.add(wp.slug);
+
+    woonplaatsUrls.push(`<url><loc>https://zwemkaart.nl/steden/${wp.slug}</loc></url>`);
+
+    const wpVenues = listVenuesByWoonplaats(db, wp.slug);
+    for (const intent of intents) {
+      const matching = wpVenues.filter((v) => matchesIntent(v, intent));
+      if (shouldGenerateIndexableFacetPage(matching.length)) {
+        intentUrls.push(
+          `<url><loc>https://zwemkaart.nl/steden/${wp.slug}/${intent}</loc></url>`
         );
       }
     }
@@ -46,14 +72,16 @@ export const GET: APIRoute = () => {
     ...provinces.map(
       (p) => `<url><loc>https://zwemkaart.nl/provincies/${p.province_slug}</loc></url>`
     ),
-    ...cities.map(
-      (c) => `<url><loc>https://zwemkaart.nl/steden/${c.slug}</loc></url>`
-    ),
+    ...cityUrls,
+    ...woonplaatsUrls,
     ...intentUrls,
-    ...venues.map(
-      (v) =>
-        `<url><loc>https://zwemkaart.nl/zwembad/${v.municipality_slug}/${v.slug}</loc><lastmod>${v.lastmod_at}</lastmod></url>`
-    ),
+    ...venues.map((v) => {
+      const trimmedLastmod = v.lastmod_at.trim();
+      const lastmodIso = trimmedLastmod.includes('T')
+        ? trimmedLastmod
+        : `${trimmedLastmod.replace(' ', 'T')}Z`;
+      return `<url><loc>https://zwemkaart.nl/zwembad/${v.municipality_slug}/${v.slug}</loc><lastmod>${lastmodIso}</lastmod></url>`;
+    }),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;

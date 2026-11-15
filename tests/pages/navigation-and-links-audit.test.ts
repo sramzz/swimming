@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getBuildDatabase } from '@/db/runtime-db';
+import { getVenueByCityAndSlug, getMunicipalityBySlug } from '@/db/queries';
+import { buildVenueJsonLd } from '@/domain/seo-aggregator';
 
 describe('Phase 2 (Tasks 7.4–7.6): Full Navigation, Header Controls, B2B Portal & Booking Widget Audit', () => {
   it('provides /aanbieder (src/pages/aanbieder.astro) and /steden (src/pages/steden/index.astro) pages', () => {
@@ -74,5 +77,163 @@ describe('Phase 2 (Tasks 7.4–7.6): Full Navigation, Header Controls, B2B Porta
     expect(searchTsx).toContain('rankVenuesByUserLocation');
     expect(searchTsx).toContain('Dichtbij mij');
     expect(searchTsx).toContain('venues: displayed');
+  });
+
+  describe('Milestone 8 (Task 8.8): Municipality & Woonplaats Dynamic Breadcrumbs, Vacation Regions and /steden Index Audit', () => {
+    it('wires [stad]/[slug].astro with dynamic getMunicipalityBySlug, vacation regions, and woonplaats breadcrumbs', () => {
+      const detailSource = fs.readFileSync(
+        path.resolve(process.cwd(), 'src/pages/zwembad/[stad]/[slug].astro'),
+        'utf-8'
+      );
+
+      // Verifies getMunicipalityBySlug import and call before db.close()
+      expect(detailSource).toContain('getMunicipalityBySlug');
+      expect(detailSource).not.toContain("venue.municipality_slug === 'eindhoven' ? 'zuid'");
+      expect(detailSource).not.toContain("venue.municipality_slug === 'utrecht' ? 'midden'");
+
+      // Verifies vacationRegion uses municipality?.school_vacation_region
+      expect(detailSource).toMatch(/municipality\??\.school_vacation_region \?\? 'noord'/);
+
+      // Verifies municipalityName derivation and usage in breadcrumb and link
+      expect(detailSource).toContain('municipalityName');
+      expect(detailSource).toContain('hasDistinctWoonplaats');
+
+      // Verifies cityName in buildVenueJsonLd uses venue.woonplaats_name || municipalityName
+      expect(detailSource).toMatch(/cityName:\s*venue\.woonplaats_name\s*\|\|\s*municipalityName/);
+
+      // Verifies breadcrumbJsonLd and nav include distinct woonplaats when present
+      expect(detailSource).toContain('venue.woonplaats_slug');
+      expect(detailSource).toContain('venue.woonplaats_name');
+
+      // Verifies clean address display in #locatie section with (Gemeente ...)
+      expect(detailSource).toContain('Gemeente');
+    });
+
+    it('renders constituent woonplaatsen and search attributes on /steden (src/pages/steden/index.astro)', () => {
+      const stedenSource = fs.readFileSync(
+        path.resolve(process.cwd(), 'src/pages/steden/index.astro'),
+        'utf-8'
+      );
+
+      // Verifies constituent woonplaatsen query with w.slug != w.municipality_slug
+      expect(stedenSource).toContain('w.slug != w.municipality_slug');
+      expect(stedenSource).toContain('woonplaatsen');
+
+      // Verifies constituent names included in search attributes
+      expect(stedenSource).toMatch(/data-city-name=.*\{.*(wp|constituent)/i);
+
+      // Verifies dedicated constituent woonplaatsen section
+      expect(stedenSource).toMatch(/Alle Plaatsen (&amp;|&) Dorpen \(Woonplaatsen\)/);
+
+      // Verifies constituent woonplaats links to /steden/
+      expect(stedenSource).toMatch(/\/steden\/\$\{.*slug\}/);
+    });
+
+    it('verifies dynamic breadcrumbs, vacation regions and JSON-LD for distinct woonplaats venues (e.g. Abcoude in De Ronde Venen)', () => {
+      const db = getBuildDatabase();
+      const venue = getVenueByCityAndSlug(db, 'de-ronde-venen', 'het-sporthuis-abcoude');
+      expect(venue).not.toBeNull();
+      expect(venue!.woonplaats_slug).toBe('abcoude');
+      expect(venue!.woonplaats_name).toBe('Abcoude');
+      expect(venue!.municipality_slug).toBe('de-ronde-venen');
+
+      const municipality = getMunicipalityBySlug(db, venue!.municipality_slug);
+      expect(municipality).not.toBeNull();
+      expect(municipality!.name).toBe('De Ronde Venen');
+      expect(municipality!.school_vacation_region).toBe('midden');
+
+      const municipalityName = municipality?.name ?? venue!.municipality_slug;
+      const hasDistinctWoonplaats = Boolean(
+        venue!.woonplaats_slug && venue!.woonplaats_name && venue!.woonplaats_slug !== venue!.municipality_slug
+      );
+      expect(hasDistinctWoonplaats).toBe(true);
+
+      const cityName = venue!.woonplaats_name || municipalityName;
+      expect(cityName).toBe('Abcoude');
+
+      const jsonLd = buildVenueJsonLd({
+        name: venue!.name,
+        slug: venue!.slug,
+        citySlug: venue!.municipality_slug,
+        cityName,
+        streetAddress: venue!.street_address,
+        postcode: venue!.postcode_pc6,
+        lat: venue!.lat,
+        lng: venue!.lng,
+        ratingScore: venue!.rating_score,
+        ratingCount: venue!.rating_count,
+        minPriceCents: venue!.min_single_price_cents,
+        waterTreatment: venue!.primary_water_treatment,
+      });
+
+      expect(jsonLd.address.addressLocality).toBe('Abcoude');
+
+      const breadcrumbItems = [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Nederland',
+          item: 'https://zwemkaart.nl/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: municipalityName,
+          item: `https://zwemkaart.nl/steden/${venue!.municipality_slug}`,
+        },
+      ];
+
+      if (hasDistinctWoonplaats) {
+        breadcrumbItems.push({
+          '@type': 'ListItem',
+          position: 3,
+          name: venue!.woonplaats_name!,
+          item: `https://zwemkaart.nl/steden/${venue!.woonplaats_slug}`,
+        });
+      }
+
+      breadcrumbItems.push({
+        '@type': 'ListItem',
+        position: breadcrumbItems.length + 1,
+        name: venue!.name,
+        item: `https://zwemkaart.nl/zwembad/${venue!.municipality_slug}/${venue!.slug}`,
+      });
+
+      expect(breadcrumbItems).toHaveLength(4);
+      expect(breadcrumbItems[1].name).toBe('De Ronde Venen');
+      expect(breadcrumbItems[1].item).toBe('https://zwemkaart.nl/steden/de-ronde-venen');
+      expect(breadcrumbItems[2].name).toBe('Abcoude');
+      expect(breadcrumbItems[2].item).toBe('https://zwemkaart.nl/steden/abcoude');
+      expect(breadcrumbItems[3].name).toBe('Het Sporthuis Abcoude');
+      expect(breadcrumbItems[3].item).toBe('https://zwemkaart.nl/zwembad/de-ronde-venen/het-sporthuis-abcoude');
+
+      db.close();
+    });
+
+    it('verifies constituent woonplaats query and grouping on /steden includes Abcoude and Weesp', () => {
+      const db = getBuildDatabase();
+      const constituentWoonplaatsen = db
+        .prepare(
+          `SELECT w.slug, w.name, w.municipality_slug, COUNT(v.id) as venue_count
+           FROM woonplaatsen w
+           JOIN venues v ON v.woonplaats_id = w.id
+           WHERE w.slug != w.municipality_slug
+           GROUP BY w.id
+           ORDER BY venue_count DESC, w.name ASC`
+        )
+        .all() as Array<{ slug: string; name: string; municipality_slug: string; venue_count: number }>;
+
+      const abcoude = constituentWoonplaatsen.find((w) => w.slug === 'abcoude');
+      expect(abcoude).toBeDefined();
+      expect(abcoude!.municipality_slug).toBe('de-ronde-venen');
+      expect(abcoude!.venue_count).toBeGreaterThanOrEqual(1);
+
+      const weesp = constituentWoonplaatsen.find((w) => w.slug === 'weesp');
+      expect(weesp).toBeDefined();
+      expect(weesp!.municipality_slug).toBe('amsterdam');
+      expect(weesp!.venue_count).toBeGreaterThanOrEqual(1);
+
+      db.close();
+    });
   });
 });

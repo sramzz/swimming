@@ -233,3 +233,16 @@ A checkbox (`- [ ]` $\rightarrow$ `- [x]`) is **not** a "I pasted the code" mark
 - [x] **Task 7.11:** Upgrade `src/domain/venue-photos.ts` with Official-First Priority & Zero-Repetition Guarantee
 - [x] **Task 7.12:** Full Build & Link Verification Gate (`tests/pages/navigation-and-links-audit.test.ts`) + Cloudflare Production Deployment
 - [x] **🛑 Milestone 7 Gate Verification:** Zero pins outside NL, pins remain stable on card hover, 0 dead links/buttons across all 6 page types, 100% unique primary photos across top 24 homepage cards, and all 945 `zwemwater.nl` locations aligned with official restrictions, information boards, and warnings.
+
+### [Milestone 8: National Dutch Pool Completeness & BAG Woonplaats Dimension Architecture](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/plans/milestone-8-national-pool-completeness-and-woonplaats-seo.md)
+- [x] **Task 8.1:** Schema Evolution (`woonplaatsen`, `postcode_pc4.woonplaats_id`, `venues.woonplaats_*`, 7 B-tree indexes) & Pre-Index Migration Guards (`database-context/schema-detailed.sql`, `src/db/client.ts`, docs)
+- [x] **Task 8.2:** Official Kadaster BAG Woonplaatsen Dataset (`src/cli/harvest-bag-woonplaatsen.ts`, `src/data/dutch-woonplaatsen.json`, `2,503` entries) & Pure Geography Resolver (`src/domain/dutch-geography.ts`)
+- [x] **Task 8.3:** Database Queries (`getMunicipalityBySlug`, `getWoonplaatsBySlug`, `listWoonplaatsenByMunicipality`, `listIndexableWoonplaatsen`, `listVenuesByWoonplaats`) & Seed Alignment (`src/db/queries.ts`, `src/db/seed.ts`)
+- [x] **Task 8.4:** Pure National Pool Parser (`parseZwemindexProvinceHtml`, `classifyPoolVenueType`) & 3-Entity Domain Mapper (`src/ingestion/national-pool-parser.ts`)
+- [x] **Task 8.5:** National Pool Harvester CLI (`src/cli/harvest-national-pools.ts`, `pnpm harvest:pools`, `690` pools in `src/data/curated-pools.json`)
+- [x] **Task 8.6:** Idempotent 3-Entity National Ingestion (`1,641` total venues across `333` municipalities & `894` woonplaatsen) & Run History (`src/cli/ingest-national.ts`, `database-context/run-history.md`)
+- [x] **Task 8.7:** Unified Woonplaats & Gemeente SEO Pages + Sitemap (`src/pages/steden/[stad]/index.astro`, `src/pages/steden/[stad]/[intent].astro`, `src/domain/seo-aggregator.ts`, `src/pages/sitemap.xml.ts`)
+- [x] **Task 8.8:** Pool Detail Breadcrumbs/JSON-LD (`src/pages/zwembad/[stad]/[slug].astro`) & `/steden` Directory Upgrade (`src/pages/steden/index.astro`)
+- [x] **Task 8.9:** Search Island, `VenueCard` Location Subtitle & Official-Photo Unique Homepage Ranking (`src/domain/multi-city-ranking.ts`, `src/domain/venue-photos.ts`, `src/components/islands/SearchAndFilterIsland.tsx`, `src/components/VenueCard.astro`)
+- [x] **Task 8.10:** Lessons Learned (`docs/lessons/sqlite-d1-and-data.md` Lesson 3) & Milestone 8 Plan Registration
+- [x] **🛑 Milestone 8 Gate Verification:** Complete national coverage (`1,641` active venues including Abcoude & Weesp), 0 venues missing `woonplaats_id` or default basin, clean `oxlint` / `astro check` / `vitest` (`124/124`) / `astro build` (`4,991` pages).

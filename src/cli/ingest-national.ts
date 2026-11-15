@@ -1,9 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import { getBuildDatabase } from '../db/runtime-db';
-import { haversineDistanceKm } from '../db/geo';
+import { applyDetailedSchema } from '../db/client';
+import { seedInitialDataset } from '../db/seed';
 import { buildCuratedPhotosForVenue } from '../domain/venue-photos';
+import {
+  resolveDutchLocation,
+  slugifyNl,
+  type BagWoonplaatsRecord,
+} from '../domain/dutch-geography';
+import { evaluateScrapedVenueSanity, computeContentHash } from '../ingestion/sanity-gate';
+import { createRunLogger } from '../lib/logger';
+import { appendRunHistoryRow } from './verify-cf-profile';
 
 interface MunicipalityRecord {
   slug: string;
@@ -24,6 +32,9 @@ interface CuratedPoolRecord {
   street_address: string;
   postcode_pc6: string;
   postcode_pc4: string;
+  woonplaats_id?: string;
+  woonplaats_slug?: string;
+  woonplaats_name?: string;
   neighborhood_name: string;
   lat: number;
   lng: number;
@@ -46,6 +57,7 @@ interface CuratedPoolRecord {
   rating_count: number;
   min_single_price_cents: number;
   featured_badge_nl?: string | null;
+  operational_state?: string;
   basins?: Array<{
     name_nl: string;
     basin_category: string;
@@ -68,6 +80,17 @@ interface CuratedPoolRecord {
     label_nl: string;
     start_time: string;
     end_time: string;
+  }>;
+  offerings?: Array<{
+    diploma_track: string;
+    monthly_price_cents?: number;
+    has_diploma_guarantee?: number;
+    group_max_size?: number;
+    lesson_duration_mins?: number;
+    current_waitlist_weeks_min?: number;
+    current_waitlist_weeks_max?: number;
+    direct_spots_note_nl?: string;
+    registration_url?: string;
   }>;
 }
 
@@ -97,15 +120,6 @@ interface ZwemwaterDetailRecord {
   warnings: Array<{ titleNl: string; bodyNl: string }>;
 }
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
 function cleanVenueName(raw: string): string {
   let name = raw.replace(/^[`'‘]([A-Za-z])/, "'$1").trim();
   if (name.startsWith("'T ")) {
@@ -122,11 +136,20 @@ export async function runNationalIngestion(): Promise<{
   indoorVenues: number;
   municipalitiesCovered: number;
 }> {
-  console.log('🏊 Starting Zwemkaart.nl National Venue Ingestion (500+ Dutch Pools)...');
-  const runId = `run-${Date.now()}`;
+  const startedAt = new Date().toISOString();
+  const runId = process.env.RUN_ID || `${startedAt.slice(0, 10)}_national_ingest`;
+  const logger = createRunLogger({ runId });
+
+  logger.info('INGEST_START', 'Starting Zwemkaart.nl National Venue Ingestion', { runId });
+  console.log(`🏊 Starting Zwemkaart.nl National Venue Ingestion (Run: ${runId})...`);
+
   const db = getBuildDatabase();
 
-  // 1. Load Dutch Municipalities
+  // 1. Ensure detailed schema & baseline seed (holidays, vacations, 6 Gold Standard flagships)
+  applyDetailedSchema(db);
+  seedInitialDataset(db);
+
+  // 2. Load Dutch Municipalities (342 CBS rows)
   const municipalitiesPath = path.resolve(process.cwd(), 'src/data/dutch-municipalities.json');
   if (!fs.existsSync(municipalitiesPath)) {
     throw new Error(`Missing ${municipalitiesPath}`);
@@ -135,7 +158,7 @@ export async function runNationalIngestion(): Promise<{
     fs.readFileSync(municipalitiesPath, 'utf-8')
   );
 
-  console.log(`📍 Upserting ${municipalities.length} Dutch municipalities into database...`);
+  logger.info('SEED_MUNICIPALITIES', `Upserting ${municipalities.length} Dutch municipalities into database`);
   const upsertMun = db.prepare(`
     INSERT INTO municipalities (slug, cbs_code, name, province_slug, province_name, school_vacation_region, center_lat, center_lng)
     VALUES (@slug, @cbs_code, @name, @province_slug, @province_name, @school_vacation_region, @center_lat, @center_lng)
@@ -149,23 +172,104 @@ export async function runNationalIngestion(): Promise<{
   `);
 
   const munBySlug = new Map<string, MunicipalityRecord>();
-  const munByNameLower = new Map<string, MunicipalityRecord>();
   db.transaction(() => {
     for (const m of municipalities) {
       upsertMun.run(m);
       munBySlug.set(m.slug, m);
-      munByNameLower.set(m.name.toLowerCase(), m);
     }
   })();
 
-  // 2. Identify existing Gold Standard flagships to protect
-  const goldStandardRows = db
-    .prepare("SELECT id, slug, municipality_slug FROM venues WHERE enrichment_tier = 'GOLD_STANDARD'")
-    .all() as Array<{ id: string; slug: string; municipality_slug: string }>;
-  const protectedVenueKeys = new Set(goldStandardRows.map((v) => `${v.municipality_slug}:${v.slug}`));
-  console.log(`🛡️  Preserving ${goldStandardRows.length} existing GOLD_STANDARD flagship venues.`);
+  // 3. Load & Upsert all 2,503 Dutch BAG Woonplaatsen & primary PC4 centroids
+  const woonplaatsenPath = path.resolve(process.cwd(), 'src/data/dutch-woonplaatsen.json');
+  if (!fs.existsSync(woonplaatsenPath)) {
+    throw new Error(`Missing ${woonplaatsenPath}`);
+  }
+  const bagWoonplaatsen: BagWoonplaatsRecord[] = JSON.parse(
+    fs.readFileSync(woonplaatsenPath, 'utf-8')
+  );
 
-  // 3. Upsert Generic Swim Providers
+  logger.info('SEED_WOONPLAATSEN', `Upserting ${bagWoonplaatsen.length} BAG woonplaatsen into database`);
+  const upsertWpl = db.prepare(`
+    INSERT INTO woonplaatsen (id, bag_id, slug, name, municipality_slug, province_slug, center_lat, center_lng)
+    VALUES (@id, @bag_id, @slug, @name, @municipality_slug, @province_slug, @center_lat, @center_lng)
+    ON CONFLICT(id) DO UPDATE SET
+      bag_id = excluded.bag_id,
+      slug = excluded.slug,
+      name = excluded.name,
+      municipality_slug = excluded.municipality_slug,
+      province_slug = excluded.province_slug,
+      center_lat = excluded.center_lat,
+      center_lng = excluded.center_lng
+  `);
+
+  const upsertPc4 = db.prepare(`
+    INSERT INTO postcode_pc4 (pc4, municipality_slug, woonplaats_id, lat, lng)
+    VALUES (@pc4, @municipality_slug, @woonplaats_id, @lat, @lng)
+    ON CONFLICT(pc4) DO UPDATE SET
+      municipality_slug = excluded.municipality_slug,
+      woonplaats_id = excluded.woonplaats_id,
+      lat = excluded.lat,
+      lng = excluded.lng
+  `);
+
+  db.transaction(() => {
+    for (const w of bagWoonplaatsen) {
+      upsertWpl.run(w);
+      if (w.primary_pc4 && w.primary_pc4.length === 4) {
+        upsertPc4.run({
+          pc4: w.primary_pc4,
+          municipality_slug: w.municipality_slug,
+          woonplaats_id: w.id,
+          lat: w.center_lat,
+          lng: w.center_lng,
+        });
+      }
+    }
+  })();
+
+  // 4. Backfill woonplaats for any GOLD_STANDARD flagship venue lacking woonplaats_id
+  const goldStandardRows = db
+    .prepare("SELECT id, slug, municipality_slug, street_address, lat, lng, woonplaats_id FROM venues WHERE enrichment_tier = 'GOLD_STANDARD'")
+    .all() as Array<{
+      id: string;
+      slug: string;
+      municipality_slug: string;
+      street_address: string | null;
+      lat: number;
+      lng: number;
+      woonplaats_id: string | null;
+    }>;
+
+  const updateGoldWpl = db.prepare(`
+    UPDATE venues
+    SET woonplaats_id = @woonplaats_id,
+        woonplaats_slug = @woonplaats_slug,
+        woonplaats_name = @woonplaats_name
+    WHERE id = @id
+  `);
+
+  db.transaction(() => {
+    for (const g of goldStandardRows) {
+      if (!g.woonplaats_id) {
+        const loc = resolveDutchLocation(
+          { streetAddress: g.street_address, lat: g.lat, lng: g.lng },
+          bagWoonplaatsen
+        );
+        updateGoldWpl.run({
+          woonplaats_id: loc.woonplaatsId,
+          woonplaats_slug: loc.woonplaatsSlug,
+          woonplaats_name: loc.woonplaatsName,
+          id: g.id,
+        });
+      }
+    }
+  })();
+
+  const protectedVenueKeys = new Set(goldStandardRows.map((v) => `${v.municipality_slug}:${v.slug}`));
+  const protectedVenueIds = new Set(goldStandardRows.map((v) => v.id));
+  logger.info('PROTECTED_GOLD', `Preserving ${goldStandardRows.length} existing GOLD_STANDARD flagship venues`);
+
+  // 5. Upsert Swim Providers
   db.prepare(`
     INSERT INTO swim_providers (id, slug, name, provider_type, is_nrz_licensed, methodology_nl, b2b_partner_state)
     VALUES
@@ -176,48 +280,87 @@ export async function runNationalIngestion(): Promise<{
     ON CONFLICT(id) DO NOTHING
   `).run();
 
-  // 4. Ingest Curated Flagship Pools
-  const curatedPoolsPath = path.resolve(process.cwd(), 'src/data/curated-pools.json');
-  let curatedPools: CuratedPoolRecord[] = [];
-  if (fs.existsSync(curatedPoolsPath)) {
-    curatedPools = JSON.parse(fs.readFileSync(curatedPoolsPath, 'utf-8'));
+  // 6. Setup In-Memory Registry for UNIQUE(municipality_slug, slug) collision management
+  const allExistingVenues = db
+    .prepare('SELECT id, slug, municipality_slug, content_hash FROM venues')
+    .all() as Array<{ id: string; slug: string; municipality_slug: string; content_hash: string | null }>;
+
+  const existingHashByVenueId = new Map<string, string | null>();
+  const venueByMunAndSlug = new Map<string, string>();
+  const venueToMunSlugKey = new Map<string, string>();
+
+  for (const v of allExistingVenues) {
+    existingHashByVenueId.set(v.id, v.content_hash);
+    const key = `${v.municipality_slug}:${v.slug}`;
+    venueByMunAndSlug.set(key, v.id);
+    venueToMunSlugKey.set(v.id, key);
   }
 
-  const upsertPc4 = db.prepare(`
-    INSERT INTO postcode_pc4 (pc4, municipality_slug, lat, lng)
-    VALUES (@pc4, @municipality_slug, @lat, @lng)
-    ON CONFLICT(pc4) DO UPDATE SET lat = excluded.lat, lng = excluded.lng
-  `);
-
+  // Prepared statements for 3-entity hierarchy & quarantine
   const upsertVenue = db.prepare(`
     INSERT INTO venues (
       id, slug, municipality_slug, name, venue_type, enrichment_tier, operational_state,
-      street_address, postcode_pc6, postcode_pc4, neighborhood_name, lat, lng,
-      operator_name, is_nrz_licensed, is_knzb_affiliated, municipal_keurmerk_label,
+      street_address, postcode_pc6, postcode_pc4, woonplaats_id, woonplaats_slug, woonplaats_name, neighborhood_name,
+      lat, lng, operator_name, is_nrz_licensed, is_knzb_affiliated, municipal_keurmerk_label,
       primary_water_treatment, has_wheelchair_lift, has_accessible_changing,
       parking_info_nl, ev_chargers_count, transit_chips_json,
       municipal_pass_name, municipal_pass_discount_nl,
       google_maps_embed_url, google_maps_route_url, official_website_url, official_tickets_url,
-      rating_score, rating_count, min_single_price_cents, featured_badge_nl, hero_photos_json, zwemwater_metadata_json, content_hash
+      rating_score, rating_count, min_single_price_cents, featured_badge_nl,
+      hero_photos_json, zwemwater_metadata_json, content_hash
     ) VALUES (
       @id, @slug, @municipality_slug, @name, @venue_type, @enrichment_tier, @operational_state,
-      @street_address, @postcode_pc6, @postcode_pc4, @neighborhood_name, @lat, @lng,
-      @operator_name, @is_nrz_licensed, @is_knzb_affiliated, @municipal_keurmerk_label,
+      @street_address, @postcode_pc6, @postcode_pc4, @woonplaats_id, @woonplaats_slug, @woonplaats_name, @neighborhood_name,
+      @lat, @lng, @operator_name, @is_nrz_licensed, @is_knzb_affiliated, @municipal_keurmerk_label,
       @primary_water_treatment, @has_wheelchair_lift, @has_accessible_changing,
       @parking_info_nl, @ev_chargers_count, @transit_chips_json,
       @municipal_pass_name, @municipal_pass_discount_nl,
       @google_maps_embed_url, @google_maps_route_url, @official_website_url, @official_tickets_url,
-      @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl, @hero_photos_json, @zwemwater_metadata_json, @content_hash
+      @rating_score, @rating_count, @min_single_price_cents, @featured_badge_nl,
+      @hero_photos_json, @zwemwater_metadata_json, @content_hash
     )
     ON CONFLICT(id) DO UPDATE SET
+      slug = excluded.slug,
+      municipality_slug = excluded.municipality_slug,
       name = excluded.name,
+      venue_type = excluded.venue_type,
+      street_address = excluded.street_address,
+      postcode_pc6 = excluded.postcode_pc6,
+      postcode_pc4 = excluded.postcode_pc4,
+      woonplaats_id = excluded.woonplaats_id,
+      woonplaats_slug = excluded.woonplaats_slug,
+      woonplaats_name = excluded.woonplaats_name,
+      neighborhood_name = excluded.neighborhood_name,
+      lat = excluded.lat,
+      lng = excluded.lng,
       operator_name = excluded.operator_name,
+      is_nrz_licensed = excluded.is_nrz_licensed,
+      is_knzb_affiliated = excluded.is_knzb_affiliated,
+      municipal_keurmerk_label = excluded.municipal_keurmerk_label,
+      primary_water_treatment = excluded.primary_water_treatment,
+      has_wheelchair_lift = excluded.has_wheelchair_lift,
+      has_accessible_changing = excluded.has_accessible_changing,
+      parking_info_nl = excluded.parking_info_nl,
+      ev_chargers_count = excluded.ev_chargers_count,
+      transit_chips_json = excluded.transit_chips_json,
+      municipal_pass_name = excluded.municipal_pass_name,
+      municipal_pass_discount_nl = excluded.municipal_pass_discount_nl,
+      google_maps_embed_url = excluded.google_maps_embed_url,
+      google_maps_route_url = excluded.google_maps_route_url,
+      official_website_url = excluded.official_website_url,
+      official_tickets_url = excluded.official_tickets_url,
       rating_score = excluded.rating_score,
       rating_count = excluded.rating_count,
       min_single_price_cents = excluded.min_single_price_cents,
-      operational_state = excluded.operational_state,
+      featured_badge_nl = excluded.featured_badge_nl,
       hero_photos_json = excluded.hero_photos_json,
-      zwemwater_metadata_json = excluded.zwemwater_metadata_json
+      zwemwater_metadata_json = excluded.zwemwater_metadata_json,
+      operational_state = excluded.operational_state,
+      content_hash = excluded.content_hash,
+      lastmod_at = CASE
+        WHEN venues.content_hash IS NOT excluded.content_hash THEN strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
+        ELSE venues.lastmod_at
+      END
   `);
 
   const upsertBasin = db.prepare(`
@@ -230,6 +373,12 @@ export async function runNationalIngestion(): Promise<{
     )
     ON CONFLICT(id) DO UPDATE SET
       name_nl = excluded.name_nl,
+      basin_category = excluded.basin_category,
+      is_default_basin = excluded.is_default_basin,
+      is_indoor = excluded.is_indoor,
+      length_meters = excluded.length_meters,
+      lanes_count = excluded.lanes_count,
+      water_treatment = excluded.water_treatment,
       target_temp_celsius = excluded.target_temp_celsius
   `);
 
@@ -241,7 +390,11 @@ export async function runNationalIngestion(): Promise<{
       @id, @venue_id, @tariff_category, @title_nl, @price_cents, @unit_label_nl,
       2026, '2026-01-01', 1
     )
-    ON CONFLICT(id) DO UPDATE SET price_cents = excluded.price_cents
+    ON CONFLICT(id) DO UPDATE SET
+      tariff_category = excluded.tariff_category,
+      title_nl = excluded.title_nl,
+      price_cents = excluded.price_cents,
+      unit_label_nl = excluded.unit_label_nl
   `);
 
   const upsertPeriod = db.prepare(`
@@ -259,23 +412,33 @@ export async function runNationalIngestion(): Promise<{
     ) VALUES (
       @id, @schedule_period_id, @day_of_week, @activity_type, @label_nl, @start_time, @end_time
     )
-    ON CONFLICT(id) DO NOTHING
+    ON CONFLICT(id) DO UPDATE SET
+      day_of_week = excluded.day_of_week,
+      activity_type = excluded.activity_type,
+      label_nl = excluded.label_nl,
+      start_time = excluded.start_time,
+      end_time = excluded.end_time
   `);
 
   const upsertOffering = db.prepare(`
     INSERT INTO venue_swim_offerings (
       id, venue_id, provider_id, diploma_track, monthly_price_cents, has_diploma_guarantee,
       group_max_size, lesson_duration_mins, current_waitlist_weeks_min, current_waitlist_weeks_max,
-      direct_spots_note_nl
+      direct_spots_note_nl, registration_url
     ) VALUES (
       @id, @venue_id, @provider_id, @diploma_track, @monthly_price_cents, @has_diploma_guarantee,
       @group_max_size, @lesson_duration_mins, @current_waitlist_weeks_min, @current_waitlist_weeks_max,
-      @direct_spots_note_nl
+      @direct_spots_note_nl, @registration_url
     )
     ON CONFLICT(venue_id, provider_id, diploma_track) DO UPDATE SET
       monthly_price_cents = excluded.monthly_price_cents,
+      has_diploma_guarantee = excluded.has_diploma_guarantee,
+      group_max_size = excluded.group_max_size,
+      lesson_duration_mins = excluded.lesson_duration_mins,
       current_waitlist_weeks_min = excluded.current_waitlist_weeks_min,
-      current_waitlist_weeks_max = excluded.current_waitlist_weeks_max
+      current_waitlist_weeks_max = excluded.current_waitlist_weeks_max,
+      direct_spots_note_nl = excluded.direct_spots_note_nl,
+      registration_url = excluded.registration_url
   `);
 
   const upsertOutdoorCond = db.prepare(`
@@ -289,50 +452,145 @@ export async function runNationalIngestion(): Promise<{
     ON CONFLICT(id) DO UPDATE SET
       water_quality_state = excluded.water_quality_state,
       wetsuit_advice_nl = excluded.wetsuit_advice_nl,
-      measured_at = excluded.measured_at
+      measured_at = CASE
+        WHEN outdoor_conditions.water_quality_state IS NOT excluded.water_quality_state THEN excluded.measured_at
+        ELSE outdoor_conditions.measured_at
+      END
   `);
 
+  const upsertAnomaly = db.prepare(`
+    INSERT INTO quarantined_anomalies (
+      id, run_id, venue_slug, failure_step, error_code, error_detail, local_fix_command, alert_state
+    ) VALUES (
+      @id, @run_id, @venue_slug, 'SANITY_INVARIANT', @error_code, @error_detail, @local_fix_command, 'ANOMALY_DETECTED'
+    )
+    ON CONFLICT(id) DO UPDATE SET
+      error_code = excluded.error_code,
+      error_detail = excluded.error_detail
+  `);
+
+  // 7. Ingest Curated Flagship Pools (690 pools)
+  const curatedPoolsPath = path.resolve(process.cwd(), 'src/data/curated-pools.json');
+  let curatedPools: CuratedPoolRecord[] = [];
+  if (fs.existsSync(curatedPoolsPath)) {
+    curatedPools = JSON.parse(fs.readFileSync(curatedPoolsPath, 'utf-8'));
+  }
+
   let indoorCount = 0;
+  let quarantinedCount = 0;
+  let totalChecked = 0;
+  let totalUpdated = 0;
+  let totalUnchanged = 0;
+
+  logger.info('PROCESS_CURATED', `Processing ${curatedPools.length} curated municipal & indoor pools`);
   console.log(`🏊 Processing ${curatedPools.length} curated municipal & indoor pool complexes...`);
+
   db.transaction(() => {
     for (const pool of curatedPools) {
+      totalChecked++;
       const key = `${pool.municipality_slug}:${pool.slug}`;
-      if (protectedVenueKeys.has(key)) {
-        continue;
-      }
-      if (!munBySlug.has(pool.municipality_slug)) {
-        console.warn(`Skipping pool with unknown municipality: ${pool.municipality_slug}`);
+      const venueId = `venue-${pool.slug}`;
+
+      if (protectedVenueKeys.has(key) || protectedVenueIds.has(venueId)) {
         continue;
       }
 
-      // Upsert PC4 if valid
+      if (!munBySlug.has(pool.municipality_slug)) {
+        logger.warn('UNKNOWN_MUN', `Skipping pool with unknown municipality: ${pool.municipality_slug}`, { slug: pool.slug });
+        continue;
+      }
+
+      // Upsert pool's PC4 centroid if valid
       if (pool.postcode_pc4 && pool.postcode_pc4.length === 4) {
         upsertPc4.run({
           pc4: pool.postcode_pc4,
           municipality_slug: pool.municipality_slug,
+          woonplaats_id: pool.woonplaats_id ?? null,
           lat: pool.lat,
           lng: pool.lng,
         });
       }
 
-      const venueId = `venue-${pool.slug}`;
-      const contentHash = crypto
-        .createHash('sha256')
-        .update(`${pool.name}:${pool.lat}:${pool.lng}:${pool.min_single_price_cents}`)
-        .digest('hex');
+      // Canonical raw content payload for sanity check & diff hashing
+      const rawContent = JSON.stringify({
+        name: pool.name,
+        municipality_slug: pool.municipality_slug,
+        woonplaats_id: pool.woonplaats_id,
+        street_address: pool.street_address,
+        postcode_pc4: pool.postcode_pc4,
+        lat: pool.lat,
+        lng: pool.lng,
+        min_single_price_cents: pool.min_single_price_cents,
+        operational_state: pool.operational_state ?? 'OPEN_REGULAR',
+        basins: pool.basins ?? [],
+        tariffs: pool.tariffs ?? [],
+        slots: pool.slots ?? [],
+        offerings: pool.offerings ?? [],
+      });
+
+      const prevContentHash = existingHashByVenueId.get(venueId) ?? null;
+      const sanityDecision = evaluateScrapedVenueSanity({
+        venueSlug: pool.slug,
+        isPaidPool: (pool.min_single_price_cents ?? 0) > 0,
+        rawContent,
+        previousContentHash: prevContentHash,
+        previousSlotsCount: pool.slots?.length ?? 0,
+        extractedAdultPriceCents: pool.min_single_price_cents ?? null,
+        extractedSlotsCount: pool.slots?.length ?? 0,
+      });
+
+      if (sanityDecision.status === 'QUARANTINED_ANOMALY') {
+        quarantinedCount++;
+        logger.warn('SANITY_QUARANTINE', `Pool quarantined: ${pool.slug}`, {
+          errorCode: sanityDecision.errorCode,
+          errorDetail: sanityDecision.errorDetail,
+        });
+        upsertAnomaly.run({
+          id: `anom-${runId}-${pool.slug}`,
+          run_id: runId,
+          venue_slug: pool.slug,
+          error_code: sanityDecision.errorCode ?? 'SANITY_ANOMALY',
+          error_detail: sanityDecision.errorDetail ?? 'Sanity check invariant failed',
+          local_fix_command: sanityDecision.localFixCommand,
+        });
+        continue;
+      }
+
+      // Slug collision guard in case of (municipality_slug, slug) conflicts
+      let uniqueSlug = pool.slug;
+      const collisionId = venueByMunAndSlug.get(`${pool.municipality_slug}:${uniqueSlug}`);
+      if (collisionId && collisionId !== venueId) {
+        uniqueSlug = `${pool.slug}-pool`;
+      }
+
+      const oldKey = venueToMunSlugKey.get(venueId);
+      if (oldKey) venueByMunAndSlug.delete(oldKey);
+      const newKey = `${pool.municipality_slug}:${uniqueSlug}`;
+      venueByMunAndSlug.set(newKey, venueId);
+      venueToMunSlugKey.set(venueId, newKey);
+
+      if (prevContentHash === sanityDecision.contentHash) {
+        totalUnchanged++;
+      } else {
+        totalUpdated++;
+      }
+      existingHashByVenueId.set(venueId, sanityDecision.contentHash);
 
       upsertVenue.run({
         id: venueId,
-        slug: pool.slug,
+        slug: uniqueSlug,
         municipality_slug: pool.municipality_slug,
         name: pool.name,
         venue_type: pool.venue_type,
         enrichment_tier: 'BASELINE',
-        operational_state: 'OPEN_REGULAR',
+        operational_state: pool.operational_state ?? 'OPEN_REGULAR',
         street_address: pool.street_address,
         postcode_pc6: pool.postcode_pc6,
         postcode_pc4: pool.postcode_pc4,
-        neighborhood_name: pool.neighborhood_name,
+        woonplaats_id: pool.woonplaats_id ?? null,
+        woonplaats_slug: pool.woonplaats_slug ?? null,
+        woonplaats_name: pool.woonplaats_name ?? null,
+        neighborhood_name: pool.neighborhood_name ?? pool.woonplaats_name,
         lat: pool.lat,
         lng: pool.lng,
         operator_name: pool.operator_name,
@@ -357,25 +615,27 @@ export async function runNationalIngestion(): Promise<{
         featured_badge_nl: pool.featured_badge_nl ?? null,
         hero_photos_json: JSON.stringify(
           buildCuratedPhotosForVenue({
-            slug: pool.slug,
+            slug: uniqueSlug,
             name: pool.name,
             venueType: pool.venue_type,
           })
         ),
         zwemwater_metadata_json: null,
-        content_hash: contentHash,
+        content_hash: sanityDecision.contentHash,
       });
 
-      // Basins
+      // Basins (ensure >= 1 default basin)
       if (pool.basins && pool.basins.length > 0) {
+        const hasDefault = pool.basins.some((b) => b.is_default_basin === 1);
         for (let i = 0; i < pool.basins.length; i++) {
           const b = pool.basins[i];
+          const isDefault = hasDefault ? b.is_default_basin : i === 0 ? 1 : 0;
           upsertBasin.run({
             id: `basin-${pool.slug}-${i}`,
             venue_id: venueId,
             name_nl: b.name_nl,
             basin_category: b.basin_category,
-            is_default_basin: b.is_default_basin,
+            is_default_basin: isDefault,
             is_indoor: b.is_indoor,
             length_meters: b.length_meters ?? null,
             lanes_count: b.lanes_count ?? null,
@@ -431,7 +691,7 @@ export async function runNationalIngestion(): Promise<{
         }
       }
 
-      // Swim offerings
+      // Swim offerings (harvested or default DIPLOMA_A fallback)
       const providerId = pool.operator_name.toLowerCase().includes('optisport')
         ? 'prov-optisport-nl'
         : pool.operator_name.toLowerCase().includes('sportfondsen')
@@ -440,27 +700,51 @@ export async function runNationalIngestion(): Promise<{
             ? 'prov-laco-nl'
             : 'prov-gemeente-sport';
 
-      upsertOffering.run({
-        id: `offering-${pool.slug}-diploma-a`,
-        venue_id: venueId,
-        provider_id: providerId,
-        diploma_track: 'DIPLOMA_A',
-        monthly_price_cents: 6800,
-        has_diploma_guarantee: 1,
-        group_max_size: 8,
-        lesson_duration_mins: 45,
-        current_waitlist_weeks_min: 6,
-        current_waitlist_weeks_max: 14,
-        direct_spots_note_nl: 'Direct instromen mogelijk op doordeweekse ochtenden',
-      });
+      if (pool.offerings && pool.offerings.length > 0) {
+        for (let i = 0; i < pool.offerings.length; i++) {
+          const o = pool.offerings[i];
+          upsertOffering.run({
+            id: `offering-${pool.slug}-${slugifyNl(o.diploma_track)}`,
+            venue_id: venueId,
+            provider_id: providerId,
+            diploma_track: o.diploma_track,
+            monthly_price_cents: o.monthly_price_cents ?? 6800,
+            has_diploma_guarantee: o.has_diploma_guarantee ?? 1,
+            group_max_size: o.group_max_size ?? 8,
+            lesson_duration_mins: o.lesson_duration_mins ?? 45,
+            current_waitlist_weeks_min: o.current_waitlist_weeks_min ?? 4,
+            current_waitlist_weeks_max: o.current_waitlist_weeks_max ?? 12,
+            direct_spots_note_nl: o.direct_spots_note_nl ?? 'Direct instromen mogelijk',
+            registration_url: o.registration_url ?? null,
+          });
+        }
+      } else {
+        upsertOffering.run({
+          id: `offering-${pool.slug}-diploma-a`,
+          venue_id: venueId,
+          provider_id: providerId,
+          diploma_track: 'DIPLOMA_A',
+          monthly_price_cents: 6800,
+          has_diploma_guarantee: 1,
+          group_max_size: 8,
+          lesson_duration_mins: 45,
+          current_waitlist_weeks_min: 6,
+          current_waitlist_weeks_max: 14,
+          direct_spots_note_nl: 'Direct instromen mogelijk op doordeweekse ochtenden',
+          registration_url: null,
+        });
+      }
 
       indoorCount++;
     }
   })();
+  logger.info('INGEST_POOLS_COMPLETE', `Ingested ${indoorCount} curated municipal/indoor pool venues`);
   console.log(`✅ Ingested ${indoorCount} curated municipal/indoor pool venues.`);
 
-  // 5. Ingest Zwemwater.nl Official Outdoor Bathing Spots
+  // 8. Ingest Zwemwater.nl Official Outdoor Bathing Spots (945 spots)
+  logger.info('PROCESS_ZWEMWATER', 'Loading 945 official Dutch outdoor swimming locations from Zwemwater.nl');
   console.log('🌊 Loading 945 official Dutch outdoor swimming locations and Rijkswaterstaat details from Zwemwater.nl...');
+
   let spots: ZwemwaterSpot[] = [];
   const addressBySpotId = new Map<string, string>();
   const detailBySpotId = new Map<string, ZwemwaterDetailRecord>();
@@ -475,21 +759,6 @@ export async function runNationalIngestion(): Promise<{
     for (const [k, v] of Object.entries(cached.details || {})) {
       detailBySpotId.set(k, v as ZwemwaterDetailRecord);
     }
-    console.log(
-      `Loaded ${spots.length} spots and ${detailBySpotId.size} detailed Rijkswaterstaat dossiers from zwemwater-spots.json.`
-    );
-  }
-
-  // Track slugs per municipality to ensure uniqueness
-  const existingSlugsInMun = new Map<string, Set<string>>();
-  const allExistingVenues = db
-    .prepare('SELECT slug, municipality_slug FROM venues')
-    .all() as Array<{ slug: string; municipality_slug: string }>;
-  for (const v of allExistingVenues) {
-    if (!existingSlugsInMun.has(v.municipality_slug)) {
-      existingSlugsInMun.set(v.municipality_slug, new Set());
-    }
-    existingSlugsInMun.get(v.municipality_slug)!.add(v.slug);
   }
 
   let outdoorCount = 0;
@@ -497,66 +766,58 @@ export async function runNationalIngestion(): Promise<{
 
   db.transaction(() => {
     for (const spot of spots) {
+      totalChecked++;
       const [lat, lng] = spot.coordinates;
       // Sanity bounds check for Netherlands: 50.7 <= lat <= 53.8, 3.3 <= lng <= 7.3
       if (lat < 50.7 || lat > 53.8 || lng < 3.3 || lng > 7.3) {
-        console.warn(`Skipping out-of-bounds spot ${spot.spotid}: ${spot.name} (${lat}, ${lng})`);
+        logger.warn('OUT_OF_BOUNDS_SPOT', `Skipping out-of-bounds spot ${spot.spotid}: ${spot.name} (${lat}, ${lng})`);
         continue;
       }
 
       const addressText = addressBySpotId.get(String(spot.spotid)) ?? '';
-      let matchedMun: MunicipalityRecord | null = null;
+      const loc = resolveDutchLocation(
+        { streetAddress: addressText, lat, lng },
+        bagWoonplaatsen
+      );
 
-      // Try matching town name from address: "Hoofdstraat , Schoonloo"
-      if (addressText.includes(',')) {
-        const parts = addressText.split(',').map((p) => p.trim());
-        const town = parts[1] || parts[0];
-        const townLower = town.toLowerCase();
-        if (munByNameLower.has(townLower)) {
-          matchedMun = munByNameLower.get(townLower)!;
-        } else {
-          const townSlug = slugify(town);
-          if (munBySlug.has(townSlug)) {
-            matchedMun = munBySlug.get(townSlug)!;
-          }
-        }
-      }
-
-      // If no address match, find closest municipality by centroid
-      if (!matchedMun) {
-        let minDist = Infinity;
-        for (const m of municipalities) {
-          const d = haversineDistanceKm(lat, lng, m.center_lat, m.center_lng);
-          if (d < minDist) {
-            minDist = d;
-            matchedMun = m;
-          }
-        }
-      }
-
-      if (!matchedMun) {
-        console.warn(`Could not match spot ${spot.spotid} to a municipality.`);
-        continue;
+      // Ensure PC4 exists in postcode_pc4 before referencing in venues
+      if (loc.postcodePc4 && loc.postcodePc4.length === 4) {
+        upsertPc4.run({
+          pc4: loc.postcodePc4,
+          municipality_slug: loc.municipalitySlug,
+          woonplaats_id: loc.woonplaatsId,
+          lat,
+          lng,
+        });
       }
 
       const cleanName = cleanVenueName(spot.name);
-      let baseSlug = slugify(cleanName);
+      let baseSlug = slugifyNl(cleanName);
       if (!baseSlug) baseSlug = `zwemplek-${spot.spotid}`;
 
-      // Check if this venue is already a protected Gold Standard venue (e.g. gaasperplas in amsterdam)
-      const protectedKey = `${matchedMun.slug}:${baseSlug}`;
-      if (protectedVenueKeys.has(protectedKey)) {
+      // Check if this venue is already a protected Gold Standard venue (e.g. gaasperplas-open-water)
+      const protectedKey = `${loc.municipalitySlug}:${baseSlug}`;
+      const venueId = `venue-zw-${spot.spotid}`;
+      if (protectedVenueKeys.has(protectedKey) || protectedVenueIds.has(venueId)) {
         continue;
       }
 
       // Ensure unique slug within this municipality
-      const munSlugs = existingSlugsInMun.get(matchedMun.slug) ?? new Set<string>();
       let uniqueSlug = baseSlug;
-      if (munSlugs.has(uniqueSlug)) {
+      const collisionId = venueByMunAndSlug.get(`${loc.municipalitySlug}:${uniqueSlug}`);
+      if (collisionId && collisionId !== venueId) {
         uniqueSlug = `${baseSlug}-${spot.spotid}`;
+        const secondCollisionId = venueByMunAndSlug.get(`${loc.municipalitySlug}:${uniqueSlug}`);
+        if (secondCollisionId && secondCollisionId !== venueId) {
+          uniqueSlug = `${baseSlug}-${spot.spotid}-spot`;
+        }
       }
-      munSlugs.add(uniqueSlug);
-      existingSlugsInMun.set(matchedMun.slug, munSlugs);
+
+      const oldKey = venueToMunSlugKey.get(venueId);
+      if (oldKey) venueByMunAndSlug.delete(oldKey);
+      const newKey = `${loc.municipalitySlug}:${uniqueSlug}`;
+      venueByMunAndSlug.set(newKey, venueId);
+      venueToMunSlugKey.set(venueId, newKey);
 
       // Map status
       let operationalState = 'OPEN_REGULAR';
@@ -589,11 +850,34 @@ export async function runNationalIngestion(): Promise<{
           detail?.warnings?.[0]?.bodyNl || 'Zwemverbod van kracht vanwege waterkwaliteit of gevaar';
       }
 
-      const venueId = `venue-zw-${spot.spotid}`;
-      const contentHash = crypto
-        .createHash('sha256')
-        .update(`${cleanName}:${lat}:${lng}:${spot.status}:${isPaidAccess ? 'paid' : 'free'}`)
-        .digest('hex');
+      const rawContent = JSON.stringify({
+        name: cleanName,
+        municipality_slug: loc.municipalitySlug,
+        woonplaats_id: loc.woonplaatsId,
+        lat,
+        lng,
+        status: spot.status,
+        operational_state: operationalState,
+        isPaidAccess,
+        operatorName,
+        waterQualityState,
+        detail: detail
+          ? {
+              class: detail.waterQuality4YearClassNl,
+              features: detail.featuresNl,
+              warnings: detail.warnings,
+            }
+          : null,
+      });
+
+      const contentHash = computeContentHash(rawContent);
+      const prevContentHash = existingHashByVenueId.get(venueId) ?? null;
+      if (prevContentHash === contentHash) {
+        totalUnchanged++;
+      } else {
+        totalUpdated++;
+      }
+      existingHashByVenueId.set(venueId, contentHash);
 
       const embedUrl = `https://maps.google.com/maps?q=${lat},${lng}&hl=nl&z=14&output=embed`;
       const routeUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
@@ -602,15 +886,18 @@ export async function runNationalIngestion(): Promise<{
       upsertVenue.run({
         id: venueId,
         slug: uniqueSlug,
-        municipality_slug: matchedMun.slug,
+        municipality_slug: loc.municipalitySlug,
         name: cleanName,
         venue_type: 'OPEN_WATER_NATURAL',
         enrichment_tier: 'BASELINE',
         operational_state: operationalState,
         street_address: addressText || null,
-        postcode_pc6: null,
-        postcode_pc4: null,
-        neighborhood_name: matchedMun.name,
+        postcode_pc6: loc.postcodePc6,
+        postcode_pc4: loc.postcodePc4,
+        woonplaats_id: loc.woonplaatsId,
+        woonplaats_slug: loc.woonplaatsSlug,
+        woonplaats_name: loc.woonplaatsName,
+        neighborhood_name: loc.woonplaatsName,
         lat,
         lng,
         operator_name: operatorName,
@@ -675,24 +962,89 @@ export async function runNationalIngestion(): Promise<{
     }
   })();
 
+  logger.info('INGEST_ZWEMWATER_COMPLETE', `Ingested ${outdoorCount} official outdoor swimming locations`);
   console.log(`✅ Ingested ${outdoorCount} official outdoor swimming locations.`);
 
-  // 6. Record Ingestion Run
+  // 9. Backfill default basins for any venues lacking a default basin (e.g. initial seeds)
+  const venuesWithoutDefaultBasin = db
+    .prepare(`
+      SELECT id, name, venue_type, primary_water_treatment
+      FROM venues v
+      WHERE NOT EXISTS (
+        SELECT 1 FROM basins b WHERE b.venue_id = v.id AND b.is_default_basin = 1
+      )
+    `)
+    .all() as Array<{ id: string; name: string; venue_type: string; primary_water_treatment: string }>;
+
+  db.transaction(() => {
+    for (const v of venuesWithoutDefaultBasin) {
+      const isOutdoor = v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'OUTDOOR_SEASONAL_POOL';
+      const basinCategory = v.venue_type === 'OPEN_WATER_NATURAL'
+        ? 'NATURAL_OPEN_WATER'
+        : v.venue_type === 'OUTDOOR_SEASONAL_POOL'
+          ? 'OUTDOOR_HEATED_BASIN'
+          : 'COMPETITION_25M';
+      upsertBasin.run({
+        id: `basin-${v.id}-default`,
+        venue_id: v.id,
+        name_nl: v.name.includes('Bassin') || v.name.includes('Bad') ? v.name : `${v.name} Bassin`,
+        basin_category: basinCategory,
+        is_default_basin: 1,
+        is_indoor: isOutdoor ? 0 : 1,
+        length_meters: isOutdoor ? null : 25,
+        lanes_count: isOutdoor ? null : 6,
+        water_treatment: v.primary_water_treatment,
+        target_temp_celsius: isOutdoor ? null : 28.5,
+      });
+    }
+  })();
+
+  // 10. Record Ingestion Run in DB and run-history.md
   const totalVenuesRow = db.prepare('SELECT count(*) as count FROM venues').get() as { count: number };
   const munCountRow = db
     .prepare('SELECT count(DISTINCT municipality_slug) as count FROM venues')
     .get() as { count: number };
 
+  const logFilePath = `logs/runs/${runId}.log`;
+  const runState = quarantinedCount > 0 ? 'COMPLETED_WITH_QUARANTINES' : 'COMPLETED_CLEAN';
+
   db.prepare(`
     INSERT INTO ingestion_runs (
-      run_id, runner_env, job_type, run_state, venues_checked, venues_updated, finished_at
+      run_id, runner_env, job_type, run_state,
+      venues_checked, venues_updated, venues_unchanged, venues_quarantined,
+      log_file_path, started_at, finished_at
     ) VALUES (
-      @runId, 'LOCAL_MAC', 'NATIONAL_VENUE_SCALE', 'COMPLETED_CLEAN', @total, @updated, strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
+      @runId, 'LOCAL_MAC', 'NATIONAL_VENUE_SCALE', @runState,
+      @venuesChecked, @venuesUpdated, @venuesUnchanged, @venuesQuarantined,
+      @logFilePath, @startedAt, strftime('%Y-%m-%dT%H:%M:%SZ', 'now')
     )
+    ON CONFLICT(run_id) DO UPDATE SET
+      run_state = excluded.run_state,
+      venues_checked = excluded.venues_checked,
+      venues_updated = excluded.venues_updated,
+      venues_unchanged = excluded.venues_unchanged,
+      venues_quarantined = excluded.venues_quarantined,
+      finished_at = excluded.finished_at
   `).run({
     runId,
-    total: spots.length + curatedPools.length,
-    updated: indoorCount + outdoorCount,
+    runState,
+    venuesChecked: totalChecked,
+    venuesUpdated: totalUpdated,
+    venuesUnchanged: totalUnchanged,
+    venuesQuarantined: quarantinedCount,
+    logFilePath,
+    startedAt,
+  });
+
+  appendRunHistoryRow(path.resolve(process.cwd(), 'database-context/run-history.md'), {
+    runId,
+    timestampUtc: new Date().toISOString(),
+    runner: 'LOCAL_MAC',
+    jobType: 'NATIONAL_VENUE_SCALE',
+    checked: totalChecked,
+    updated: totalUpdated,
+    quarantined: quarantinedCount,
+    logFile: logFilePath,
   });
 
   const breakdown = db
@@ -707,6 +1059,14 @@ export async function runNationalIngestion(): Promise<{
     console.log(` - ${b.venue_type}: ${b.count}`);
   }
   console.log('===================================================\n');
+
+  logger.info('INGEST_FINISH', 'National ingestion finished successfully', {
+    totalVenues: totalVenuesRow.count,
+    outdoorVenues: outdoorCount,
+    indoorVenues: indoorCount,
+    municipalitiesCovered: munCountRow.count,
+    quarantinedCount,
+  });
 
   db.close();
 

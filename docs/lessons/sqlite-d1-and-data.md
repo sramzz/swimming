@@ -39,3 +39,19 @@ Using a small pool of 32 stock photos hashed by `slug` across 4 images per categ
 1. **Official Pages & Wikimedia Commons First:** For every curated/flagship pool, harvest its real photograph from its `official_website_url` (`og:image` / hero photo) or Wikimedia Commons (`commons.wikimedia.org/w/api.php`), optimize to `.webp`, and store in `public/images/venues/official/<slug>.webp`.
 2. **Official `register.zwemwater.nl` Photos for Outdoor Spots:** When `map-content.php?spotid=<id>` provides `Foto1` / `Foto2` (`https://register.zwemwater.nl/zwr/api/files/...`), use the real spot photo as the primary image.
 3. **Anti-Repetition Guarantee:** Enforce a unit test (`tests/domain/venue-photos.test.ts`) verifying that the top 24 venues on the homepage and within any major city have **100% distinct primary hero photos**.
+
+---
+
+## Lesson 3: Dutch Administrative Municipalities (*Gemeenten*) vs. Postal Towns (*Woonplaatsen*) & Internal `id` Keys
+
+### What Happened
+Initially, `venues` referenced `municipalities(slug)` (`342` CBS *gemeenten*) while storing free text in `neighborhood_name`. Because merged municipalities combine multiple distinct towns (e.g. **Abcoude**, **Vinkeveen**, **Mijdrecht** in `de-ronde-venen`; **Weesp** in `amsterdam`):
+1. National ingestion (`src/cli/ingest-national.ts`) only matched place names against the 342 `municipalities.name` rows, causing Abcoude's open-water spots (`Hoge Dijk Speelsloot`, `Strand De Hoge Dijk`) to fall back to nearest centroid and land in the wrong municipality (`ouder-amstel`), while overwriting `neighborhood_name` with the municipality name.
+2. Only `56` PC4 rows existed in `postcode_pc4`, leaving `findVenuesNearPostcodePc4` and the *Kortste Wachttijd Vergelijker* broken for most of the Netherlands.
+3. Dutch swimmers search by *woonplaats* (`/steden/abcoude`, `/steden/weesp`), whereas school holiday regions (`noord`, `midden`, `zuid`) and municipal discount passes are governed by the parent *gemeente*.
+
+### Prevention Rule (Mandatory)
+1. **Model the 4-Tier Dutch Geography Explicitly (`Provincie` → `Gemeente` → `Woonplaats` → `PC4`):** Seed all `2,503` official Kadaster BAG *woonplaatsen* in the `woonplaatsen` table with an **immutable internal `id` (`wpl-<bag_id>`)**, `UNIQUE bag_id`, and disambiguated SEO `slug` (`valkenburg-lb` vs. `valkenburg-zh`), keeping `neighborhood_name` strictly for sub-city districts (*wijken*).
+2. **Preserve Geographic Updates on Idempotent Re-Ingestion:** Ensure `ON CONFLICT(id) DO UPDATE SET` updates `municipality_slug`, `woonplaats_id`, `woonplaats_slug`, `woonplaats_name`, `postcode_pc4`, and `content_hash`, bumping `lastmod_at` **only** when `content_hash` changes.
+3. **Seed `postcode_pc4` Centroids Before Foreign-Key Inserts:** Always populate `postcode_pc4` for BAG woonplaats centroids and pool addresses before inserting/updating `venues` with `PRAGMA foreign_keys = ON`.
+4. **Upgrade Legacy SQLite Column Migrations Before Indexes:** When adding indexed columns (`woonplaats_id`, `woonplaats_slug`, `postcode_pc4`) to an existing SQLite file, `applyDetailedSchema` must `ALTER TABLE` missing columns **before** executing `CREATE INDEX IF NOT EXISTS`.

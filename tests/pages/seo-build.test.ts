@@ -2,9 +2,15 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { getBuildDatabase } from '@/db/runtime-db';
-import { listAllVenues, getVenueByCityAndSlug } from '@/db/queries';
+import {
+  listAllVenues,
+  getVenueByCityAndSlug,
+  listIndexableWoonplaatsen,
+  listVenuesByWoonplaats,
+} from '@/db/queries';
 import { buildVenueJsonLd } from '@/domain/seo-aggregator';
 import { parseVenuePhotos } from '@/domain/venue-photos';
+import { GET as getSitemap } from '@/pages/sitemap.xml';
 
 describe('Static Page & Sitemap Data Generation', () => {
   it('loads seeded venues and constructs valid canonical URLs and JSON-LD', () => {
@@ -168,5 +174,85 @@ describe('Static Page & Sitemap Data Generation', () => {
     expect(fs.existsSync(page404)).toBe(true);
     const content404 = fs.readFileSync(page404, 'utf-8');
     expect(content404).toContain('robots="noindex, follow"');
+  });
+
+  it('indexes sub-woonplaatsen (e.g. Abcoude, Weesp) distinct from municipality slugs and seeds their venues', () => {
+    const db = getBuildDatabase();
+    const subWoonplaatsen = listIndexableWoonplaatsen(db);
+    expect(subWoonplaatsen.length).toBeGreaterThan(200);
+
+    const subSlugs = subWoonplaatsen.map((w) => w.slug);
+    expect(subSlugs).toContain('abcoude');
+    expect(subSlugs).toContain('weesp');
+    expect(subSlugs).not.toContain('amsterdam');
+
+    const abcoudeVenues = listVenuesByWoonplaats(db, 'abcoude');
+    expect(abcoudeVenues.length).toBeGreaterThanOrEqual(1);
+    const abcoudeSlugs = abcoudeVenues.map((v) => v.slug);
+    expect(abcoudeSlugs).toContain('het-sporthuis-abcoude');
+    expect(abcoudeSlugs).toContain('hoge-dijk-speelsloot');
+
+    const weespVenues = listVenuesByWoonplaats(db, 'weesp');
+    expect(weespVenues.length).toBeGreaterThanOrEqual(1);
+    const weespSlugs = weespVenues.map((v) => v.slug);
+    expect(weespSlugs).toContain('victoriabad-weesp');
+
+    db.close();
+  });
+
+  it('supports constituent woonplaats routing and navigation in city hub and intent pages', () => {
+    const cityIndex = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/steden/[stad]/index.astro'),
+      'utf-8'
+    );
+    expect(cityIndex).toContain('listIndexableWoonplaatsen');
+    expect(cityIndex).toContain('listWoonplaatsenByMunicipality');
+    expect(cityIndex).toContain('listVenuesByWoonplaats');
+    expect(cityIndex).toContain('Plaatsen in gemeente');
+    expect(cityIndex).toContain('Onderdeel van gemeente');
+    expect(cityIndex).toContain('Overige zwemlocaties in gemeente');
+
+    const cityIntent = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/steden/[stad]/[intent].astro'),
+      'utf-8'
+    );
+    expect(cityIntent).toContain('listIndexableWoonplaatsen');
+    expect(cityIntent).toContain('listVenuesByWoonplaats');
+    expect(cityIntent).toContain('shouldGenerateIndexableFacetPage');
+    expect(cityIntent).toContain('municipalitySlug');
+
+    const sitemap = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/sitemap.xml.ts'),
+      'utf-8'
+    );
+    expect(sitemap).toContain('listIndexableWoonplaatsen');
+    expect(sitemap).toContain('listVenuesByWoonplaats');
+  });
+
+  it('includes indexable woonplaatsen and their facet URLs in sitemap.xml output', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = (await getSitemap({} as any)) as Response;
+    const xml = await response.text();
+    expect(xml).toContain('<loc>https://zwemkaart.nl/steden/abcoude</loc>');
+    expect(xml).toContain('<loc>https://zwemkaart.nl/steden/weesp</loc>');
+    expect(xml).toContain('<loc>https://zwemkaart.nl/steden/abcoude/banenzwemmen</loc>');
+    expect(xml).toContain('<loc>https://zwemkaart.nl/steden/abcoude/buitenwater</loc>');
+    expect(xml).toContain('<loc>https://zwemkaart.nl/steden/weesp/banenzwemmen</loc>');
+
+    const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+    expect(new Set(locs).size).toBe(locs.length);
+    for (const loc of locs) {
+      expect(loc.startsWith('https://zwemkaart.nl')).toBe(true);
+    }
+    const badTrailingSlash = locs.filter(
+      (loc) => loc !== 'https://zwemkaart.nl/' && loc.endsWith('/')
+    );
+    expect(badTrailingSlash).toEqual([]);
+
+    const lastmods = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]);
+    expect(lastmods.length).toBeGreaterThan(1000);
+    for (const lastmod of lastmods) {
+      expect(lastmod).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/);
+    }
   });
 });

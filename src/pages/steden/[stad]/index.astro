@@ -5,24 +5,91 @@ import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 import VenueCard from '../../../components/VenueCard.astro';
 import { getBuildDatabase } from '../../../db/runtime-db';
-import { listVenuesByCity } from '../../../db/queries';
+import {
+  listVenuesByCity,
+  listIndexableWoonplaatsen,
+  listWoonplaatsenByMunicipality,
+  listVenuesByWoonplaats,
+  type VenueRow,
+  type WoonplaatsWithCountRow,
+} from '../../../db/queries';
 import { buildCitySeoSummaryNl, buildItemListJsonLd } from '../../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../../domain/venue-photos';
+
+interface Props {
+  kind: 'municipality' | 'woonplaats';
+  cityName: string;
+  municipalitySlug: string;
+  municipalityName: string;
+}
 
 export async function getStaticPaths() {
   const db = getBuildDatabase();
   const cities = db.prepare('SELECT slug, name FROM municipalities').all() as Array<{ slug: string; name: string }>;
-  const paths = cities
-    .filter((c) => listVenuesByCity(db, c.slug).length >= 1)
-    .map((c) => ({ params: { stad: c.slug }, props: { cityName: c.name } }));
+  const munMap = new Map(cities.map((c) => [c.slug, c.name]));
+
+  const paths: Array<{
+    params: { stad: string };
+    props: Props;
+  }> = [];
+  const seenSlugs = new Set<string>();
+
+  for (const c of cities) {
+    if (listVenuesByCity(db, c.slug).length >= 1) {
+      seenSlugs.add(c.slug);
+      paths.push({
+        params: { stad: c.slug },
+        props: {
+          kind: 'municipality',
+          cityName: c.name,
+          municipalitySlug: c.slug,
+          municipalityName: c.name,
+        },
+      });
+    }
+  }
+
+  const indexableWp = listIndexableWoonplaatsen(db);
+  for (const w of indexableWp) {
+    if (!seenSlugs.has(w.slug)) {
+      seenSlugs.add(w.slug);
+      const parentMunName = munMap.get(w.municipality_slug) ?? w.municipality_slug;
+      paths.push({
+        params: { stad: w.slug },
+        props: {
+          kind: 'woonplaats',
+          cityName: w.name,
+          municipalitySlug: w.municipality_slug,
+          municipalityName: parentMunName,
+        },
+      });
+    }
+  }
+
   db.close();
   return paths;
 }
 
 const { stad } = Astro.params;
-const { cityName } = Astro.props;
+const {
+  kind = 'municipality',
+  cityName,
+  municipalitySlug = stad!,
+  municipalityName = cityName,
+} = Astro.props as Props;
+
 const db = getBuildDatabase();
-const venues = listVenuesByCity(db, stad!);
+let venues: VenueRow[] = [];
+let subWoonplaatsen: WoonplaatsWithCountRow[] = [];
+let nearbyMunVenues: VenueRow[] = [];
+
+if (kind === 'woonplaats') {
+  venues = listVenuesByWoonplaats(db, stad!);
+  nearbyMunVenues = listVenuesByCity(db, municipalitySlug).filter((v) => v.woonplaats_slug !== stad);
+} else {
+  venues = listVenuesByCity(db, stad!);
+  subWoonplaatsen = listWoonplaatsenByMunicipality(db, stad!);
+}
 db.close();
 
 const paid = venues.filter((v) => v.min_single_price_cents && v.min_single_price_cents > 0);
@@ -36,23 +103,47 @@ const summaryNl = buildCitySeoSummaryNl({
   shortestWaitlistWeeks: 4,
 });
 
+const breadcrumbItems =
+  kind === 'woonplaats'
+    ? [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Nederland',
+          item: 'https://zwemkaart.nl/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: municipalityName,
+          item: `https://zwemkaart.nl/steden/${municipalitySlug}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: cityName,
+          item: `https://zwemkaart.nl/steden/${stad}`,
+        },
+      ]
+    : [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Nederland',
+          item: 'https://zwemkaart.nl/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: cityName,
+          item: `https://zwemkaart.nl/steden/${stad}`,
+        },
+      ];
+
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Nederland',
-      item: 'https://zwemkaart.nl/',
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: cityName,
-      item: `https://zwemkaart.nl/steden/${stad}`,
-    },
-  ],
+  itemListElement: breadcrumbItems,
 };
 
 const cityItemListJsonLd = buildItemListJsonLd({
@@ -80,11 +171,44 @@ const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
     <nav aria-label="Broodkruimelpad" class="text-xs text-text-muted mb-4 flex items-center gap-2">
       <a href="/" class="hover:underline">Nederland</a>
       <span>›</span>
-      <span class="text-text-charcoal font-semibold">{cityName}</span>
+      {kind === 'woonplaats' ? (
+        <>
+          <a href={`/steden/${municipalitySlug}`} class="hover:underline">{municipalityName}</a>
+          <span>›</span>
+          <span class="text-text-charcoal font-semibold">{cityName}</span>
+        </>
+      ) : (
+        <span class="text-text-charcoal font-semibold">{cityName}</span>
+      )}
     </nav>
 
-    <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">Zwembaden in {cityName}</h1>
+    <h1 class="text-3xl font-extrabold text-text-charcoal mb-1">Zwembaden in {cityName}</h1>
+    {kind === 'woonplaats' && (
+      <p class="text-xs text-text-muted mb-3">
+        Onderdeel van gemeente <a href={`/steden/${municipalitySlug}`} class="text-primary font-semibold hover:underline">{municipalityName}</a>
+      </p>
+    )}
     <p class="text-sm text-text-muted mb-4">{summaryNl}</p>
+
+    {kind === 'municipality' && subWoonplaatsen.filter((w) => w.slug !== stad).length > 0 && (
+      <div class="mb-5 p-4 bg-surface-subtle rounded-xl border border-border-hairline">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-text-muted mb-2.5">
+          Plaatsen in gemeente {cityName}
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {subWoonplaatsen
+            .filter((w) => w.slug !== stad)
+            .map((w) => (
+              <a
+                href={`/steden/${w.slug}`}
+                class="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-pure text-text-charcoal border border-border-hairline hover:border-text-charcoal transition-colors"
+              >
+                {w.name} <span class="text-text-muted text-[11px]">({w.venue_count})</span>
+              </a>
+            ))}
+        </div>
+      </div>
+    )}
 
     {/* Crawlable SEO Intent Hub Links */}
     <nav aria-label={`Categorieën in ${cityName}`} class="flex flex-wrap items-center gap-2 mb-4">
@@ -151,6 +275,17 @@ const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="city-venues-grid">
       {venues.map((v) => <VenueCard venue={v} />)}
     </div>
+
+    {kind === 'woonplaats' && nearbyMunVenues.length > 0 && (
+      <section class="mt-12 pt-8 border-t border-border-hairline">
+        <h2 class="text-xl font-bold text-text-charcoal mb-4">
+          Overige zwemlocaties in gemeente {municipalityName}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+          {nearbyMunVenues.map((v) => <VenueCard venue={v} />)}
+        </div>
+      </section>
+    )}
   </main>
   <Footer />
 </BaseLayout>

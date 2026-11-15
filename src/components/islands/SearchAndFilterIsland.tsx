@@ -4,6 +4,7 @@ import { formatEuroCentsNl } from '../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../domain/venue-photos';
 import {
   FEATURED_DUTCH_CITIES,
+  matchesVenueSearchQuery,
   rankVenuesByUserLocation,
   rankVenuesMultiCityRecommended,
 } from '../../domain/multi-city-ranking';
@@ -160,13 +161,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
   }
 
   const baseMatches = venues.filter((v) => {
-    const q = query.trim().toLowerCase();
-    const matchesText =
-      q === '' ||
-      v.name.toLowerCase().includes(q) ||
-      v.municipality_slug.toLowerCase().includes(q) ||
-      (v.neighborhood_name ?? '').toLowerCase().includes(q) ||
-      (v.postcode_pc4 ?? '').includes(q);
+    const matchesText = matchesVenueSearchQuery(v, query);
 
     const matchesCity = selectedCitySlug === 'ALL' || v.municipality_slug === selectedCitySlug;
 
@@ -291,9 +286,10 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
     const activeIdx = photoIndexByVenue[venue.id] ?? 0;
     const isFav = favorites.includes(venue.id);
 
-    const cityLabel =
-      venue.neighborhood_name ??
+    const capitalizedMunicipality =
       venue.municipality_slug.charAt(0).toUpperCase() + venue.municipality_slug.slice(1);
+    const cityLabel =
+      venue.woonplaats_name ?? venue.neighborhood_name ?? capitalizedMunicipality;
     let subtitleNl = venue.default_basin_name_nl
       ? `${cityLabel} • ${venue.default_basin_name_nl}`
       : cityLabel;
@@ -554,7 +550,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
           <h1 class="text-xl md:text-2xl font-extrabold text-text-charcoal tracking-tight">
             {selectedCityObj
               ? `Zwembaden & Zwemwater in ${selectedCityObj.labelNl} (${filtered.length})`
-              : `Meer dan 480 zwemlocaties in Nederland (${displayed.length} van ${filtered.length} geladen)`}
+              : `Alle ${venues.length.toLocaleString('nl-NL')} Zwemlocaties in Nederland (${displayed.length} van ${filtered.length} geladen)`}
           </h1>
           <span class="text-xs text-text-muted">
             {geoStatusNl || 'Kaartweergave synchroon met geladen baden'}

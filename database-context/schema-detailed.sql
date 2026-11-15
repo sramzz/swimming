@@ -28,15 +28,34 @@ CREATE TABLE IF NOT EXISTS municipalities (
 
 CREATE INDEX IF NOT EXISTS idx_municipalities_province ON municipalities(province_slug);
 
+-- Grain: 1 row per Dutch BAG Woonplaats (~2,503 rows, official Cadastre / BAG settlement boundaries)
+CREATE TABLE IF NOT EXISTS woonplaatsen (
+    id                  TEXT PRIMARY KEY,               -- e.g. 'wpl-3594' ('wpl-' || bag_id)
+    bag_id              TEXT NOT NULL UNIQUE,           -- e.g. '3594' (Official 4-digit BAG Woonplaatscode)
+    slug                TEXT NOT NULL UNIQUE,           -- e.g. 'amsterdam', 'scheveningen'
+    name                TEXT NOT NULL,                  -- e.g. 'Amsterdam', 'Scheveningen'
+    municipality_slug   TEXT NOT NULL REFERENCES municipalities(slug),
+    province_slug       TEXT NOT NULL,                  -- e.g. 'noord-holland'
+    center_lat          REAL NOT NULL,
+    center_lng          REAL NOT NULL,
+    updated_at          TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+) STRICT;
+
+CREATE INDEX IF NOT EXISTS idx_woonplaatsen_municipality ON woonplaatsen(municipality_slug);
+CREATE INDEX IF NOT EXISTS idx_woonplaatsen_province ON woonplaatsen(province_slug);
+CREATE INDEX IF NOT EXISTS idx_woonplaatsen_name ON woonplaatsen(name);
+
 -- Grain: 1 row per 4-digit Dutch Postcode centroid (PC4, ~4,000 rows) for <0.5ms radius search
 CREATE TABLE IF NOT EXISTS postcode_pc4 (
     pc4                 TEXT PRIMARY KEY CHECK (length(pc4) = 4), -- e.g. '1079'
     municipality_slug   TEXT NOT NULL REFERENCES municipalities(slug),
+    woonplaats_id       TEXT REFERENCES woonplaatsen(id),
     lat                 REAL NOT NULL,
     lng                 REAL NOT NULL
 ) STRICT;
 
 CREATE INDEX IF NOT EXISTS idx_postcode_pc4_bbox ON postcode_pc4(lat, lng);
+CREATE INDEX IF NOT EXISTS idx_postcode_pc4_woonplaats_id ON postcode_pc4(woonplaats_id);
 
 -- Grain: 1 row per Official Dutch Public Holiday (Feestdag) per date
 CREATE TABLE IF NOT EXISTS nl_public_holidays (
@@ -114,6 +133,9 @@ CREATE TABLE IF NOT EXISTS venues (
     street_address          TEXT,                       -- e.g. 'De Mirandalaan 9'
     postcode_pc6            TEXT,                       -- e.g. '1079 PA'
     postcode_pc4            TEXT REFERENCES postcode_pc4(pc4),
+    woonplaats_id           TEXT REFERENCES woonplaatsen(id),
+    woonplaats_slug         TEXT,                       -- e.g. 'amsterdam'
+    woonplaats_name         TEXT,                       -- e.g. 'Amsterdam'
     neighborhood_name       TEXT,                       -- e.g. 'Amsterdam Zuid (Rivierenbuurt)'
     lat                     REAL NOT NULL,
     lng                     REAL NOT NULL,
@@ -161,6 +183,9 @@ CREATE TABLE IF NOT EXISTS venues (
 
 CREATE INDEX IF NOT EXISTS idx_venues_geo_bbox ON venues(lat, lng);
 CREATE INDEX IF NOT EXISTS idx_venues_municipality ON venues(municipality_slug, venue_type);
+CREATE INDEX IF NOT EXISTS idx_venues_woonplaats_id ON venues(woonplaats_id, venue_type);
+CREATE INDEX IF NOT EXISTS idx_venues_woonplaats_slug ON venues(woonplaats_slug, venue_type);
+CREATE INDEX IF NOT EXISTS idx_venues_postcode_pc4 ON venues(postcode_pc4);
 CREATE INDEX IF NOT EXISTS idx_venues_treatment ON venues(primary_water_treatment);
 
 -- ----------------------------------------------------------------------------

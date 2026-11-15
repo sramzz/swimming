@@ -1,5 +1,6 @@
 import type { VenueRow } from '../db/queries';
 import { haversineDistanceKm } from '../db/geo';
+import { hasOfficialVenuePhotoOnDisk } from './venue-photos';
 
 export interface FeaturedDutchCity {
   slug: string;
@@ -30,11 +31,24 @@ export const FEATURED_DUTCH_CITIES: FeaturedDutchCity[] = [
  */
 export function rankVenuesMultiCityRecommended(venues: VenueRow[]): VenueRow[] {
   const baseSorted = [...venues].sort((a, b) => {
+    // 1. hasOfficialVenuePhotoOnDisk(v.slug) (true before false)
+    const aPhoto = hasOfficialVenuePhotoOnDisk(a.slug) ? 1 : 0;
+    const bPhoto = hasOfficialVenuePhotoOnDisk(b.slug) ? 1 : 0;
+    if (aPhoto !== bPhoto) return bPhoto - aPhoto;
+
+    // 2. v.enrichment_tier === 'GOLD_STANDARD' (true before false)
+    const aGold = a.enrichment_tier === 'GOLD_STANDARD' ? 1 : 0;
+    const bGold = b.enrichment_tier === 'GOLD_STANDARD' ? 1 : 0;
+    if (aGold !== bGold) return bGold - aGold;
+
+    // 3. v.rating_score !== null and highest rating_score
     const aRated = a.rating_score !== null ? 1 : 0;
     const bRated = b.rating_score !== null ? 1 : 0;
     if (aRated !== bRated) return bRated - aRated;
     const scoreDiff = (b.rating_score ?? 0) - (a.rating_score ?? 0);
     if (Math.abs(scoreDiff) > 0.001) return scoreDiff;
+
+    // 4. v.name.localeCompare(..., 'nl')
     return a.name.localeCompare(b.name, 'nl');
   });
 
@@ -46,22 +60,33 @@ export function rankVenuesMultiCityRecommended(venues: VenueRow[]): VenueRow[] {
     buckets.set(v.municipality_slug, list);
   }
 
-  // Order municipality buckets by their best venue's rating (with featured major cities prioritized when tied)
+  // Order municipality buckets
   const featuredOrder = new Map(FEATURED_DUTCH_CITIES.map((c, idx) => [c.slug, idx]));
   const orderedCityKeys = [...buckets.keys()].sort((munA, munB) => {
     const topA = buckets.get(munA)![0];
     const topB = buckets.get(munB)![0];
-    const aHasRating = topA.rating_score !== null ? 1 : 0;
-    const bHasRating = topB.rating_score !== null ? 1 : 0;
-    if (aHasRating !== bHasRating) return bHasRating - aHasRating;
 
+    // 1. Official-photo municipalities come first
+    const aPhoto = hasOfficialVenuePhotoOnDisk(topA.slug) ? 1 : 0;
+    const bPhoto = hasOfficialVenuePhotoOnDisk(topB.slug) ? 1 : 0;
+    if (aPhoto !== bPhoto) return bPhoto - aPhoto;
+
+    // 2. FEATURED_DUTCH_CITIES order
     const featA = featuredOrder.get(munA);
     const featB = featuredOrder.get(munB);
     if (featA !== undefined && featB !== undefined) return featA - featB;
     if (featA !== undefined) return -1;
     if (featB !== undefined) return 1;
 
-    return (topB.rating_score ?? 0) - (topA.rating_score ?? 0);
+    // 3. top.rating_score !== null and highest rating_score
+    const aHasRating = topA.rating_score !== null ? 1 : 0;
+    const bHasRating = topB.rating_score !== null ? 1 : 0;
+    if (aHasRating !== bHasRating) return bHasRating - aHasRating;
+
+    const scoreDiff = (topB.rating_score ?? 0) - (topA.rating_score ?? 0);
+    if (Math.abs(scoreDiff) > 0.001) return scoreDiff;
+
+    return munA.localeCompare(munB, 'nl');
   });
 
   // Round-robin pass across municipalities
@@ -93,4 +118,38 @@ export function rankVenuesByUserLocation(
     const distB = haversineDistanceKm(userLat, userLng, b.lat, b.lng);
     return distA - distB;
   });
+}
+
+/**
+ * Pure search matcher comparing query string against venue identity and location fields.
+ * Supports lowercase, trimmed search, woonplaats, address, and whitespace-insensitive postcodes.
+ */
+export function matchesVenueSearchQuery(venue: VenueRow, rawQuery: string): boolean {
+  const q = rawQuery.trim().toLowerCase();
+  if (q === '') return true;
+
+  const qNoSpaces = q.replace(/\s+/g, '');
+
+  if (venue.name.toLowerCase().includes(q)) return true;
+  if (venue.municipality_slug.toLowerCase().includes(q)) return true;
+  if (venue.woonplaats_name && venue.woonplaats_name.toLowerCase().includes(q)) return true;
+  if (venue.woonplaats_slug && venue.woonplaats_slug.toLowerCase().includes(q)) return true;
+  if (venue.neighborhood_name && venue.neighborhood_name.toLowerCase().includes(q)) return true;
+  if (venue.street_address && venue.street_address.toLowerCase().includes(q)) return true;
+  if (venue.postcode_pc4 && venue.postcode_pc4.toLowerCase().includes(q)) return true;
+  if (venue.postcode_pc6) {
+    const pc6Lower = venue.postcode_pc6.toLowerCase();
+    if (pc6Lower.includes(q)) return true;
+    if (qNoSpaces.length > 0 && pc6Lower.replace(/\s+/g, '').includes(qNoSpaces)) return true;
+  }
+
+  return false;
+}
+
+export function rankVenuesForSearch(venues: VenueRow[], rawQuery: string): VenueRow[] {
+  const q = rawQuery.trim();
+  if (q === '') return rankVenuesMultiCityRecommended(venues);
+  return venues
+    .filter((v) => matchesVenueSearchQuery(v, q))
+    .sort((a, b) => (b.rating_score ?? 0) - (a.rating_score ?? 0));
 }

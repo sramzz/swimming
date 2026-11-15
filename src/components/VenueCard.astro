@@ -116,7 +116,7 @@ const filterCategory =
   </div>
 
   <p class="text-xs text-text-muted mt-0.5 line-clamp-1">
-    {venue.default_basin_name_nl ?? venue.neighborhood_name ?? venue.municipality_slug}
+    {venue.default_basin_name_nl ? `${venue.woonplaats_name ?? venue.neighborhood_name ?? venue.municipality_slug} • ${venue.default_basin_name_nl}` : (venue.woonplaats_name ?? venue.neighborhood_name ?? venue.municipality_slug)}
   </p>
 
   <div class="mt-2 flex flex-wrap items-center gap-1.5">

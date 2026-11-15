@@ -5,73 +5,160 @@ import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 import VenueCard from '../../../components/VenueCard.astro';
 import { getBuildDatabase } from '../../../db/runtime-db';
-import { listVenuesByCity } from '../../../db/queries';
+import {
+  listVenuesByCity,
+  listIndexableWoonplaatsen,
+  listVenuesByWoonplaats,
+} from '../../../db/queries';
 import {
   buildCityIntentSeoMeta,
   buildItemListJsonLd,
+  matchesIntent,
   shouldGenerateIndexableFacetPage,
 } from '../../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../../domain/venue-photos';
 
+interface Props {
+  kind: 'municipality' | 'woonplaats';
+  cityName: string;
+  municipalitySlug: string;
+  municipalityName: string;
+}
+
 export async function getStaticPaths() {
   const db = getBuildDatabase();
   const cities = db.prepare('SELECT slug, name FROM municipalities').all() as Array<{ slug: string; name: string }>;
+  const munMap = new Map(cities.map((c) => [c.slug, c.name]));
   const intents = ['banenzwemmen', 'zwemles', 'buitenwater'] as const;
-  const paths: Array<{ params: { stad: string; intent: string }; props: { cityName: string } }> = [];
+  const paths: Array<{
+    params: { stad: string; intent: string };
+    props: Props;
+  }> = [];
+
+  const seenKeys = new Set<string>();
+  const municipalitySlugSet = new Set(cities.map((c) => c.slug));
 
   for (const city of cities) {
     const allVenues = listVenuesByCity(db, city.slug);
     for (const intent of intents) {
-      const matching =
-        intent === 'buitenwater'
-          ? allVenues.filter((v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR')
-          : allVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
+      const matching = allVenues.filter((v) => matchesIntent(v, intent));
       if (shouldGenerateIndexableFacetPage(matching.length)) {
-        paths.push({ params: { stad: city.slug, intent }, props: { cityName: city.name } });
+        const key = `${city.slug}/${intent}`;
+        if (!seenKeys.has(key)) {
+          seenKeys.add(key);
+          paths.push({
+            params: { stad: city.slug, intent },
+            props: {
+              kind: 'municipality',
+              cityName: city.name,
+              municipalitySlug: city.slug,
+              municipalityName: city.name,
+            },
+          });
+        }
       }
     }
   }
+
+  const indexableWp = listIndexableWoonplaatsen(db);
+  for (const wp of indexableWp) {
+    if (municipalitySlugSet.has(wp.slug)) continue;
+    const wpVenues = listVenuesByWoonplaats(db, wp.slug);
+    const munName = munMap.get(wp.municipality_slug) ?? wp.municipality_slug;
+    for (const intent of intents) {
+      const matching = wpVenues.filter((v) => matchesIntent(v, intent));
+      if (shouldGenerateIndexableFacetPage(matching.length)) {
+        const key = `${wp.slug}/${intent}`;
+        if (!seenKeys.has(key)) {
+          seenKeys.add(key);
+          paths.push({
+            params: { stad: wp.slug, intent },
+            props: {
+              kind: 'woonplaats',
+              cityName: wp.name,
+              municipalitySlug: wp.municipality_slug,
+              municipalityName: munName,
+            },
+          });
+        }
+      }
+    }
+  }
+
   db.close();
   return paths;
 }
 
 const { stad, intent } = Astro.params;
-const { cityName } = Astro.props;
+const {
+  kind = 'municipality',
+  cityName,
+  municipalitySlug = stad!,
+  municipalityName = cityName,
+} = Astro.props as Props;
+
 const db = getBuildDatabase();
-const allVenues = listVenuesByCity(db, stad!);
+const allVenues = kind === 'woonplaats' ? listVenuesByWoonplaats(db, stad!) : listVenuesByCity(db, stad!);
 db.close();
 
-const venues =
-  intent === 'buitenwater'
-    ? allVenues.filter((v) => v.venue_type === 'OPEN_WATER_NATURAL' || v.venue_type === 'INDOOR_AND_OUTDOOR')
-    : allVenues.filter((v) => v.venue_type !== 'OPEN_WATER_NATURAL');
+const venues = allVenues.filter((v) => matchesIntent(v, intent!));
 
 const seoMeta = buildCityIntentSeoMeta(cityName, intent!, venues.length);
 const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
 
+const breadcrumbItems =
+  kind === 'woonplaats'
+    ? [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Nederland',
+          item: 'https://zwemkaart.nl/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: municipalityName,
+          item: `https://zwemkaart.nl/steden/${municipalitySlug}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: cityName,
+          item: `https://zwemkaart.nl/steden/${stad}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 4,
+          name: intent ? intent.charAt(0).toUpperCase() + intent.slice(1) : '',
+          item: `https://zwemkaart.nl/steden/${stad}/${intent}`,
+        },
+      ]
+    : [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Nederland',
+          item: 'https://zwemkaart.nl/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: cityName,
+          item: `https://zwemkaart.nl/steden/${stad}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: intent ? intent.charAt(0).toUpperCase() + intent.slice(1) : '',
+          item: `https://zwemkaart.nl/steden/${stad}/${intent}`,
+        },
+      ];
+
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Nederland',
-      item: 'https://zwemkaart.nl/',
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: cityName,
-      item: `https://zwemkaart.nl/steden/${stad}`,
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: intent ? intent.charAt(0).toUpperCase() + intent.slice(1) : '',
-      item: `https://zwemkaart.nl/steden/${stad}/${intent}`,
-    },
-  ],
+  itemListElement: breadcrumbItems,
 };
 
 const intentItemListJsonLd = buildItemListJsonLd({
@@ -97,12 +184,25 @@ const intentItemListJsonLd = buildItemListJsonLd({
     <nav aria-label="Broodkruimelpad" class="text-xs text-text-muted mb-4 flex items-center gap-2">
       <a href="/" class="hover:underline">Nederland</a>
       <span>›</span>
-      <a href={`/steden/${stad}`} class="hover:underline">{cityName}</a>
+      {kind === 'woonplaats' ? (
+        <>
+          <a href={`/steden/${municipalitySlug}`} class="hover:underline">{municipalityName}</a>
+          <span>›</span>
+          <a href={`/steden/${stad}`} class="hover:underline">{cityName}</a>
+        </>
+      ) : (
+        <a href={`/steden/${stad}`} class="hover:underline">{cityName}</a>
+      )}
       <span>›</span>
       <span class="text-text-charcoal font-semibold capitalize">{intent}</span>
     </nav>
 
     <h1 class="text-3xl font-extrabold text-text-charcoal mb-2">{seoMeta.h1}</h1>
+    {kind === 'woonplaats' && (
+      <p class="text-xs text-text-muted mb-2">
+        Onderdeel van gemeente <a href={`/steden/${municipalitySlug}`} class="text-primary font-semibold hover:underline">{municipalityName}</a>
+      </p>
+    )}
     <p class="text-sm text-text-muted mb-5">{seoMeta.description}</p>
 
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-5 mb-6 border-b border-border-hairline">

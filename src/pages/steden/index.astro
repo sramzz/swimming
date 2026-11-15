@@ -5,6 +5,13 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getBuildDatabase } from '../../db/runtime-db';
 
+interface ConstituentWoonplaats {
+  slug: string;
+  name: string;
+  municipality_slug: string;
+  venue_count: number;
+}
+
 const db = getBuildDatabase();
 
 const provinces = db
@@ -36,7 +43,25 @@ const cities = db
     outdoor_count: number;
   }>;
 
+const constituentWoonplaatsen = db
+  .prepare(
+    `SELECT w.slug, w.name, w.municipality_slug, COUNT(v.id) as venue_count
+     FROM woonplaatsen w
+     JOIN venues v ON v.woonplaats_id = w.id
+     WHERE w.slug != w.municipality_slug
+     GROUP BY w.id
+     ORDER BY venue_count DESC, w.name ASC`
+  )
+  .all() as ConstituentWoonplaats[];
+
 db.close();
+
+const woonplaatsenByMunicipality = new Map<string, ConstituentWoonplaats[]>();
+for (const wp of constituentWoonplaatsen) {
+  const list = woonplaatsenByMunicipality.get(wp.municipality_slug) ?? [];
+  list.push(wp);
+  woonplaatsenByMunicipality.set(wp.municipality_slug, list);
+}
 ---
 <BaseLayout
   title="Alle Steden & Provincies – Zwembaden in Nederland | Zwemkaart.nl"
@@ -89,26 +114,76 @@ db.close();
           <input
             id="city-directory-search"
             type="search"
-            placeholder="Filter op gemeente of provincie..."
+            placeholder="Filter op gemeente, dorp of provincie..."
             class="w-full px-4 py-2 rounded-full border border-border-strong bg-surface-pure text-xs md:text-sm"
           />
         </div>
       </div>
 
       <div id="city-directory-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {cities.map((c) => (
-          <a
-            href={`/steden/${c.slug}`}
-            data-city-name={`${c.name.toLowerCase()} ${c.province_name.toLowerCase()}`}
-            class="city-directory-card p-3.5 rounded-xl border border-border-hairline bg-surface-pure hover:border-primary hover:shadow-xs transition-all flex items-center justify-between gap-2"
-          >
-            <div class="min-w-0">
-              <div class="font-bold text-sm text-text-charcoal truncate">{c.name}</div>
-              <div class="text-[11px] text-text-muted truncate">{c.province_name}</div>
+        {cities.map((c) => {
+          const wps = woonplaatsenByMunicipality.get(c.slug) ?? [];
+          const wpNames = wps.map((w) => w.name.toLowerCase()).join(' ');
+          return (
+            <div
+              data-city-name={`${c.name.toLowerCase()} ${c.province_name.toLowerCase()} ${wpNames}`.trim()}
+              class="city-directory-card p-3.5 rounded-xl border border-border-hairline bg-surface-pure hover:border-primary hover:shadow-xs transition-all flex flex-col justify-between gap-2"
+            >
+              <div class="flex items-center justify-between gap-2">
+                <a href={`/steden/${c.slug}`} class="min-w-0 group flex-1">
+                  <div class="font-bold text-sm text-text-charcoal group-hover:text-primary transition-colors truncate">{c.name}</div>
+                  <div class="text-[11px] text-text-muted truncate">{c.province_name}</div>
+                </a>
+                <a
+                  href={`/steden/${c.slug}`}
+                  class="shrink-0 px-2.5 py-1 rounded-full bg-badge-teal-bg text-primary text-xs font-bold hover:bg-primary hover:text-white transition-colors"
+                >
+                  {c.venue_count}
+                </a>
+              </div>
+              {wps.length > 0 && (
+                <div class="pt-2 border-t border-border-hairline/60 flex flex-wrap gap-1 items-center">
+                  <span class="text-[10px] font-semibold text-text-muted">Kernen:</span>
+                  {wps.slice(0, 4).map((wp) => (
+                    <a
+                      href={`/steden/${wp.slug}`}
+                      class="text-[10px] px-1.5 py-0.5 rounded bg-surface-subtle text-text-charcoal hover:bg-primary hover:text-white transition-colors"
+                      title={`${wp.name} (${wp.venue_count} locaties)`}
+                    >
+                      {wp.name}
+                    </a>
+                  ))}
+                  {wps.length > 4 && (
+                    <span class="text-[10px] text-text-muted">+{wps.length - 4}</span>
+                  )}
+                </div>
+              )}
             </div>
-            <span class="shrink-0 px-2.5 py-1 rounded-full bg-badge-teal-bg text-primary text-xs font-bold">
-              {c.venue_count}
-            </span>
+          );
+        })}
+      </div>
+    </section>
+
+    {/* Searchable All Woonplaatsen (Towns & Villages) Directory */}
+    <section class="mt-12">
+      <div class="mb-5 pb-4 border-b border-border-hairline">
+        <h2 class="text-lg font-extrabold text-text-charcoal mb-1">
+          Alle Plaatsen &amp; Dorpen (Woonplaatsen) ({constituentWoonplaatsen.length})
+        </h2>
+        <p class="text-xs text-text-muted">
+          Plaatsen, dorpen en kernen met een eigen BAG-woonplaats binnen een grotere gemeente. Zoek direct op plaatsnaam.
+        </p>
+      </div>
+
+      <div id="woonplaats-directory-grid" class="flex flex-wrap gap-2">
+        {constituentWoonplaatsen.map((wp) => (
+          <a
+            href={`/steden/${wp.slug}`}
+            data-city-name={`${wp.name.toLowerCase()} ${wp.municipality_slug.toLowerCase()}`}
+            class="city-directory-card text-xs px-3 py-1.5 rounded-full border border-border-hairline bg-surface-pure hover:border-primary hover:text-primary transition-all flex items-center gap-1.5"
+          >
+            <span class="font-semibold text-text-charcoal">{wp.name}</span>
+            <span class="text-[10px] text-text-muted">({wp.venue_count})</span>
           </a>
         ))}
       </div>

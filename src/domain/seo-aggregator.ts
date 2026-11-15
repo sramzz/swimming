@@ -2,6 +2,17 @@ export function shouldGenerateIndexableFacetPage(matchingVenuesCount: number): b
   return matchingVenuesCount >= 1;
 }
 
+export function matchesIntent(venue: { venue_type: string }, intent: string): boolean {
+  if (intent === 'buitenwater') {
+    return (
+      venue.venue_type === 'OPEN_WATER_NATURAL' ||
+      venue.venue_type === 'INDOOR_AND_OUTDOOR' ||
+      venue.venue_type === 'OUTDOOR_SEASONAL_POOL'
+    );
+  }
+  return venue.venue_type !== 'OPEN_WATER_NATURAL';
+}
+
 export function formatEuroCentsNl(cents: number): string {
   return `€ ${(cents / 100).toFixed(2).replace('.', ',')}`;
 }

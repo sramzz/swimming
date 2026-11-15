@@ -7,7 +7,7 @@ import AlertBanner from '../../../components/AlertBanner.astro';
 import LazyGoogleMapIframe from '../../../components/LazyGoogleMapIframe.astro';
 import StickyBookingWidgetIsland from '../../../components/islands/StickyBookingWidgetIsland';
 import { getBuildDatabase } from '../../../db/runtime-db';
-import { listAllVenues, getVenueByCityAndSlug } from '../../../db/queries';
+import { listAllVenues, getVenueByCityAndSlug, getMunicipalityBySlug } from '../../../db/queries';
 import { buildVenueJsonLd, formatEuroCentsNl } from '../../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../../domain/venue-photos';
 import { resolveVenueScheduleAndAlerts } from '../../../machines/schedule-resolver';
@@ -25,11 +25,21 @@ export async function getStaticPaths() {
 const { stad, slug } = Astro.params;
 const db = getBuildDatabase();
 const venue = getVenueByCityAndSlug(db, stad!, slug!);
-db.close();
 
 if (!venue) {
+  db.close();
   throw new Error(`Venue not found: ${stad}/${slug}`);
 }
+
+const municipality = getMunicipalityBySlug(db, venue.municipality_slug);
+db.close();
+
+const municipalityName =
+  municipality?.name ?? (venue.municipality_slug.charAt(0).toUpperCase() + venue.municipality_slug.slice(1));
+const hasDistinctWoonplaats = Boolean(
+  venue.woonplaats_slug && venue.woonplaats_name && venue.woonplaats_slug !== venue.municipality_slug
+);
+const vacationRegion = municipality?.school_vacation_region ?? 'noord';
 
 const photos = parseVenuePhotos(venue);
 const mainPhoto = photos[0];
@@ -43,9 +53,9 @@ const scheduleResolution = resolveVenueScheduleAndAlerts({
   todayIsoDate: '2026-10-21',
   isOutdoorOrOpenWater:
     venue.venue_type === 'OPEN_WATER_NATURAL' || venue.venue_type === 'OUTDOOR_SEASONAL_POOL',
-  vacationRegion: venue.municipality_slug === 'eindhoven' ? 'zuid' : venue.municipality_slug === 'utrecht' ? 'midden' : 'noord',
+  vacationRegion,
   publicHolidayNameNl: null,
-  activeVacationNameNl: venue.municipality_slug === 'eindhoven' ? null : 'Herfstvakantie',
+  activeVacationNameNl: vacationRegion === 'zuid' ? null : 'Herfstvakantie',
   knmiAlert: null,
   outdoorWaterQualityState: 'CLEAN_APPROVED',
   outdoorWaterTempCelsius: venue.outdoor_temp_celsius,
@@ -114,7 +124,7 @@ const venueJsonLd = buildVenueJsonLd({
   name: venue.name,
   slug: venue.slug,
   citySlug: venue.municipality_slug,
-  cityName: venue.municipality_slug,
+  cityName: venue.woonplaats_name || municipalityName,
   streetAddress: venue.street_address,
   postcode: venue.postcode_pc6,
   lat: venue.lat,
@@ -128,29 +138,41 @@ const venueJsonLd = buildVenueJsonLd({
   officialWebsiteUrl: venue.official_website_url,
 });
 
+const breadcrumbItems = [
+  {
+    '@type': 'ListItem',
+    position: 1,
+    name: 'Nederland',
+    item: 'https://zwemkaart.nl/',
+  },
+  {
+    '@type': 'ListItem',
+    position: 2,
+    name: municipalityName,
+    item: `https://zwemkaart.nl/steden/${venue.municipality_slug}`,
+  },
+];
+
+if (hasDistinctWoonplaats) {
+  breadcrumbItems.push({
+    '@type': 'ListItem',
+    position: 3,
+    name: venue.woonplaats_name!,
+    item: `https://zwemkaart.nl/steden/${venue.woonplaats_slug}`,
+  });
+}
+
+breadcrumbItems.push({
+  '@type': 'ListItem',
+  position: breadcrumbItems.length + 1,
+  name: venue.name,
+  item: `https://zwemkaart.nl/zwembad/${venue.municipality_slug}/${venue.slug}`,
+});
+
 const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
-  itemListElement: [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Nederland',
-      item: 'https://zwemkaart.nl/',
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: venue.municipality_slug.charAt(0).toUpperCase() + venue.municipality_slug.slice(1),
-      item: `https://zwemkaart.nl/steden/${venue.municipality_slug}`,
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: venue.name,
-      item: `https://zwemkaart.nl/zwembad/${venue.municipality_slug}/${venue.slug}`,
-    },
-  ],
+  itemListElement: breadcrumbItems,
 };
 ---
 <BaseLayout
@@ -168,9 +190,17 @@ const breadcrumbJsonLd = {
     <nav aria-label="Broodkruimelpad" class="text-xs font-semibold text-text-muted mb-4 flex items-center gap-2 flex-wrap">
       <a href="/" class="hover:text-text-charcoal transition-colors">Nederland</a>
       <span>›</span>
-      <a href={`/steden/${venue.municipality_slug}`} class="hover:text-text-charcoal transition-colors capitalize">
-        {venue.municipality_slug}
+      <a href={`/steden/${venue.municipality_slug}`} class="hover:text-text-charcoal transition-colors">
+        {municipalityName}
       </a>
+      {hasDistinctWoonplaats && (
+        <>
+          <span>›</span>
+          <a href={`/steden/${venue.woonplaats_slug}`} class="hover:text-text-charcoal transition-colors">
+            {venue.woonplaats_name}
+          </a>
+        </>
+      )}
       <span>›</span>
       <span class="text-text-charcoal font-bold">{venue.name}</span>
     </nav>
@@ -900,7 +930,14 @@ const breadcrumbJsonLd = {
           {venue.street_address && (
             <p class="text-sm text-text-muted mb-4">
               {venue.street_address}
-              {venue.postcode_pc6 ? `, ${venue.postcode_pc6}` : ''} ({venue.neighborhood_name ?? venue.municipality_slug})
+              {venue.postcode_pc6 ? `, ${venue.postcode_pc6}` : ''}
+              {hasDistinctWoonplaats ? (
+                <> {venue.woonplaats_name} (Gemeente {municipalityName})</>
+              ) : venue.neighborhood_name && venue.neighborhood_name !== municipalityName ? (
+                <> {municipalityName} — {venue.neighborhood_name}</>
+              ) : (
+                <> {municipalityName}</>
+              )}
             </p>
           )}
           {transitChips.length > 0 && (

@@ -22,23 +22,84 @@ export function seedInitialDataset(db: SqliteDatabase): void {
     ];
     for (const m of municipalities) upsertMunicipality.run(m);
 
-    // 2. Postcode PC4 centroids
+    // 2. BAG Woonplaatsen
+    const upsertWoonplaats = db.prepare(`
+      INSERT INTO woonplaatsen (id, bag_id, slug, name, municipality_slug, province_slug, center_lat, center_lng)
+      VALUES (@id, @bag_id, @slug, @name, @municipality_slug, @province_slug, @center_lat, @center_lng)
+      ON CONFLICT(id) DO UPDATE SET
+        bag_id = excluded.bag_id,
+        slug = excluded.slug,
+        name = excluded.name,
+        municipality_slug = excluded.municipality_slug,
+        province_slug = excluded.province_slug,
+        center_lat = excluded.center_lat,
+        center_lng = excluded.center_lng
+    `);
+
+    const woonplaatsen = [
+      {
+        id: 'wpl-3594',
+        bag_id: '3594',
+        slug: 'amsterdam',
+        name: 'Amsterdam',
+        municipality_slug: 'amsterdam',
+        province_slug: 'noord-holland',
+        center_lat: 52.37344272,
+        center_lng: 4.90454379,
+      },
+      {
+        id: 'wpl-3295',
+        bag_id: '3295',
+        slug: 'utrecht',
+        name: 'Utrecht',
+        municipality_slug: 'utrecht',
+        province_slug: 'utrecht',
+        center_lat: 52.0886922,
+        center_lng: 5.09520363,
+      },
+      {
+        id: 'wpl-1101',
+        bag_id: '1101',
+        slug: 'eindhoven',
+        name: 'Eindhoven',
+        municipality_slug: 'eindhoven',
+        province_slug: 'noord-brabant',
+        center_lat: 51.45016172,
+        center_lng: 5.45853544,
+      },
+      {
+        id: 'wpl-3086',
+        bag_id: '3086',
+        slug: 'rotterdam',
+        name: 'Rotterdam',
+        municipality_slug: 'rotterdam',
+        province_slug: 'zuid-holland',
+        center_lat: 51.92248806,
+        center_lng: 4.48653571,
+      },
+    ];
+    for (const w of woonplaatsen) upsertWoonplaats.run(w);
+
+    // 3. Postcode PC4 centroids
     const upsertPc4 = db.prepare(`
-      INSERT INTO postcode_pc4 (pc4, municipality_slug, lat, lng)
-      VALUES (@pc4, @municipality_slug, @lat, @lng)
-      ON CONFLICT(pc4) DO UPDATE SET lat = excluded.lat, lng = excluded.lng
+      INSERT INTO postcode_pc4 (pc4, municipality_slug, woonplaats_id, lat, lng)
+      VALUES (@pc4, @municipality_slug, @woonplaats_id, @lat, @lng)
+      ON CONFLICT(pc4) DO UPDATE SET
+        woonplaats_id = excluded.woonplaats_id,
+        lat = excluded.lat,
+        lng = excluded.lng
     `);
     const pc4List = [
-      { pc4: '1079', municipality_slug: 'amsterdam', lat: 52.3387, lng: 4.9021 },
-      { pc4: '1093', municipality_slug: 'amsterdam', lat: 52.3564, lng: 4.9275 },
-      { pc4: '1064', municipality_slug: 'amsterdam', lat: 52.3718, lng: 4.8054 },
-      { pc4: '1108', municipality_slug: 'amsterdam', lat: 52.3095, lng: 4.9912 },
-      { pc4: '3544', municipality_slug: 'utrecht', lat: 52.0985, lng: 5.0542 },
-      { pc4: '5644', municipality_slug: 'eindhoven', lat: 51.4162, lng: 5.4792 },
+      { pc4: '1079', municipality_slug: 'amsterdam', woonplaats_id: 'wpl-3594', lat: 52.3387, lng: 4.9021 },
+      { pc4: '1093', municipality_slug: 'amsterdam', woonplaats_id: 'wpl-3594', lat: 52.3564, lng: 4.9275 },
+      { pc4: '1064', municipality_slug: 'amsterdam', woonplaats_id: 'wpl-3594', lat: 52.3718, lng: 4.8054 },
+      { pc4: '1108', municipality_slug: 'amsterdam', woonplaats_id: 'wpl-3594', lat: 52.3095, lng: 4.9912 },
+      { pc4: '3544', municipality_slug: 'utrecht', woonplaats_id: 'wpl-3295', lat: 52.0985, lng: 5.0542 },
+      { pc4: '5644', municipality_slug: 'eindhoven', woonplaats_id: 'wpl-1101', lat: 51.4162, lng: 5.4792 },
     ];
     for (const p of pc4List) upsertPc4.run(p);
 
-    // 3. Dutch Public Holidays & School Vacations
+    // 4. Dutch Public Holidays & School Vacations
     db.prepare(`
       INSERT INTO nl_public_holidays (holiday_date, name_nl, is_national)
       VALUES ('2026-04-27', 'Koningsdag', 1), ('2026-12-25', 'Eerste Kerstdag', 1), ('2026-12-26', 'Tweede Kerstdag', 1)
@@ -54,11 +115,11 @@ export function seedInitialDataset(db: SqliteDatabase): void {
       ON CONFLICT(id) DO NOTHING
     `).run();
 
-    // 4. Flagship Venues from Mockups
+    // 5. Flagship Venues from Mockups
     const upsertVenue = db.prepare(`
       INSERT INTO venues (
         id, slug, municipality_slug, name, venue_type, enrichment_tier, operational_state,
-        street_address, postcode_pc6, postcode_pc4, neighborhood_name, lat, lng,
+        street_address, postcode_pc6, postcode_pc4, woonplaats_id, woonplaats_slug, woonplaats_name, neighborhood_name, lat, lng,
         operator_name, is_nrz_licensed, is_knzb_affiliated, municipal_keurmerk_label,
         primary_water_treatment, has_wheelchair_lift, has_accessible_changing,
         parking_info_nl, ev_chargers_count, transit_chips_json,
@@ -67,7 +128,7 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         rating_score, rating_count, min_single_price_cents, featured_badge_nl, hero_photos_json, content_hash
       ) VALUES (
         @id, @slug, @municipality_slug, @name, @venue_type, 'GOLD_STANDARD', 'OPEN_REGULAR',
-        @street_address, @postcode_pc6, @postcode_pc4, @neighborhood_name, @lat, @lng,
+        @street_address, @postcode_pc6, @postcode_pc4, @woonplaats_id, @woonplaats_slug, @woonplaats_name, @neighborhood_name, @lat, @lng,
         @operator_name, @is_nrz_licensed, @is_knzb_affiliated, @municipal_keurmerk_label,
         @primary_water_treatment, @has_wheelchair_lift, @has_accessible_changing,
         @parking_info_nl, @ev_chargers_count, @transit_chips_json,
@@ -79,7 +140,11 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         name = excluded.name,
         min_single_price_cents = excluded.min_single_price_cents,
         primary_water_treatment = excluded.primary_water_treatment,
-        hero_photos_json = excluded.hero_photos_json
+        hero_photos_json = excluded.hero_photos_json,
+        woonplaats_id = excluded.woonplaats_id,
+        woonplaats_slug = excluded.woonplaats_slug,
+        woonplaats_name = excluded.woonplaats_name,
+        neighborhood_name = excluded.neighborhood_name
     `);
 
     const venues = [
@@ -92,6 +157,9 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         street_address: 'De Mirandalaan 9',
         postcode_pc6: '1079 PA',
         postcode_pc4: '1079',
+        woonplaats_id: 'wpl-3594',
+        woonplaats_slug: 'amsterdam',
+        woonplaats_name: 'Amsterdam',
         neighborhood_name: 'Amsterdam Zuid (Rivierenbuurt)',
         lat: 52.3387,
         lng: 4.9021,
@@ -129,6 +197,9 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         street_address: 'Land van Cocagneplein 44',
         postcode_pc6: '1093 NB',
         postcode_pc4: '1093',
+        woonplaats_id: 'wpl-3594',
+        woonplaats_slug: 'amsterdam',
+        woonplaats_name: 'Amsterdam',
         neighborhood_name: 'Amsterdam Oost (Oostpoort)',
         lat: 52.3564,
         lng: 4.9275,
@@ -165,6 +236,9 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         street_address: 'President Allendelaan 3',
         postcode_pc6: '1064 GW',
         postcode_pc4: '1064',
+        woonplaats_id: 'wpl-3594',
+        woonplaats_slug: 'amsterdam',
+        woonplaats_name: 'Amsterdam',
         neighborhood_name: 'Amsterdam Nieuw-West',
         lat: 52.3718,
         lng: 4.8054,
@@ -200,6 +274,9 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         street_address: 'Langbroekdreef',
         postcode_pc6: '1108 AZ',
         postcode_pc4: '1108',
+        woonplaats_id: 'wpl-3594',
+        woonplaats_slug: 'amsterdam',
+        woonplaats_name: 'Amsterdam',
         neighborhood_name: 'Amsterdam Zuidoost',
         lat: 52.3095,
         lng: 4.9912,
@@ -235,6 +312,9 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         street_address: 'Grebbeberglaan 15',
         postcode_pc6: '3527 VX',
         postcode_pc4: '3544',
+        woonplaats_id: 'wpl-3295',
+        woonplaats_slug: 'utrecht',
+        woonplaats_name: 'Utrecht',
         neighborhood_name: 'Utrecht Leidsche Rijn',
         lat: 52.0985,
         lng: 5.0542,
@@ -268,6 +348,9 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         street_address: 'Antoon Coolenlaan 1',
         postcode_pc6: '5644 RX',
         postcode_pc4: '5644',
+        woonplaats_id: 'wpl-1101',
+        woonplaats_slug: 'eindhoven',
+        woonplaats_name: 'Eindhoven',
         neighborhood_name: 'Eindhoven Zuid',
         lat: 51.4162,
         lng: 5.4792,
@@ -306,7 +389,7 @@ export function seedInitialDataset(db: SqliteDatabase): void {
       });
     }
 
-    // 5. Basins for De Mirandabad + Default Basins for others
+    // 6. Basins for De Mirandabad + Default Basins for others
     const upsertBasin = db.prepare(`
       INSERT INTO basins (id, venue_id, name_nl, basin_category, is_default_basin, is_indoor, length_meters, lanes_count, has_movable_floor, water_treatment, target_temp_celsius, warm_water_day_note_nl)
       VALUES (@id, @venue_id, @name_nl, @basin_category, @is_default_basin, @is_indoor, @length_meters, @lanes_count, @has_movable_floor, @water_treatment, @target_temp_celsius, @warm_water_day_note_nl)
@@ -322,14 +405,14 @@ export function seedInitialDataset(db: SqliteDatabase): void {
     ];
     for (const b of basins) upsertBasin.run(b);
 
-    // 6. Outdoor conditions for Gaasperplas
+    // 7. Outdoor conditions for Gaasperplas
     db.prepare(`
       INSERT INTO outdoor_conditions (id, venue_id, source_authority, water_temp_celsius, water_quality_state, wetsuit_advice_nl, measured_at, is_current)
       VALUES ('cond-gaasperplas-current', 'venue-gaasperplas', 'RIJKSWATERSTAAT', 14.2, 'CLEAN_APPROVED', 'Wetsuit vereist (3-5mm) + zwemboei', '2026-10-21T08:00:00Z', 1)
       ON CONFLICT(id) DO UPDATE SET water_temp_celsius = excluded.water_temp_celsius
     `).run();
 
-    // 7. Tariffs for De Mirandabad (SCD Type 2)
+    // 8. Tariffs for De Mirandabad (SCD Type 2)
     const upsertTariff = db.prepare(`
       INSERT INTO tariffs (id, venue_id, tariff_category, title_nl, subtitle_nl, price_cents, unit_label_nl, visits_included, is_highlighted, badge_nl, tariff_year, valid_from, valid_to, is_current)
       VALUES (@id, @venue_id, @tariff_category, @title_nl, @subtitle_nl, @price_cents, @unit_label_nl, @visits_included, @is_highlighted, @badge_nl, 2026, '2026-01-01', NULL, 1)
@@ -344,7 +427,7 @@ export function seedInitialDataset(db: SqliteDatabase): void {
     ];
     for (const t of tariffs) upsertTariff.run(t);
 
-    // 8. Schedule Period & Slots for De Mirandabad
+    // 9. Schedule Period & Slots for De Mirandabad
     db.prepare(`
       INSERT INTO schedule_periods (id, venue_id, schedule_type, title_nl, valid_from, valid_to, priority, verification_state, verified_at)
       VALUES ('sched-miranda-2026-reg', 'venue-de-mirandabad', 'REGULAR_WINTER', 'Regulier Rooster 2026', '2026-09-01', '2027-06-30', 10, 'VERIFIED_PUBLISHED', '2026-10-01T10:00:00Z')
@@ -392,7 +475,7 @@ export function seedInitialDataset(db: SqliteDatabase): void {
       });
     }
 
-    // 9. Swim Providers & Offerings (Waitlists)
+    // 10. Swim Providers & Offerings (Waitlists)
     db.prepare(`
       INSERT INTO swim_providers (id, slug, name, provider_type, is_nrz_licensed, methodology_nl, b2b_partner_state, official_registration_url)
       VALUES
@@ -413,7 +496,7 @@ export function seedInitialDataset(db: SqliteDatabase): void {
         current_waitlist_weeks_max = excluded.current_waitlist_weeks_max
     `).run();
 
-    // 10. Affiliate Product Stubs (Disabled by default per spec)
+    // 11. Affiliate Product Stubs (Disabled by default per spec)
     db.prepare(`
       INSERT INTO affiliate_product_stubs (slug, context_rule, title_nl, target_url, is_enabled)
       VALUES

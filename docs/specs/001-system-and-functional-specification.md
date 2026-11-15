@@ -55,6 +55,16 @@ Ref: [MADR 0002](file:///Users/sramzzs4d/Projects-sramzz/swimming/docs/MADRs/000
   * `SportsActivityLocation` / `PublicSwimmingPool` (`name`, `address`, `geo`, `aggregateRating`, `amenityFeature`, `openingHoursSpecification`, and `specialOpeningHoursSpecification` for upcoming verified holidays/vacations).
   * `AggregateOffer` (for admission tariffs) and `Course` (for *Zwem-ABC* offerings).
 
+### 3.4 4-Tier Dutch Geographic & Settlement Hierarchy
+AlleZwembaden.nl models Dutch administrative and settlement territory across four distinct levels:
+1. **Provincie (12 Provinces):** Top-level territory (e.g. `noord-holland`, `zuid-holland`) mapped to provincial KNMI weather warning zones (`weather_alerts`).
+2. **CBS Gemeente (`municipalities`):** ~342 official Dutch administrative municipalities identified by CBS codes (`cbs_code` e.g. `GM0363`), determining regional school vacation periods (`school_vacation_region` IN `'noord', 'midden', 'zuid'`) and municipal discount schemes (*Stadspas*, *U-pas*).
+3. **BAG Woonplaats (`woonplaatsen`):** ~2,503 official settlement boundaries defined by the Dutch Cadastre (BAG - *Basisregistratie Adressen en Gebouwen*). Each record has an immutable internal `id = 'wpl-' || bag_id` (e.g. `wpl-3594` for Amsterdam, `wpl-1065` for Scheveningen), a unique 4-digit `bag_id`, unique `slug`, centroid coordinates, and an explicit foreign key to `municipalities(slug)`. This allows distinct settlements within large municipalities (e.g. *Scheveningen* within *Den Haag*) to maintain exact geographic fidelity.
+4. **Postcode PC4 (`postcode_pc4`):** ~4,000 4-digit postcode centroids optimized for <0.5ms bounding-box radius search, linked via foreign keys to `municipalities(slug)` and `woonplaatsen(id)`.
+
+**Venue Geographic Modeling:**
+Every `venues` row references its parent CBS Gemeente (`municipality_slug`) and BAG Woonplaats (`woonplaats_id`, `woonplaats_slug`, `woonplaats_name`), while `neighborhood_name` is strictly reserved for sub-city districts/wijken (e.g. *Amsterdam Zuid (Rivierenbuurt)*).
+
 ---
 
 ## 4. Design System & UI Component Architecture (`Aquatic Discovery`)

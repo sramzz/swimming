@@ -260,7 +260,7 @@ function getOpenWaterPool(): VenueHeroPhoto[] {
   return pool;
 }
 
-function hasOfficialVenuePhotoOnDisk(slug: string): boolean {
+export function hasOfficialVenuePhotoOnDisk(slug: string): boolean {
   return OFFICIAL_PHOTO_SLUGS.has(slug);
 }
 
