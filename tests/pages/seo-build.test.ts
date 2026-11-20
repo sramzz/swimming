@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { getBuildDatabase } from '@/db/runtime-db';
 import {
   listAllVenues,
@@ -11,6 +12,15 @@ import {
 import { buildVenueJsonLd } from '@/domain/seo-aggregator';
 import { parseVenuePhotos } from '@/domain/venue-photos';
 import { GET as getSitemap } from '@/pages/sitemap.xml';
+import {
+  auditDistDirectory,
+  hasAuditFailures,
+  unescapeHtml,
+  extractAttr,
+  extractMeta,
+  normalizeInternalHref,
+  type DistSeoAuditReport,
+} from '@/cli/audit-dist-seo';
 
 describe('Static Page & Sitemap Data Generation', () => {
   it('loads seeded venues and constructs valid canonical URLs and JSON-LD', () => {
@@ -254,5 +264,202 @@ describe('Static Page & Sitemap Data Generation', () => {
     for (const lastmod of lastmods) {
       expect(lastmod).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/);
     }
+  });
+
+  describe('audit-dist-seo helper and extraction logic', () => {
+    it('unescapes HTML entities properly without double unescaping', () => {
+      expect(unescapeHtml('&quot;Hello&quot; &amp; &#39;World&#39;')).toBe('"Hello" & \'World\'');
+      expect(unescapeHtml('&#38;amp;')).toBe('&amp;');
+      expect(unescapeHtml('Zwembaden in &#39;s-Gravendeel')).toBe("Zwembaden in 's-Gravendeel");
+    });
+
+    it('extracts HTML attributes safely with single or double quotes and apostrophes inside', () => {
+      const attrs = 'name="description" content="In \'s-Gravendeel (Hoeksche Waard) zijn er 1 zwemlocaties."';
+      expect(extractAttr(attrs, 'name')).toBe('description');
+      expect(extractAttr(attrs, 'content')).toBe("In 's-Gravendeel (Hoeksche Waard) zijn er 1 zwemlocaties.");
+
+      const inverted = 'content=\'https://zwemkaart.nl/image.webp\' property="og:image"';
+      expect(extractAttr(inverted, 'property')).toBe('og:image');
+      expect(extractAttr(inverted, 'content')).toBe('https://zwemkaart.nl/image.webp');
+    });
+
+    it('extracts meta description and og:image handling attribute order variations', () => {
+      const html1 = '<meta name="description" content="Zwembad beschrijving">';
+      const html2 = '<meta content="Zwembad omgekeerd" name="description">';
+      const html3 = '<meta property="og:image" content="https://zwemkaart.nl/hero.webp">';
+      expect(extractMeta(html1, 'name', 'description')).toBe('Zwembad beschrijving');
+      expect(extractMeta(html2, 'name', 'description')).toBe('Zwembad omgekeerd');
+      expect(extractMeta(html3, 'property', 'og:image')).toBe('https://zwemkaart.nl/hero.webp');
+    });
+
+    it('normalizes internal hrefs and ignores protocol-relative or external links', () => {
+      expect(normalizeInternalHref('/steden/amsterdam')).toBe('/steden/amsterdam');
+      expect(normalizeInternalHref('/steden/amsterdam/')).toBe('/steden/amsterdam');
+      expect(normalizeInternalHref('/steden/amsterdam?q=1#main')).toBe('/steden/amsterdam');
+      expect(normalizeInternalHref('/')).toBe('/');
+      expect(normalizeInternalHref('/#top')).toBe('/');
+      expect(normalizeInternalHref('https://zwemkaart.nl/steden/rotterdam')).toBe('/steden/rotterdam');
+      expect(normalizeInternalHref('//example.com/foo')).toBeNull();
+      expect(normalizeInternalHref('https://google.com')).toBeNull();
+      expect(normalizeInternalHref('mailto:info@zwemkaart.nl')).toBeNull();
+      expect(normalizeInternalHref('#anchor')).toBeNull();
+    });
+
+    it('identifies audit failures correctly in hasAuditFailures', () => {
+      const cleanReport: DistSeoAuditReport = {
+        totalHtmlFiles: 4862,
+        totalIndexablePages: 4861,
+        sitemapUrlCount: 4861,
+        totalInternalLinksChecked: 500000,
+        missingTitle: [],
+        duplicateTitles: [],
+        missingDescription: [],
+        duplicateDescriptions: [],
+        missingH1: [],
+        canonicalMismatch: [],
+        sitemapMissingInDist: [],
+        distMissingInSitemap: [],
+        missingJsonLd: [],
+        invalidJsonLd: [],
+        missingOgImage: [],
+        brokenOgImageAsset: [],
+        badTextTokens: [],
+        brokenInternalLinks: [],
+      };
+      expect(hasAuditFailures(cleanReport)).toBe(false);
+
+      expect(hasAuditFailures({ ...cleanReport, totalIndexablePages: 4000 })).toBe(true);
+      expect(hasAuditFailures({ ...cleanReport, missingTitle: ['/test'] })).toBe(true);
+      expect(hasAuditFailures({ ...cleanReport, brokenInternalLinks: [{ sourceUrl: '/', href: '/bad' }] })).toBe(true);
+    });
+
+    it('detects missing SEO elements and broken assets on a synthetic fixture directory', async () => {
+      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'seo-audit-fixture-'));
+      expect(tmpDir).toBeDefined();
+      try {
+        fs.mkdirSync(path.join(tmpDir, 'page-a'), { recursive: true });
+        fs.mkdirSync(path.join(tmpDir, 'page-b'), { recursive: true });
+        fs.mkdirSync(path.join(tmpDir, 'page-empty'), { recursive: true });
+
+        // sitemap
+        const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://zwemkaart.nl/</loc></url>
+<url><loc>https://zwemkaart.nl/page-a</loc></url>
+<url><loc>https://zwemkaart.nl/page-empty</loc></url>
+<url><loc>https://zwemkaart.nl/page-ghost</loc></url>
+</urlset>`;
+        fs.writeFileSync(path.join(tmpDir, 'sitemap.xml'), sitemapXml, 'utf-8');
+
+        // index.html - clean
+        const indexHtml = `<!DOCTYPE html><html><head>
+<title>Homepage Title</title>
+<meta name="description" content="Homepage Description">
+<link rel="canonical" href="https://zwemkaart.nl/">
+<meta property="og:image" content="https://zwemkaart.nl/image.webp">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite"}</script>
+</head><body>
+<h1>Homepage Heading</h1>
+<a href="/page-a">To Page A</a>
+<a href="/broken-link">Broken</a>
+</body></html>`;
+        fs.writeFileSync(path.join(tmpDir, 'index.html'), indexHtml, 'utf-8');
+        fs.writeFileSync(path.join(tmpDir, 'image.webp'), 'fake image data', 'utf-8');
+
+        // page-a - bad tokens, duplicate title, broken og image
+        const pageAHtml = `<!DOCTYPE html><html><head>
+<title>Homepage Title</title>
+<meta name="description" content="Page A Description">
+<link rel="canonical" href="https://zwemkaart.nl/wrong-canonical">
+<meta property="og:image" content="/missing-og.webp">
+<script type="application/ld+json">INVALID_JSON_HERE</script>
+</head><body>
+<h1>Heading with undefined</h1>
+<p>Visible NaN body</p>
+<a href="/">Back Home</a>
+</body></html>`;
+        fs.writeFileSync(path.join(tmpDir, 'page-a', 'index.html'), pageAHtml, 'utf-8');
+
+        // page-b - not in sitemap
+        const pageBHtml = `<!DOCTYPE html><html><head>
+<title>Page B Title</title>
+<meta name="description" content="Page B Description">
+<link rel="canonical" href="https://zwemkaart.nl/page-b">
+<meta property="og:image" content="/image.webp">
+<script type="application/ld+json">{"@context":"https://schema.org"}</script>
+</head><body>
+<h1>Page B Heading</h1>
+<a href="/">Home</a>
+</body></html>`;
+        fs.writeFileSync(path.join(tmpDir, 'page-b', 'index.html'), pageBHtml, 'utf-8');
+
+        // page-empty - missing title, description, h1, og:image, and json-ld
+        const pageEmptyHtml = `<!DOCTYPE html><html><head>
+<link rel="canonical" href="https://zwemkaart.nl/page-empty">
+</head><body>
+<p>Empty SEO shell</p>
+</body></html>`;
+        fs.writeFileSync(path.join(tmpDir, 'page-empty', 'index.html'), pageEmptyHtml, 'utf-8');
+
+        // 404.html
+        const page404Html = `<!DOCTYPE html><html><head>
+<title>404</title><meta name="robots" content="noindex">
+</head><body><h1>Not found</h1><a href="/page-a">Go to A</a></body></html>`;
+        fs.writeFileSync(path.join(tmpDir, '404.html'), page404Html, 'utf-8');
+
+        const report = await auditDistDirectory(tmpDir);
+
+        expect(report.totalHtmlFiles).toBe(5);
+        expect(report.totalIndexablePages).toBe(4);
+        expect(report.sitemapUrlCount).toBe(4);
+        expect(report.missingTitle).toEqual(['/page-empty']);
+        expect(report.missingDescription).toEqual(['/page-empty']);
+        expect(report.missingH1).toEqual(['/page-empty']);
+        expect(report.missingOgImage).toEqual(['/page-empty']);
+        expect(report.missingJsonLd).toEqual(['/page-empty']);
+        expect(report.duplicateTitles.length).toBe(1);
+        expect(report.duplicateTitles[0].title).toBe('Homepage Title');
+        expect(report.canonicalMismatch).toEqual([{ url: '/page-a', canonical: 'https://zwemkaart.nl/wrong-canonical' }]);
+        expect(report.brokenOgImageAsset).toEqual([{ url: '/page-a', ogImage: '/missing-og.webp' }]);
+        expect(report.invalidJsonLd.length).toBe(1);
+        expect(report.invalidJsonLd[0].url).toBe('/page-a');
+        expect(report.distMissingInSitemap).toEqual(['https://zwemkaart.nl/page-b']);
+        expect(report.sitemapMissingInDist).toEqual(['https://zwemkaart.nl/page-ghost']);
+        expect(report.brokenInternalLinks).toEqual([{ sourceUrl: '/', href: '/broken-link' }]);
+        expect(report.badTextTokens).toContainEqual({ url: '/page-a', field: 'h1', token: 'undefined' });
+        expect(report.badTextTokens).toContainEqual({ url: '/page-a', field: 'body', token: 'NaN' });
+      } finally {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
+    });
+
+    it('executes full audit over built dist/ directory when present', async () => {
+      const sitemapPath = path.resolve(process.cwd(), 'dist', 'sitemap.xml');
+      if (!fs.existsSync(sitemapPath)) {
+        // Skip if dist has not been generated yet
+        return;
+      }
+
+      const report = await auditDistDirectory();
+      expect(report.totalIndexablePages).toBeGreaterThanOrEqual(4800);
+      expect(report.sitemapUrlCount).toBeGreaterThanOrEqual(4800);
+      expect(report.totalInternalLinksChecked).toBeGreaterThan(100000);
+
+      expect(report.missingTitle).toEqual([]);
+      expect(report.duplicateTitles).toEqual([]);
+      expect(report.missingDescription).toEqual([]);
+      expect(report.duplicateDescriptions).toEqual([]);
+      expect(report.missingH1).toEqual([]);
+      expect(report.canonicalMismatch).toEqual([]);
+      expect(report.sitemapMissingInDist).toEqual([]);
+      expect(report.distMissingInSitemap).toEqual([]);
+      expect(report.missingJsonLd).toEqual([]);
+      expect(report.invalidJsonLd).toEqual([]);
+      expect(report.missingOgImage).toEqual([]);
+      expect(report.brokenOgImageAsset).toEqual([]);
+      expect(report.badTextTokens).toEqual([]);
+      expect(report.brokenInternalLinks).toEqual([]);
+      expect(hasAuditFailures(report)).toBe(false);
+    });
   });
 });

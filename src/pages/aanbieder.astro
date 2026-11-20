@@ -3,11 +3,50 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+const pageTitle = 'Word Aanbieder – Zwembad of Zwemschool Aanmelden | Zwemkaart.nl';
+const pageDescription =
+  'Beheer de openingstijden, tarieven en actuele Zwem-ABC wachttijden van uw zwembad of zwemschool op Zwemkaart.nl.';
+
+const aanbiederJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://zwemkaart.nl/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Voor Zwembadaanbieders',
+          item: 'https://zwemkaart.nl/aanbieder',
+        },
+      ],
+    },
+    {
+      '@type': 'WebPage',
+      name: pageTitle,
+      description: pageDescription,
+      url: 'https://zwemkaart.nl/aanbieder',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'Zwemkaart.nl',
+        url: 'https://zwemkaart.nl',
+      },
+    },
+  ],
+};
 ---
 <BaseLayout
-  title="Word Aanbieder – Zwembad of Zwemschool Aanmelden | Zwemkaart.nl"
-  description="Beheer de openingstijden, tarieven en actuele Zwem-ABC wachttijden van uw zwembad of zwemschool op Zwemkaart.nl."
+  title={pageTitle}
+  description={pageDescription}
   canonicalPath="/aanbieder"
+  jsonLd={aanbiederJsonLd}
 >
   <Header />
   <main class="max-w-5xl mx-auto px-4 md:px-8 py-12 flex-1 w-full">

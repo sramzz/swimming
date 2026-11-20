@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getBuildDatabase } from '../../db/runtime-db';
+import { isDistinctSubWoonplaats } from '../../db/queries';
 
 interface ConstituentWoonplaats {
   slug: string;
@@ -43,16 +44,27 @@ const cities = db
     outdoor_count: number;
   }>;
 
-const constituentWoonplaatsen = db
+const allMunicipalitySlugs = new Set(
+  (db.prepare('SELECT slug FROM municipalities').all() as Array<{ slug: string }>).map((m) => m.slug)
+);
+
+const rawConstituentWoonplaatsen = db
   .prepare(
-    `SELECT w.slug, w.name, w.municipality_slug, COUNT(v.id) as venue_count
+    `SELECT w.slug, w.name, w.municipality_slug, m.name AS municipality_name, COUNT(v.id) as venue_count
      FROM woonplaatsen w
+     JOIN municipalities m ON m.slug = w.municipality_slug
      JOIN venues v ON v.woonplaats_id = w.id
      WHERE w.slug != w.municipality_slug
      GROUP BY w.id
      ORDER BY venue_count DESC, w.name ASC`
   )
-  .all() as ConstituentWoonplaats[];
+  .all() as Array<ConstituentWoonplaats & { municipality_name?: string }>;
+
+const constituentWoonplaatsen = rawConstituentWoonplaatsen.filter(
+  (wp) =>
+    isDistinctSubWoonplaats(wp.name, wp.slug, wp.municipality_name, wp.municipality_slug) &&
+    !allMunicipalitySlugs.has(wp.slug)
+);
 
 db.close();
 
@@ -62,11 +74,49 @@ for (const wp of constituentWoonplaatsen) {
   list.push(wp);
   woonplaatsenByMunicipality.set(wp.municipality_slug, list);
 }
+
+const pageTitle = 'Alle Steden & Provincies – Zwembaden in Nederland | Zwemkaart.nl';
+const pageDescription = `Overzicht van alle ${cities.length} Nederlandse gemeenten en 12 provincies met zwembaden, banenzwemmen, Zwem-ABC zwemles en natuurwater.`;
+
+const citiesDirectoryJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://zwemkaart.nl/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Alle Steden & Gemeenten',
+          item: 'https://zwemkaart.nl/steden',
+        },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      name: pageTitle,
+      description: pageDescription,
+      url: 'https://zwemkaart.nl/steden',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'Zwemkaart.nl',
+        url: 'https://zwemkaart.nl',
+      },
+    },
+  ],
+};
 ---
 <BaseLayout
-  title="Alle Steden & Provincies – Zwembaden in Nederland | Zwemkaart.nl"
-  description={`Overzicht van alle ${cities.length} Nederlandse gemeenten en 12 provincies met zwembaden, banenzwemmen, Zwem-ABC zwemles en natuurwater.`}
+  title={pageTitle}
+  description={pageDescription}
   canonicalPath="/steden"
+  jsonLd={citiesDirectoryJsonLd}
 >
   <Header />
   <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 flex-1 w-full">

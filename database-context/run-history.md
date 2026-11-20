@@ -42,3 +42,4 @@ pnpm sync:venue --slug=<venue-slug> --push-d1
 | `2026-11-09_seed` | 2026-11-09T19:07:11.896Z | `LOCAL_MAC` | `SEED_INITIAL` | 1002 | 1002 | 0 | `logs/runs/2026-11-09_seed.log` |
 | `2026-11-09_m7_zwemwater_and_photos` | 2026-11-09T20:37:15.000Z | `LOCAL_MAC` | `ZWEMWATER_DOSSIER_AND_OFFICIAL_PHOTOS` | 1002 | 1002 | 0 | `logs/runs/2026-11-09_seed.log` |
 | `2026-11-15_national_ingest` | 2026-11-15T10:02:00.000Z | `LOCAL_MAC` | `NATIONAL_VENUE_SCALE` | 1635 | 1635 | 0 | `logs/runs/2026-11-15_national_ingest.log` |
+| `2026-11-20_national_ingest` | 2026-11-20T19:42:42.058Z | `LOCAL_MAC` | `NATIONAL_VENUE_SCALE` | 1612 | 0 | 0 | `logs/runs/2026-11-20_national_ingest.log` |

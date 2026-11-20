@@ -1,3 +1,8 @@
+import type { VenueRow } from '../db/queries';
+
+export type CityIntent = 'banenzwemmen' | 'zwemles' | 'buitenwater';
+export const CITY_INTENTS: readonly CityIntent[] = ['banenzwemmen', 'zwemles', 'buitenwater'] as const;
+
 export function shouldGenerateIndexableFacetPage(matchingVenuesCount: number): boolean {
   return matchingVenuesCount >= 1;
 }
@@ -13,8 +18,40 @@ export function matchesIntent(venue: { venue_type: string }, intent: string): bo
   return venue.venue_type !== 'OPEN_WATER_NATURAL';
 }
 
+export function getAvailableCityIntents(venues: Array<{ venue_type: string }>): CityIntent[] {
+  return (['banenzwemmen', 'zwemles', 'buitenwater'] as const).filter((intent) =>
+    shouldGenerateIndexableFacetPage(venues.filter((v) => matchesIntent(v, intent)).length),
+  );
+}
+
 export function formatEuroCentsNl(cents: number): string {
   return `€ ${(cents / 100).toFixed(2).replace('.', ',')}`;
+}
+
+export interface CitySeoOptions {
+  isWoonplaats?: boolean;
+  municipalityName?: string | null;
+}
+
+export function formatCitySeoDisplayName(
+  cityName: string,
+  options?: CitySeoOptions
+): string {
+  if (options?.isWoonplaats && options.municipalityName) {
+    const trimmedMun = options.municipalityName.trim();
+    const trimmedCity = cityName.trim();
+    if (trimmedMun.length > 0 && trimmedMun.toLowerCase() !== trimmedCity.toLowerCase()) {
+      return `${cityName} (${trimmedMun})`;
+    }
+  }
+  return cityName;
+}
+
+export function buildCityHubTitleNl(
+  cityName: string,
+  options?: CitySeoOptions
+): string {
+  return `Zwembaden in ${formatCitySeoDisplayName(cityName, options)} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`;
 }
 
 export interface CitySeoSummaryInput {
@@ -26,9 +63,13 @@ export interface CitySeoSummaryInput {
   shortestWaitlistWeeks: number | null;
 }
 
-export function buildCitySeoSummaryNl(input: CitySeoSummaryInput): string {
+export function buildCitySeoSummaryNl(
+  input: CitySeoSummaryInput,
+  options?: CitySeoOptions
+): string {
+  const displayName = formatCitySeoDisplayName(input.cityName, options);
   const parts: string[] = [
-    `In ${input.cityName} zijn er ${input.totalVenues} zwemlocaties (waaronder ${input.saltWaterCount} zwembaden met huidvriendelijke zoutelektrolyse).`,
+    `In ${displayName} zijn er ${input.totalVenues} zwemlocaties (waaronder ${input.saltWaterCount} zwembaden met huidvriendelijke zoutelektrolyse).`,
   ];
 
   if (input.cheapestSinglePriceCents !== null && input.cheapestVenueName) {
@@ -39,7 +80,7 @@ export function buildCitySeoSummaryNl(input: CitySeoSummaryInput): string {
 
   if (input.shortestWaitlistWeeks !== null) {
     parts.push(
-      `De kortste wachttijd voor Zwemdiploma A in ${input.cityName} bedraagt momenteel circa ${input.shortestWaitlistWeeks} weken.`
+      `De kortste wachttijd voor Zwemdiploma A in ${displayName} bedraagt momenteel circa ${input.shortestWaitlistWeeks} weken.`
     );
   }
 
@@ -208,32 +249,75 @@ export interface CityIntentSeoMeta {
 export function buildCityIntentSeoMeta(
   cityName: string,
   intent: string,
-  venueCount: number
+  venueCount: number,
+  options?: CitySeoOptions
 ): CityIntentSeoMeta {
+  const displayName = formatCitySeoDisplayName(cityName, options);
   if (intent === 'banenzwemmen') {
     return {
-      title: `Banenzwemmen in ${cityName} (${venueCount} baden & tijden) | Zwemkaart.nl`,
+      title: `Banenzwemmen in ${displayName} (${venueCount} baden & tijden) | Zwemkaart.nl`,
       h1: `Banenzwemmen in ${cityName}`,
-      description: `Bekijk alle ${venueCount} zwembaden voor banenzwemmen in ${cityName}. Vergelijk vroege ochtendbanen, watertemperatuur, zoutelektrolyse en losse entreeprijzen.`,
+      description: `Bekijk alle ${venueCount} zwembaden voor banenzwemmen in ${displayName}. Vergelijk vroege ochtendbanen, watertemperatuur, zoutelektrolyse en losse entreeprijzen.`,
     };
   }
   if (intent === 'zwemles') {
     return {
-      title: `Zwemles A/B/C in ${cityName} (${venueCount} aanbieders & wachttijden) | Zwemkaart.nl`,
+      title: `Zwemles A/B/C in ${displayName} (${venueCount} aanbieders & wachttijden) | Zwemkaart.nl`,
       h1: `Zwemles A/B/C in ${cityName}`,
-      description: `Vergelijk ${venueCount} erkende zwemscholen en gemeentebaden voor Zwem-ABC in ${cityName}. Bekijk actuele wachtlijsten in weken en maandtarieven.`,
+      description: `Vergelijk ${venueCount} erkende zwemscholen en gemeentebaden voor Zwem-ABC in ${displayName}. Bekijk actuele wachtlijsten in weken en maandtarieven.`,
     };
   }
   if (intent === 'buitenwater') {
     return {
-      title: `Buitenzwemmen & Natuurwater in ${cityName} (${venueCount} locaties) | Zwemkaart.nl`,
+      title: `Buitenzwemmen & Natuurwater in ${displayName} (${venueCount} locaties) | Zwemkaart.nl`,
       h1: `Buitenzwemmen & Natuurwater in ${cityName}`,
-      description: `Ontdek ${venueCount} officiële Rijkswaterstaat zwemwaterlocaties en buitenbaden in ${cityName}. Bekijk actuele waarschuwingen, blauwalg-controles en informatieborden.`,
+      description: `Ontdek ${venueCount} officiële Rijkswaterstaat zwemwaterlocaties en buitenbaden in ${displayName}. Bekijk actuele waarschuwingen, blauwalg-controles en informatieborden.`,
     };
   }
   return {
-    title: `${intent} in ${cityName} | Zwemkaart.nl`,
+    title: `${intent} in ${displayName} | Zwemkaart.nl`,
     h1: `${intent} in ${cityName}`,
-    description: `Overzicht van ${venueCount} zwemlocaties voor ${intent} in ${cityName}.`,
+    description: `Overzicht van ${venueCount} zwemlocaties voor ${intent} in ${displayName}.`,
   };
+}
+
+export function buildVenuePageSeoMeta(
+  venue: Pick<VenueRow, 'name' | 'venue_type' | 'street_address' | 'woonplaats_name'>,
+  municipalityName: string
+): { title: string; description: string } {
+  const trimmedVenueName = venue.name.trim();
+  const trimmedMun = municipalityName.trim();
+  const trimmedWp = venue.woonplaats_name?.trim();
+  const locationLabel = trimmedWp || trimmedMun;
+
+  const venueNameLower = trimmedVenueName.toLowerCase();
+  const locLower = locationLabel.toLowerCase();
+  const munLower = trimmedMun.toLowerCase();
+
+  const containsLoc = venueNameLower.includes(locLower);
+  const containsMun = trimmedMun.length > 0 && venueNameLower.includes(munLower);
+
+  const qualifiedVenueName =
+    containsLoc || containsMun ? trimmedVenueName : `${trimmedVenueName} (${locationLabel})`;
+
+  const isOpenWater = venue.venue_type === 'OPEN_WATER_NATURAL';
+
+  const title = isOpenWater
+    ? `${qualifiedVenueName} - Zwemwaterkwaliteit, Blauwalg & Voorzieningen | Zwemkaart.nl`
+    : `${qualifiedVenueName} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`;
+
+  let placeInText = locationLabel;
+  if (trimmedWp && trimmedMun && trimmedWp.toLowerCase() !== trimmedMun.toLowerCase()) {
+    placeInText = `${trimmedWp} (Gemeente ${trimmedMun})`;
+  }
+
+  const addressPart = venue.street_address?.trim()
+    ? `, gevestigd aan ${venue.street_address.trim()}`
+    : '';
+
+  const description = isOpenWater
+    ? `Bekijk de officiële zwemwaterkwaliteit, blauwalg-status, voorzieningen en locatie van ${qualifiedVenueName}${addressPart} in ${placeInText}.`
+    : `Bekijk actuele entreeprijzen, banenzwemmen tijden, watertemperatuur en Zwem-ABC wachttijden bij ${qualifiedVenueName}${addressPart} in ${placeInText}.`;
+
+  return { title, description };
 }

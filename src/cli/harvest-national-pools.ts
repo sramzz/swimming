@@ -25,6 +25,7 @@ export interface CuratedPoolRecord {
   woonplaats_id?: string;
   woonplaats_slug?: string;
   woonplaats_name?: string;
+  woonplaats_bag_id?: string;
   name: string;
   venue_type: VenueType | string;
   street_address: string;
@@ -294,32 +295,207 @@ function inferOperatorName(poolName: string, desc: string | null, munName: strin
   return `Gemeente ${munName} Sportbedrijf`;
 }
 
+export interface PhysicalPoolComparisonItem {
+  slug?: string;
+  sourceSlug?: string;
+  name: string;
+  street_address?: string | null;
+  streetAddress?: string | null;
+  postcode_pc6?: string | null;
+  postcodePc6?: string | null;
+  postcode_pc4?: string | null;
+  postcodePc4?: string | null;
+  lat: number;
+  lng: number;
+  municipality_slug?: string;
+  municipalitySlug?: string;
+  woonplaats_name?: string;
+  woonplaatsName?: string;
+  facility_tags?: string[];
+  facilityTags?: string[];
+  official_website_url?: string | null;
+  officialWebsiteUrl?: string | null;
+}
+
+const GENERIC_POOL_WORDS = new Set([
+  'zwembad',
+  'bad',
+  'de',
+  'het',
+  'van',
+  'der',
+  'den',
+  'en',
+  'sportcomplex',
+  'sportcentrum',
+  'recreatiebad',
+  'openluchtbad',
+  'bosbad',
+  'in',
+  'aan',
+  'op',
+  'accommodatie',
+  'centrum',
+]);
+
+/**
+ * Normalizes street name and extracts house number.
+ */
+export function normalizeStreetAndNumber(
+  address?: string | null
+): { normalizedStreet: string; houseNumber: string } | null {
+  if (!address) return null;
+  const cleaned = address
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const match = cleaned.match(/^(.+?)\s+(\d+)(?:[a-z\s/-]|\b.*)?$/i);
+  if (!match) return null;
+  const normalizedStreet = match[1].replace(/[^a-z0-9]/g, '');
+  const houseNumber = match[2];
+  if (!normalizedStreet || !houseNumber) return null;
+  return { normalizedStreet, houseNumber };
+}
+
+/**
+ * Extracts significant tokens from a pool name.
+ */
+export function extractNameTokens(name: string): Set<string> {
+  const tokens = name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .split(/\s+/)
+    .filter((t) => t.length >= 3 && !GENERIC_POOL_WORDS.has(t));
+  return new Set(tokens);
+}
+
+/**
+ * Checks if two pool names have meaningful token overlap.
+ */
+export function hasMeaningfulTokenOverlap(nameA: string, nameB: string): boolean {
+  const tokensA = extractNameTokens(nameA);
+  const tokensB = extractNameTokens(nameB);
+  for (const t of tokensA) {
+    if (tokensB.has(t)) return true;
+    for (const tb of tokensB) {
+      if (t.length >= 4 && tb.length >= 4 && (t.includes(tb) || tb.includes(t))) return true;
+    }
+  }
+  return false;
+}
+
+function getPc4(item: PhysicalPoolComparisonItem): string | null {
+  if (item.postcode_pc4) return String(item.postcode_pc4).slice(0, 4);
+  if (item.postcodePc4) return String(item.postcodePc4).slice(0, 4);
+  if (item.postcode_pc6) return String(item.postcode_pc6).replace(/\s+/g, '').slice(0, 4);
+  if (item.postcodePc6) return String(item.postcodePc6).replace(/\s+/g, '').slice(0, 4);
+  return null;
+}
+
+function getStreetAddress(item: PhysicalPoolComparisonItem): string | null {
+  return item.street_address || item.streetAddress || null;
+}
+
+/**
+ * Core physical duplicate check between two pool records.
+ */
+export function isPhysicalDuplicate(
+  a: PhysicalPoolComparisonItem,
+  b: PhysicalPoolComparisonItem
+): boolean {
+  const slugA = a.slug || a.sourceSlug;
+  const slugB = b.slug || b.sourceSlug;
+  if (slugA && slugB && slugifyNl(slugA) === slugifyNl(slugB)) {
+    return true;
+  }
+
+  const distKm = haversineDistanceKm(a.lat, a.lng, b.lat, b.lng);
+  const distM = distKm * 1000;
+
+  const addrA = normalizeStreetAndNumber(getStreetAddress(a));
+  const addrB = normalizeStreetAndNumber(getStreetAddress(b));
+
+  const sameStreetAndNumber = Boolean(
+    addrA &&
+      addrB &&
+      addrA.normalizedStreet === addrB.normalizedStreet &&
+      addrA.houseNumber === addrB.houseNumber
+  );
+
+  const pc4A = getPc4(a);
+  const pc4B = getPc4(b);
+  const samePc4 = Boolean(pc4A && pc4B && pc4A === pc4B);
+
+  // Condition 1: Normalized street_address match within <= 2000m (or matching postal code prefix)
+  if (sameStreetAndNumber && (distM <= 2000 || samePc4)) {
+    return true;
+  }
+
+  // Condition 2: Close Haversine proximity (<= 120m) when normalized name tokens overlap meaningfully (or identical street + number)
+  if (distM <= 120) {
+    if (sameStreetAndNumber) return true;
+    if (hasMeaningfulTokenOverlap(a.name, b.name)) return true;
+  }
+
+  return false;
+}
+
+/**
+ * Pure deduplication helper for an array of pool candidates against existing reference pools.
+ */
+export function deduplicatePhysicalPools<T extends PhysicalPoolComparisonItem>(
+  candidates: T[],
+  referencePools: PhysicalPoolComparisonItem[] = []
+): T[] {
+  const kept: T[] = [];
+  for (const candidate of candidates) {
+    const matchesRef = referencePools.some((ref) => isPhysicalDuplicate(candidate, ref));
+    if (matchesRef) {
+      continue;
+    }
+    const matchesKept = kept.some((k) => isPhysicalDuplicate(candidate, k));
+    if (matchesKept) {
+      continue;
+    }
+    kept.push(candidate);
+  }
+  return kept;
+}
+
+export const GOLD_STANDARD_SEEDS: PhysicalPoolComparisonItem[] = [
+  { slug: 'de-mirandabad', name: 'Zwemcentrum De Mirandabad', street_address: 'De Mirandalaan 9', postcode_pc4: '1079', lat: 52.3387, lng: 4.9021, municipality_slug: 'amsterdam' },
+  { slug: 'sportfondsenbad-oost', name: 'Sportfondsenbad Amsterdam-Oost', street_address: 'Land van Cocagneplein 44', postcode_pc4: '1093', lat: 52.3564, lng: 4.9275, municipality_slug: 'amsterdam' },
+  { slug: 'sloterparkbad', name: 'Sloterparkbad', street_address: 'President Allendelaan 3', postcode_pc4: '1064', lat: 52.3718, lng: 4.8054, municipality_slug: 'amsterdam' },
+  { slug: 'tongelreep-zwemparadijs', name: 'Nationaal Zwemcentrum de Tongelreep', street_address: 'Antoon Coolenlaan 1', postcode_pc4: '5644', lat: 51.4162, lng: 5.4792, municipality_slug: 'eindhoven' },
+  { slug: 'ra-sports-swimming-utrecht', name: 'R&A Sports & Swimming - Utrecht', street_address: 'Grebbeberglaan 15', postcode_pc4: '3544', lat: 52.0985, lng: 5.0542, municipality_slug: 'utrecht' },
+  { slug: 'gaasperplas-open-water', name: 'Gaasperplas Open Water Spot', street_address: 'Langbroekdreef', postcode_pc4: '1108', lat: 52.3095, lng: 4.9912, municipality_slug: 'amsterdam' },
+];
+
 /**
  * Smart deduplication against existing curated flagship pool.
  */
 function matchesExistingFlagship(
-  harvested: {
-    name: string;
-    sourceSlug: string;
-    lat: number;
-    lng: number;
-    municipalitySlug: string;
-    woonplaatsName: string;
-  },
+  harvested: PhysicalPoolComparisonItem,
   existing: CuratedPoolRecord
 ): boolean {
-  if (existing.municipality_slug !== harvested.municipalitySlug) {
+  if (isPhysicalDuplicate(harvested, existing)) return true;
+
+  const harvestedMun = harvested.municipalitySlug || harvested.municipality_slug;
+  if (existing.municipality_slug !== harvestedMun) {
     return false;
   }
 
   const s1 = slugifyNl(existing.slug);
-  const s2 = slugifyNl(harvested.sourceSlug);
+  const s2 = slugifyNl(harvested.sourceSlug || harvested.slug || '');
   if (s1 === s2) return true;
 
   const d = haversineDistanceKm(existing.lat, existing.lng, harvested.lat, harvested.lng);
 
   const b1 = cleanPoolBrand(existing.name, existing.woonplaats_name);
-  const b2 = cleanPoolBrand(harvested.name, harvested.woonplaatsName);
+  const b2 = cleanPoolBrand(harvested.name, harvested.woonplaatsName || harvested.woonplaats_name);
 
   // Exact brand match within municipality
   if (b1 && b2 && b1 === b2) return true;
@@ -338,20 +514,16 @@ function matchesExistingFlagship(
  * Smart deduplication against newly kept harvested pools.
  */
 function matchesKeptPool(
-  candidate: {
-    name: string;
-    sourceSlug: string;
-    lat: number;
-    lng: number;
-    municipalitySlug: string;
-    woonplaatsName: string;
-  },
+  candidate: PhysicalPoolComparisonItem,
   kept: CuratedPoolRecord
 ): boolean {
-  if (kept.municipality_slug !== candidate.municipalitySlug) return false;
+  if (isPhysicalDuplicate(candidate, kept)) return true;
+
+  const candidateMun = candidate.municipalitySlug || candidate.municipality_slug;
+  if (kept.municipality_slug !== candidateMun) return false;
   const d = haversineDistanceKm(kept.lat, kept.lng, candidate.lat, candidate.lng);
   const b1 = cleanPoolBrand(kept.name, kept.woonplaats_name);
-  const b2 = cleanPoolBrand(candidate.name, candidate.woonplaatsName);
+  const b2 = cleanPoolBrand(candidate.name, candidate.woonplaatsName || candidate.woonplaats_name);
   if (b1 && b2 && b1 === b2 && d <= 1.0) return true;
   if (d <= 0.25) return true;
   return false;
@@ -613,14 +785,27 @@ export async function harvestNationalPools(): Promise<CuratedPoolRecord[]> {
       continue;
     }
 
-    const candidate = {
+    const candidate: PhysicalPoolComparisonItem = {
       name: pool.name,
       sourceSlug: pool.sourceSlug,
+      street_address: pool.streetAddress,
+      streetAddress: pool.streetAddress,
+      postcode_pc4: loc.postcodePc4,
+      postcode_pc6: loc.postcodePc6,
       lat: pool.lat,
       lng: pool.lng,
+      municipality_slug: loc.municipalitySlug,
       municipalitySlug: loc.municipalitySlug,
       woonplaatsName: loc.woonplaatsName,
     };
+
+    // Check if matches a GOLD_STANDARD seed pool
+    const matchesGoldStandard = GOLD_STANDARD_SEEDS.some((seed) =>
+      isPhysicalDuplicate(candidate, seed)
+    );
+    if (matchesGoldStandard) {
+      continue;
+    }
 
     // Check if matches an existing flagship pool
     const flagshipMatch = enrichedExisting.find((flagship) =>
@@ -832,11 +1017,14 @@ export async function harvestNationalPools(): Promise<CuratedPoolRecord[]> {
 }
 
 // CLI entry point
-if (
-  process.argv[1] &&
-  (process.argv[1].endsWith('harvest-national-pools.ts') ||
-    process.argv[1].endsWith('harvest-national-pools.js'))
-) {
+const isCliEntry =
+  !process.env.VITEST &&
+  Boolean(process.argv[1]) &&
+  (process.argv[1] === fileURLToPath(import.meta.url) ||
+    process.argv[1].endsWith('harvest-national-pools.ts') ||
+    process.argv[1].endsWith('harvest-national-pools.js'));
+
+if (isCliEntry) {
   harvestNationalPools()
     .then((pools) => {
       console.log(`🎉 Harvest completed successfully with ${pools.length} pools.`);

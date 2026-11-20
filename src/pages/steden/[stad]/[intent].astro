@@ -13,6 +13,7 @@ import {
 import {
   buildCityIntentSeoMeta,
   buildItemListJsonLd,
+  getAvailableCityIntents,
   matchesIntent,
   shouldGenerateIndexableFacetPage,
 } from '../../../domain/seo-aggregator';
@@ -101,9 +102,13 @@ const db = getBuildDatabase();
 const allVenues = kind === 'woonplaats' ? listVenuesByWoonplaats(db, stad!) : listVenuesByCity(db, stad!);
 db.close();
 
+const availableIntents = getAvailableCityIntents(allVenues);
 const venues = allVenues.filter((v) => matchesIntent(v, intent!));
 
-const seoMeta = buildCityIntentSeoMeta(cityName, intent!, venues.length);
+const seoMeta = buildCityIntentSeoMeta(cityName, intent!, venues.length, {
+  isWoonplaats: kind === 'woonplaats',
+  municipalityName,
+});
 const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
 
 const breadcrumbItems =
@@ -212,36 +217,42 @@ const intentItemListJsonLd = buildItemListJsonLd({
       >
         Alle baden in {cityName}
       </a>
-      <a
-        href={`/steden/${stad}/banenzwemmen`}
-        class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
-          intent === 'banenzwemmen'
-            ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
-            : 'bg-surface-subtle text-text-charcoal border-border-hairline'
-        }`}
-      >
-        Banenzwemmen
-      </a>
-      <a
-        href={`/steden/${stad}/zwemles`}
-        class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
-          intent === 'zwemles'
-            ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
-            : 'bg-surface-subtle text-text-charcoal border-border-hairline'
-        }`}
-      >
-        Zwemles A/B/C
-      </a>
-      <a
-        href={`/steden/${stad}/buitenwater`}
-        class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
-          intent === 'buitenwater'
-            ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
-            : 'bg-surface-subtle text-text-charcoal border-border-hairline'
-        }`}
-      >
-        Buiten &amp; Natuurwater
-      </a>
+      {availableIntents.includes('banenzwemmen') && (
+        <a
+          href={`/steden/${stad}/banenzwemmen`}
+          class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
+            intent === 'banenzwemmen'
+              ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
+              : 'bg-surface-subtle text-text-charcoal border-border-hairline'
+          }`}
+        >
+          Banenzwemmen
+        </a>
+      )}
+      {availableIntents.includes('zwemles') && (
+        <a
+          href={`/steden/${stad}/zwemles`}
+          class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
+            intent === 'zwemles'
+              ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
+              : 'bg-surface-subtle text-text-charcoal border-border-hairline'
+          }`}
+        >
+          Zwemles A/B/C
+        </a>
+      )}
+      {availableIntents.includes('buitenwater') && (
+        <a
+          href={`/steden/${stad}/buitenwater`}
+          class={`px-4 py-1.5 rounded-full text-xs font-bold border ${
+            intent === 'buitenwater'
+              ? 'bg-text-charcoal text-surface-pure border-text-charcoal'
+              : 'bg-surface-subtle text-text-charcoal border-border-hairline'
+          }`}
+        >
+          Buiten &amp; Natuurwater
+        </a>
+      )}
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">

@@ -7,8 +7,17 @@ import AlertBanner from '../../../components/AlertBanner.astro';
 import LazyGoogleMapIframe from '../../../components/LazyGoogleMapIframe.astro';
 import StickyBookingWidgetIsland from '../../../components/islands/StickyBookingWidgetIsland';
 import { getBuildDatabase } from '../../../db/runtime-db';
-import { listAllVenues, getVenueByCityAndSlug, getMunicipalityBySlug } from '../../../db/queries';
-import { buildVenueJsonLd, formatEuroCentsNl } from '../../../domain/seo-aggregator';
+import {
+  listAllVenues,
+  getVenueByCityAndSlug,
+  getMunicipalityBySlug,
+  isDistinctSubWoonplaats,
+} from '../../../db/queries';
+import {
+  buildVenueJsonLd,
+  buildVenuePageSeoMeta,
+  formatEuroCentsNl,
+} from '../../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../../domain/venue-photos';
 import { resolveVenueScheduleAndAlerts } from '../../../machines/schedule-resolver';
 import { evaluateCurrentOpenStatus } from '../../../domain/open-status';
@@ -32,13 +41,22 @@ if (!venue) {
 }
 
 const municipality = getMunicipalityBySlug(db, venue.municipality_slug);
+const isCollidingMunicipalitySlug = Boolean(
+  venue.woonplaats_slug &&
+    venue.woonplaats_slug !== venue.municipality_slug &&
+    getMunicipalityBySlug(db, venue.woonplaats_slug)
+);
 db.close();
 
 const municipalityName =
   municipality?.name ?? (venue.municipality_slug.charAt(0).toUpperCase() + venue.municipality_slug.slice(1));
-const hasDistinctWoonplaats = Boolean(
-  venue.woonplaats_slug && venue.woonplaats_name && venue.woonplaats_slug !== venue.municipality_slug
-);
+const hasDistinctWoonplaats =
+  isDistinctSubWoonplaats(
+    venue.woonplaats_name,
+    venue.woonplaats_slug,
+    municipalityName,
+    venue.municipality_slug
+  ) && !isCollidingMunicipalitySlug;
 const vacationRegion = municipality?.school_vacation_region ?? 'noord';
 
 const photos = parseVenuePhotos(venue);
@@ -118,7 +136,10 @@ const zwemwaterMeta: ZwemwaterMeta | null = venue.zwemwater_metadata_json
   ? JSON.parse(venue.zwemwater_metadata_json)
   : null;
 
-const pageDescription = `Bekijk actuele entreeprijzen, banenzwemmen tijden, watertemperatuur en Zwem-ABC wachttijden bij ${venue.name}.`;
+const { title: pageTitle, description: pageDescription } = buildVenuePageSeoMeta(
+  venue,
+  municipalityName
+);
 
 const venueJsonLd = buildVenueJsonLd({
   name: venue.name,
@@ -176,7 +197,7 @@ const breadcrumbJsonLd = {
 };
 ---
 <BaseLayout
-  title={`${venue.name} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`}
+  title={pageTitle}
   description={pageDescription}
   canonicalPath={`/zwembad/${venue.municipality_slug}/${venue.slug}`}
   ogImage={mainPhoto.url}

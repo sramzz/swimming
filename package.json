@@ -16,6 +16,7 @@
     "lint": "oxlint --deny-warnings src tests",
     "typecheck": "astro check",
     "check": "pnpm lint && pnpm typecheck",
+    "audit:seo": "tsx src/cli/audit-dist-seo.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:seed": "tsx src/cli/run-seed.ts",

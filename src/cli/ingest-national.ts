@@ -3,6 +3,7 @@ import path from 'node:path';
 import { getBuildDatabase } from '../db/runtime-db';
 import { applyDetailedSchema } from '../db/client';
 import { seedInitialDataset } from '../db/seed';
+import { haversineDistanceKm } from '../db/geo';
 import { buildCuratedPhotosForVenue } from '../domain/venue-photos';
 import {
   resolveDutchLocation,
@@ -120,7 +121,7 @@ interface ZwemwaterDetailRecord {
   warnings: Array<{ titleNl: string; bodyNl: string }>;
 }
 
-function cleanVenueName(raw: string): string {
+export function cleanVenueName(raw: string): string {
   let name = raw.replace(/^[`'‘]([A-Za-z])/, "'$1").trim();
   if (name.startsWith("'T ")) {
     name = "'t " + name.slice(3);
@@ -128,6 +129,94 @@ function cleanVenueName(raw: string): string {
     name = "'s-" + name.slice(3);
   }
   return name;
+}
+
+export function extractStreetPrefix(addressText: string | null | undefined, baseName: string): string | null {
+  if (!addressText) return null;
+  const beforeComma = addressText.split(',')[0].trim();
+  const cleaned = beforeComma
+    .replace(/\s+(z\.?n\.?|ong\.?)$/i, '')
+    .trim();
+  if (!cleaned) return null;
+  if (cleaned.toLowerCase() === baseName.toLowerCase()) return null;
+  return cleaned;
+}
+
+export interface DisambiguateSpotParams {
+  name: string;
+  spotid: string | number;
+  addressText?: string | null;
+  hasCollision?: boolean;
+  isPrefixColliding?: boolean;
+}
+
+export function disambiguateZwemwaterName(params: DisambiguateSpotParams): string {
+  const cleanName = cleanVenueName(params.name);
+  if (!params.hasCollision) {
+    return cleanName;
+  }
+
+  const streetPrefix = extractStreetPrefix(params.addressText, cleanName);
+
+  if (streetPrefix && !params.isPrefixColliding) {
+    return `${cleanName} (${streetPrefix})`;
+  }
+
+  if (streetPrefix && params.isPrefixColliding) {
+    return `${cleanName} (${streetPrefix} - ${params.spotid})`;
+  }
+
+  return `${cleanName} (${params.spotid})`;
+}
+
+export function disambiguateMunicipalitySpots<T extends { spotid: string | number; name: string; addressText?: string | null }>(
+  spots: T[],
+  existingNamesInMunicipality?: Set<string> | string[]
+): Array<T & { disambiguatedName: string }> {
+  const existingSet = new Set(
+    Array.isArray(existingNamesInMunicipality)
+      ? existingNamesInMunicipality.map((n) => n.trim().toLowerCase())
+      : Array.from(existingNamesInMunicipality ?? []).map((n) => n.trim().toLowerCase())
+  );
+
+  const nameCounts = new Map<string, number>();
+  for (const s of spots) {
+    const norm = cleanVenueName(s.name).toLowerCase();
+    nameCounts.set(norm, (nameCounts.get(norm) ?? 0) + 1);
+  }
+
+  const prefixCandidates = spots.map((s) => {
+    const cleanName = cleanVenueName(s.name);
+    const hasCollision =
+      (nameCounts.get(cleanName.toLowerCase()) ?? 0) > 1 || existingSet.has(cleanName.toLowerCase());
+    if (!hasCollision) {
+      return { spot: s, candidate: cleanName, hasCollision, streetPrefix: null };
+    }
+    const streetPrefix = extractStreetPrefix(s.addressText, cleanName);
+    const candidate = streetPrefix ? `${cleanName} (${streetPrefix})` : `${cleanName} (${s.spotid})`;
+    return { spot: s, candidate, hasCollision, streetPrefix };
+  });
+
+  const candidateCounts = new Map<string, number>();
+  for (const item of prefixCandidates) {
+    const norm = item.candidate.toLowerCase();
+    candidateCounts.set(norm, (candidateCounts.get(norm) ?? 0) + 1);
+  }
+
+  return prefixCandidates.map((item) => {
+    const cleanName = cleanVenueName(item.spot.name);
+    if (!item.hasCollision) {
+      return { ...item.spot, disambiguatedName: cleanName };
+    }
+    const count = candidateCounts.get(item.candidate.toLowerCase()) ?? 0;
+    if (count > 1 || existingSet.has(item.candidate.toLowerCase())) {
+      const finalName = item.streetPrefix
+        ? `${cleanName} (${item.streetPrefix} - ${item.spot.spotid})`
+        : `${cleanName} (${item.spot.spotid})`;
+      return { ...item.spot, disambiguatedName: finalName };
+    }
+    return { ...item.spot, disambiguatedName: item.candidate };
+  });
 }
 
 export async function runNationalIngestion(): Promise<{
@@ -267,6 +356,7 @@ export async function runNationalIngestion(): Promise<{
 
   const protectedVenueKeys = new Set(goldStandardRows.map((v) => `${v.municipality_slug}:${v.slug}`));
   const protectedVenueIds = new Set(goldStandardRows.map((v) => v.id));
+  const activeVenueIds = new Set<string>(protectedVenueIds);
   logger.info('PROTECTED_GOLD', `Preserving ${goldStandardRows.length} existing GOLD_STANDARD flagship venues`);
 
   // 5. Upsert Swim Providers
@@ -492,6 +582,7 @@ export async function runNationalIngestion(): Promise<{
       const venueId = `venue-${pool.slug}`;
 
       if (protectedVenueKeys.has(key) || protectedVenueIds.has(venueId)) {
+        activeVenueIds.add(venueId);
         continue;
       }
 
@@ -623,6 +714,7 @@ export async function runNationalIngestion(): Promise<{
         zwemwater_metadata_json: null,
         content_hash: sanityDecision.contentHash,
       });
+      activeVenueIds.add(venueId);
 
       // Basins (ensure >= 1 default basin)
       if (pool.basins && pool.basins.length > 0) {
@@ -761,24 +853,110 @@ export async function runNationalIngestion(): Promise<{
     }
   }
 
+  // Index curated pools by municipality for collision check
+  const curatedByMun = new Map<string, CuratedPoolRecord[]>();
+  for (const pool of curatedPools) {
+    if (!curatedByMun.has(pool.municipality_slug)) {
+      curatedByMun.set(pool.municipality_slug, []);
+    }
+    curatedByMun.get(pool.municipality_slug)!.push(pool);
+  }
+
+  interface ResolvedSpotItem {
+    spot: ZwemwaterSpot;
+    lat: number;
+    lng: number;
+    addressText: string;
+    loc: ReturnType<typeof resolveDutchLocation>;
+  }
+
+  const validSpots: ResolvedSpotItem[] = [];
+  for (const spot of spots) {
+    totalChecked++;
+    const [lat, lng] = spot.coordinates;
+    // Sanity bounds check for Netherlands: 50.7 <= lat <= 53.8, 3.3 <= lng <= 7.3
+    if (lat < 50.7 || lat > 53.8 || lng < 3.3 || lng > 7.3) {
+      logger.warn('OUT_OF_BOUNDS_SPOT', `Skipping out-of-bounds spot ${spot.spotid}: ${spot.name} (${lat}, ${lng})`);
+      continue;
+    }
+
+    const addressText = addressBySpotId.get(String(spot.spotid)) ?? '';
+    const loc = resolveDutchLocation(
+      { streetAddress: addressText, lat, lng },
+      bagWoonplaatsen
+    );
+    validSpots.push({ spot, lat, lng, addressText, loc });
+  }
+
+  // Prevent open-water / curated-pool collision
+  const nonCollidingSpots: ResolvedSpotItem[] = [];
+  for (const item of validSpots) {
+    const { spot, lat, lng, loc } = item;
+    const cleanName = cleanVenueName(spot.name);
+    let baseSlug = slugifyNl(cleanName);
+    if (!baseSlug) baseSlug = `zwemplek-${spot.spotid}`;
+
+    const munCurated = curatedByMun.get(loc.municipalitySlug) ?? [];
+    let isColliding = false;
+
+    for (const c of munCurated) {
+      const sameSlug = c.slug === baseSlug || c.slug === `zwembad-${baseSlug}`;
+      const sameName = c.name.toLowerCase() === cleanName.toLowerCase();
+      const distKm = haversineDistanceKm(lat, lng, c.lat, c.lng);
+      const distMeters = distKm * 1000;
+
+      if ((sameSlug && sameName) || (sameName && distMeters < 150)) {
+        isColliding = true;
+        logger.info('COLLISION_SKIPPED', `Skipping duplicate zwemwater spot colliding with curated pool: ${cleanName} (${spot.spotid})`, {
+          spotid: spot.spotid,
+          curatedSlug: c.slug,
+          municipality: loc.municipalitySlug,
+          distanceMeters: Math.round(distMeters),
+        });
+        console.log(`⏩ Skipping duplicate zwemwater spot "${cleanName}" (spot ${spot.spotid}) colliding with curated pool "${c.name}" (${c.slug}) [${Math.round(distMeters)}m]`);
+        break;
+      }
+
+      if (distMeters < 150) {
+        logger.info('COLLISION_CHECK_COEXIST', `Zwemwater spot within 150m of curated pool (coexisting): ${cleanName} (${spot.spotid}) near ${c.name} [${Math.round(distMeters)}m]`);
+      }
+    }
+
+    if (!isColliding) {
+      nonCollidingSpots.push(item);
+    }
+  }
+
+  // Disambiguate repeated zwemwater spot names within each municipality
+  const spotsByMunicipality = new Map<string, Array<{ spotid: string; name: string; addressText: string; item: ResolvedSpotItem }>>();
+  for (const item of nonCollidingSpots) {
+    const mun = item.loc.municipalitySlug;
+    if (!spotsByMunicipality.has(mun)) {
+      spotsByMunicipality.set(mun, []);
+    }
+    spotsByMunicipality.get(mun)!.push({
+      spotid: String(item.spot.spotid),
+      name: item.spot.name,
+      addressText: item.addressText,
+      item,
+    });
+  }
+
+  const disambiguatedSpots: Array<{ item: ResolvedSpotItem; disambiguatedName: string }> = [];
+  for (const [mun, munSpots] of spotsByMunicipality.entries()) {
+    const existingMunCuratedNames = (curatedByMun.get(mun) ?? []).map((c) => c.name);
+    const res = disambiguateMunicipalitySpots(munSpots, existingMunCuratedNames);
+    for (const r of res) {
+      disambiguatedSpots.push({ item: r.item, disambiguatedName: r.disambiguatedName });
+    }
+  }
+
   let outdoorCount = 0;
   const nowIso = new Date().toISOString();
 
   db.transaction(() => {
-    for (const spot of spots) {
-      totalChecked++;
-      const [lat, lng] = spot.coordinates;
-      // Sanity bounds check for Netherlands: 50.7 <= lat <= 53.8, 3.3 <= lng <= 7.3
-      if (lat < 50.7 || lat > 53.8 || lng < 3.3 || lng > 7.3) {
-        logger.warn('OUT_OF_BOUNDS_SPOT', `Skipping out-of-bounds spot ${spot.spotid}: ${spot.name} (${lat}, ${lng})`);
-        continue;
-      }
-
-      const addressText = addressBySpotId.get(String(spot.spotid)) ?? '';
-      const loc = resolveDutchLocation(
-        { streetAddress: addressText, lat, lng },
-        bagWoonplaatsen
-      );
+    for (const { item, disambiguatedName } of disambiguatedSpots) {
+      const { spot, lat, lng, addressText, loc } = item;
 
       // Ensure PC4 exists in postcode_pc4 before referencing in venues
       if (loc.postcodePc4 && loc.postcodePc4.length === 4) {
@@ -791,7 +969,7 @@ export async function runNationalIngestion(): Promise<{
         });
       }
 
-      const cleanName = cleanVenueName(spot.name);
+      const cleanName = disambiguatedName;
       let baseSlug = slugifyNl(cleanName);
       if (!baseSlug) baseSlug = `zwemplek-${spot.spotid}`;
 
@@ -799,6 +977,7 @@ export async function runNationalIngestion(): Promise<{
       const protectedKey = `${loc.municipalitySlug}:${baseSlug}`;
       const venueId = `venue-zw-${spot.spotid}`;
       if (protectedVenueKeys.has(protectedKey) || protectedVenueIds.has(venueId)) {
+        activeVenueIds.add(venueId);
         continue;
       }
 
@@ -818,6 +997,7 @@ export async function runNationalIngestion(): Promise<{
       const newKey = `${loc.municipalitySlug}:${uniqueSlug}`;
       venueByMunAndSlug.set(newKey, venueId);
       venueToMunSlugKey.set(venueId, newKey);
+      activeVenueIds.add(venueId);
 
       // Map status
       let operationalState = 'OPEN_REGULAR';
@@ -999,6 +1179,63 @@ export async function runNationalIngestion(): Promise<{
     }
   })();
 
+  // 9b. Clean up stale/deleted venues not in the active set
+  db.exec('CREATE TEMP TABLE IF NOT EXISTS active_venue_ids (id TEXT PRIMARY KEY)');
+  const insActive = db.prepare('INSERT OR IGNORE INTO active_venue_ids (id) VALUES (?)');
+  db.transaction(() => {
+    for (const id of activeVenueIds) {
+      insActive.run(id);
+    }
+  })();
+
+  const staleVenues = db
+    .prepare('SELECT id, slug, municipality_slug FROM venues WHERE id NOT IN (SELECT id FROM active_venue_ids)')
+    .all() as Array<{ id: string; slug: string; municipality_slug: string }>;
+
+  if (staleVenues.length > 0) {
+    logger.info('STALE_VENUES_CLEANUP', `Cleaning up ${staleVenues.length} stale/deleted venues from database`, {
+      count: staleVenues.length,
+    });
+    console.log(`🧹 Cleaning up ${staleVenues.length} stale/deleted venues...`);
+
+    const existingTables = new Set(
+      (
+        db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as Array<{
+          name: string;
+        }>
+      ).map((r) => r.name)
+    );
+
+    const childTables = [
+      'pricing_rules',
+      'schedules',
+      'swimming_lessons',
+      'pool_facilities',
+      'water_quality_measurements',
+      'crowd_reports',
+      'outdoor_conditions',
+      'basins',
+      'tariffs',
+      'schedule_periods',
+      'venue_swim_offerings',
+      'outbound_click_daily_counts',
+    ];
+
+    db.transaction(() => {
+      for (const tbl of childTables) {
+        if (existingTables.has(tbl)) {
+          try {
+            db.prepare(`DELETE FROM ${tbl} WHERE venue_id NOT IN (SELECT id FROM active_venue_ids)`).run();
+          } catch {
+            // Child table might have different schema or cascade handled automatically
+          }
+        }
+      }
+      db.prepare('DELETE FROM venues WHERE id NOT IN (SELECT id FROM active_venue_ids)').run();
+    })();
+  }
+  db.exec('DROP TABLE IF EXISTS active_venue_ids');
+
   // 10. Record Ingestion Run in DB and run-history.md
   const totalVenuesRow = db.prepare('SELECT count(*) as count FROM venues').get() as { count: number };
   const munCountRow = db
@@ -1079,7 +1316,7 @@ export async function runNationalIngestion(): Promise<{
 }
 
 // Direct CLI execution
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === `file://${process.argv[1]}` && !process.env.VITEST) {
   runNationalIngestion().catch((err) => {
     console.error('❌ Ingestion failed:', err);
     process.exit(1);

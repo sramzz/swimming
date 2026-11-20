@@ -13,7 +13,12 @@ import {
   type VenueRow,
   type WoonplaatsWithCountRow,
 } from '../../../db/queries';
-import { buildCitySeoSummaryNl, buildItemListJsonLd } from '../../../domain/seo-aggregator';
+import {
+  buildCityHubTitleNl,
+  buildCitySeoSummaryNl,
+  buildItemListJsonLd,
+  getAvailableCityIntents,
+} from '../../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../../domain/venue-photos';
 
 interface Props {
@@ -88,20 +93,25 @@ if (kind === 'woonplaats') {
   nearbyMunVenues = listVenuesByCity(db, municipalitySlug).filter((v) => v.woonplaats_slug !== stad);
 } else {
   venues = listVenuesByCity(db, stad!);
-  subWoonplaatsen = listWoonplaatsenByMunicipality(db, stad!);
+  subWoonplaatsen = listWoonplaatsenByMunicipality(db, stad!, { distinctOnly: true });
 }
 db.close();
 
+const availableIntents = getAvailableCityIntents(venues);
 const paid = venues.filter((v) => v.min_single_price_cents && v.min_single_price_cents > 0);
 const cheapest = [...paid].sort((a, b) => (a.min_single_price_cents ?? 9999) - (b.min_single_price_cents ?? 9999))[0];
-const summaryNl = buildCitySeoSummaryNl({
-  cityName,
-  totalVenues: venues.length,
-  saltWaterCount: venues.filter((v) => v.primary_water_treatment === 'SALT_ELECTROLYSIS').length,
-  cheapestSinglePriceCents: cheapest?.min_single_price_cents ?? null,
-  cheapestVenueName: cheapest?.name ?? null,
-  shortestWaitlistWeeks: 4,
-});
+const summaryNl = buildCitySeoSummaryNl(
+  {
+    cityName,
+    totalVenues: venues.length,
+    saltWaterCount: venues.filter((v) => v.primary_water_treatment === 'SALT_ELECTROLYSIS').length,
+    cheapestSinglePriceCents: cheapest?.min_single_price_cents ?? null,
+    cheapestVenueName: cheapest?.name ?? null,
+    shortestWaitlistWeeks: 4,
+  },
+  { isWoonplaats: kind === 'woonplaats', municipalityName }
+);
+const pageTitle = buildCityHubTitleNl(cityName, { isWoonplaats: kind === 'woonplaats', municipalityName });
 
 const breadcrumbItems =
   kind === 'woonplaats'
@@ -159,7 +169,7 @@ const cityItemListJsonLd = buildItemListJsonLd({
 const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
 ---
 <BaseLayout
-  title={`Zwembaden in ${cityName} - Prijzen, Banenzwemmen & Zwemles | Zwemkaart.nl`}
+  title={pageTitle}
   description={summaryNl}
   canonicalPath={`/steden/${stad}`}
   ogImage={leadPhoto?.url}
@@ -211,26 +221,34 @@ const leadPhoto = venues[0] ? parseVenuePhotos(venues[0])[0] : undefined;
     )}
 
     {/* Crawlable SEO Intent Hub Links */}
-    <nav aria-label={`Categorieën in ${cityName}`} class="flex flex-wrap items-center gap-2 mb-4">
-      <a
-        href={`/steden/${stad}/banenzwemmen`}
-        class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-teal-bg text-primary hover:underline"
-      >
-        Banenzwemmen in {cityName}
-      </a>
-      <a
-        href={`/steden/${stad}/zwemles`}
-        class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-teal-bg text-primary hover:underline"
-      >
-        Zwemles A/B/C in {cityName}
-      </a>
-      <a
-        href={`/steden/${stad}/buitenwater`}
-        class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-amber-bg text-accent-seasonal hover:underline"
-      >
-        Buitenzwemmen &amp; Natuurwater
-      </a>
-    </nav>
+    {availableIntents.length > 0 && (
+      <nav aria-label={`Categorieën in ${cityName}`} class="flex flex-wrap items-center gap-2 mb-4">
+        {availableIntents.includes('banenzwemmen') && (
+          <a
+            href={`/steden/${stad}/banenzwemmen`}
+            class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-teal-bg text-primary hover:underline"
+          >
+            Banenzwemmen in {cityName}
+          </a>
+        )}
+        {availableIntents.includes('zwemles') && (
+          <a
+            href={`/steden/${stad}/zwemles`}
+            class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-teal-bg text-primary hover:underline"
+          >
+            Zwemles A/B/C in {cityName}
+          </a>
+        )}
+        {availableIntents.includes('buitenwater') && (
+          <a
+            href={`/steden/${stad}/buitenwater`}
+            class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-badge-amber-bg text-accent-seasonal hover:underline"
+          >
+            Buitenzwemmen &amp; Natuurwater
+          </a>
+        )}
+      </nav>
+    )}
 
     <!-- Interactive Filter Pills for City Overview -->
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-5 mb-6 border-b border-border-hairline" data-static-filter-bar>

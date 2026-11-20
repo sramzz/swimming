@@ -276,6 +276,7 @@ export interface WoonplaatsRow {
   slug: string;
   name: string;
   municipality_slug: string;
+  municipality_name?: string;
   province_slug: string;
   center_lat: number;
   center_lng: number;
@@ -283,6 +284,105 @@ export interface WoonplaatsRow {
 
 export interface WoonplaatsWithCountRow extends WoonplaatsRow {
   venue_count: number;
+}
+
+export interface ResolvedLocation {
+  type: 'municipality' | 'woonplaats';
+  cityName: string;
+  municipalitySlug: string;
+  municipalityName: string;
+  woonplaatsSlug?: string;
+  woonplaatsId?: string;
+}
+
+/**
+ * Pure helper to verify if a BAG woonplaats is a genuine distinct sub-woonplaats
+ * (e.g. Weesp in Amsterdam, Zwaag in Hoorn, Ewijk in Beuningen, Abcoude in De Ronde Venen)
+ * versus an eponymous municipality seat (e.g. Amsterdam in Amsterdam, Hoorn [slug: hoorn-nh] in Hoorn,
+ * Beuningen Gld in Beuningen, Beek [slug: beek-lb] in Beek).
+ */
+export function isDistinctSubWoonplaats(
+  woonplaatsName: string | null | undefined,
+  woonplaatsSlug: string | null | undefined,
+  municipalityName: string | null | undefined,
+  municipalitySlug: string | null | undefined
+): boolean {
+  if (!woonplaatsName || !woonplaatsSlug || !municipalityName || !municipalitySlug) {
+    return false;
+  }
+
+  const cleanWpSlug = woonplaatsSlug.trim().toLowerCase();
+  const cleanMunSlug = municipalitySlug.trim().toLowerCase();
+  if (cleanWpSlug === cleanMunSlug) {
+    return false;
+  }
+
+  const cleanWpName = woonplaatsName.trim().toLowerCase();
+  const cleanMunName = municipalityName.trim().toLowerCase();
+  if (cleanWpName === cleanMunName) {
+    return false;
+  }
+
+  // Strip trailing Dutch province suffixes on name: e.g. "Beuningen Gld" -> "Beuningen"
+  const strippedWpName = cleanWpName
+    .replace(/\s+(gld|nh|zh|nb|lb|fr|ov|dr|ut|zl|fl|gr|gd)$/i, '')
+    .trim();
+  if (strippedWpName === cleanMunName) {
+    return false;
+  }
+
+  // Strip province or municipality suffix on slug: e.g. "hoorn-nh" -> "hoorn", "voorst-gd-voorst" -> "voorst"
+  const strippedWpSlug = cleanWpSlug
+    .replace(/-(gld|nh|zh|nb|lb|fr|ov|dr|ut|zl|fl|gr|gd)(-[a-z0-9-]+)?$/i, '')
+    .trim();
+  if (strippedWpSlug === cleanMunSlug) {
+    return false;
+  }
+
+  return true;
+}
+
+export function resolveLocationBySlug(db: SqliteDatabase, slug: string): ResolvedLocation | null {
+  // 1. Municipalities always take precedence
+  const mun = getMunicipalityBySlug(db, slug);
+  if (mun) {
+    return {
+      type: 'municipality',
+      cityName: mun.name,
+      municipalitySlug: mun.slug,
+      municipalityName: mun.name,
+    };
+  }
+
+  // 2. Check woonplaatsen
+  const wp = getWoonplaatsBySlug(db, slug);
+  if (wp) {
+    const parentMun = getMunicipalityBySlug(db, wp.municipality_slug);
+    const parentMunName = parentMun?.name ?? wp.municipality_slug;
+    const parentMunSlug = parentMun?.slug ?? wp.municipality_slug;
+
+    // Check if this is an eponymous municipality seat (e.g. hoorn-nh in hoorn, beuningen-gld in beuningen)
+    const isDistinct = isDistinctSubWoonplaats(wp.name, wp.slug, parentMunName, parentMunSlug);
+    if (!isDistinct && parentMun) {
+      return {
+        type: 'municipality',
+        cityName: parentMun.name,
+        municipalitySlug: parentMun.slug,
+        municipalityName: parentMun.name,
+      };
+    }
+
+    return {
+      type: 'woonplaats',
+      cityName: wp.name,
+      municipalitySlug: parentMunSlug,
+      municipalityName: parentMunName,
+      woonplaatsSlug: wp.slug,
+      woonplaatsId: wp.id,
+    };
+  }
+
+  return null;
 }
 
 export function getMunicipalityBySlug(db: SqliteDatabase, slug: string): MunicipalityRow | null {
@@ -299,9 +399,11 @@ export function getMunicipalityBySlug(db: SqliteDatabase, slug: string): Municip
 export function getWoonplaatsBySlug(db: SqliteDatabase, slug: string): WoonplaatsRow | null {
   const row = db
     .prepare(
-      `SELECT id, bag_id, slug, name, municipality_slug, province_slug, center_lat, center_lng
-       FROM woonplaatsen
-       WHERE slug = ?`
+      `SELECT w.id, w.bag_id, w.slug, w.name, w.municipality_slug, m.name AS municipality_name,
+              w.province_slug, w.center_lat, w.center_lng
+       FROM woonplaatsen w
+       LEFT JOIN municipalities m ON m.slug = w.municipality_slug
+       WHERE w.slug = ?`
     )
     .get(slug) as WoonplaatsRow | undefined;
   return row ?? null;
@@ -309,9 +411,10 @@ export function getWoonplaatsBySlug(db: SqliteDatabase, slug: string): Woonplaat
 
 export function listWoonplaatsenByMunicipality(
   db: SqliteDatabase,
-  municipalitySlug: string
+  municipalitySlug: string,
+  options?: { distinctOnly?: boolean }
 ): WoonplaatsWithCountRow[] {
-  return db
+  const rows = db
     .prepare(
       `SELECT
          w.id,
@@ -319,22 +422,35 @@ export function listWoonplaatsenByMunicipality(
          w.slug,
          w.name,
          w.municipality_slug,
+         m.name AS municipality_name,
          w.province_slug,
          w.center_lat,
          w.center_lng,
          COUNT(v.id) AS venue_count
        FROM woonplaatsen w
+       JOIN municipalities m ON m.slug = w.municipality_slug
        JOIN venues v ON v.woonplaats_id = w.id
        WHERE w.municipality_slug = ?
        GROUP BY w.id
        HAVING COUNT(v.id) >= 1
        ORDER BY venue_count DESC, w.name ASC`
     )
-    .all(municipalitySlug) as WoonplaatsWithCountRow[];
+    .all(municipalitySlug) as Array<WoonplaatsWithCountRow & { municipality_name?: string }>;
+
+  return rows.filter((r) => {
+    if (options?.distinctOnly === true) {
+      return isDistinctSubWoonplaats(r.name, r.slug, r.municipality_name, r.municipality_slug);
+    }
+    // Filter out eponymous seats that differ from municipality slug (e.g. hoorn-nh in hoorn, beuningen-gld in beuningen)
+    if (r.slug !== r.municipality_slug) {
+      return isDistinctSubWoonplaats(r.name, r.slug, r.municipality_name, r.municipality_slug);
+    }
+    return true;
+  });
 }
 
 export function listIndexableWoonplaatsen(db: SqliteDatabase): WoonplaatsWithCountRow[] {
-  return db
+  const rows = db
     .prepare(
       `SELECT
          w.id,
@@ -342,18 +458,24 @@ export function listIndexableWoonplaatsen(db: SqliteDatabase): WoonplaatsWithCou
          w.slug,
          w.name,
          w.municipality_slug,
+         m.name AS municipality_name,
          w.province_slug,
          w.center_lat,
          w.center_lng,
          COUNT(v.id) AS venue_count
        FROM woonplaatsen w
+       JOIN municipalities m ON m.slug = w.municipality_slug
        JOIN venues v ON v.woonplaats_id = w.id
        WHERE w.slug != w.municipality_slug
        GROUP BY w.id
        HAVING COUNT(v.id) >= 1
        ORDER BY venue_count DESC, w.name ASC`
     )
-    .all() as WoonplaatsWithCountRow[];
+    .all() as Array<WoonplaatsWithCountRow & { municipality_name?: string }>;
+
+  return rows.filter((r) =>
+    isDistinctSubWoonplaats(r.name, r.slug, r.municipality_name, r.municipality_slug)
+  );
 }
 
 export function listVenuesByWoonplaats(db: SqliteDatabase, woonplaatsSlug: string): VenueRow[] {
