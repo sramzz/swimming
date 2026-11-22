@@ -3,6 +3,7 @@ import type { Map as MapLibreMap, Marker as MapLibreMarker } from 'maplibre-gl';
 import type { VenueRow } from '../../db/queries';
 import { formatEuroCentsNl } from '../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../domain/venue-photos';
+import { rankVenuesMultiCityRecommended } from '../../domain/multi-city-ranking';
 import {
   filterValidMapVenues,
   formatMapMarkerLabel,
@@ -10,6 +11,7 @@ import {
   NL_DEFAULT_CENTER,
   NL_DEFAULT_ZOOM,
   NL_MAP_MAX_BOUNDS,
+  type MapBoundingBox,
 } from '../../domain/map-bounds';
 
 type MapLibreModule = typeof import('maplibre-gl');
@@ -21,14 +23,22 @@ export interface ListingMapIslandProps {
 
 interface ActiveMarkerRecord {
   id: string;
+  venue: VenueRow;
+  index: number;
   marker: MapLibreMarker;
   wrapperEl: HTMLDivElement;
   buttonEl: HTMLButtonElement;
 }
 
-function fitMapToVenues(maplibregl: MapLibreModule, map: MapLibreMap, list: VenueRow[]) {
+function fitMapToVenues(
+  maplibregl: MapLibreModule,
+  map: MapLibreMap,
+  list: VenueRow[],
+  onBeforeMove?: () => void
+) {
   if (list.length === 0) return;
   try {
+    onBeforeMove?.();
     if (list.length === 1) {
       map.flyTo({ center: [list[0].lng, list[0].lat], zoom: 13, duration: 500 });
       return;
@@ -51,15 +61,33 @@ export default function ListingMapIsland({
   const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef<ActiveMarkerRecord[]>([]);
 
-  // Only show the loaded/displayed venues on the homepage (initially 24)
-  const initialLoaded = filterValidMapVenues(venues).slice(0, 24);
+  // Match initial homepage ranking 1-to-1 with SearchAndFilterIsland (24 ranked venues)
+  const initialLoaded = rankVenuesMultiCityRecommended(filterValidMapVenues(venues)).slice(0, 24);
   const [loadedVenues, setLoadedVenues] = useState<VenueRow[]>(initialLoaded);
   const [selectedVenue, setSelectedVenue] = useState<VenueRow | null>(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [hoveredVenueId, setHoveredVenueId] = useState<string | null>(null);
   const [mobileMapOpen, setMobileMapOpen] = useState(false);
-  const [regionLabel, setRegionLabel] = useState('Heel Nederland (24 geladen)');
+  const [hasPendingBoundsSearch, setHasPendingBoundsSearch] = useState(false);
+  const [regionLabel, setRegionLabel] = useState(`Heel Nederland (${initialLoaded.length} geladen)`);
   const mapCardTrackRef = useRef<HTMLDivElement | null>(null);
+  const loadedVenuesRef = useRef<VenueRow[]>(loadedVenues);
+  const isProgrammaticMoveRef = useRef(false);
+  const programmaticTimeoutRef = useRef<number | null>(null);
+  const skipNextFitRef = useRef(false);
+
+  loadedVenuesRef.current = loadedVenues;
+
+  function markProgrammaticMove() {
+    isProgrammaticMoveRef.current = true;
+    if (programmaticTimeoutRef.current !== null) {
+      window.clearTimeout(programmaticTimeoutRef.current);
+    }
+    programmaticTimeoutRef.current = window.setTimeout(() => {
+      isProgrammaticMoveRef.current = false;
+      programmaticTimeoutRef.current = null;
+    }, 800);
+  }
 
   useEffect(() => {
     setSelectedPhotoIndex(0);
@@ -68,7 +96,7 @@ export default function ListingMapIsland({
     }
   }, [selectedVenue?.id]);
 
-  // Listen for filter & hover events from SearchAndFilterIsland
+  // Listen for bidirectional list <-> map events from SearchAndFilterIsland
   useEffect(() => {
     function onFiltered(e: Event) {
       const detail = (
@@ -77,10 +105,13 @@ export default function ListingMapIsland({
           totalFiltered?: number;
           query: string;
           cityLabel?: string;
+          isMapBoundsFilter?: boolean;
         }>
       ).detail;
       if (!detail) return;
       const validLoaded = filterValidMapVenues(detail.venues);
+      skipNextFitRef.current = Boolean(detail.isMapBoundsFilter);
+      setHasPendingBoundsSearch(false);
       setLoadedVenues(validLoaded);
 
       if (detail.cityLabel && detail.cityLabel !== 'ALL') {
@@ -101,11 +132,38 @@ export default function ListingMapIsland({
       setHoveredVenueId(detail?.venueId ?? null);
     }
 
+    function onFocusVenue(e: Event) {
+      const detail = (e as CustomEvent<{ venueId: string }>).detail;
+      if (!detail?.venueId) return;
+      const target =
+        loadedVenuesRef.current.find((v) => v.id === detail.venueId) ??
+        venues.find((v) => v.id === detail.venueId);
+      if (!target) return;
+      setSelectedVenue(target);
+      if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+        setMobileMapOpen(true);
+      }
+      if (mapRef.current) {
+        try {
+          markProgrammaticMove();
+          mapRef.current.flyTo({ center: [target.lng, target.lat], zoom: 13, duration: 500 });
+        } catch {
+          // Ignore flyTo in non-WebGL test env
+        }
+      }
+    }
+
     window.addEventListener('zwemkaart:filtered', onFiltered);
     window.addEventListener('zwemkaart:hover-venue', onHover);
+    window.addEventListener('zwemkaart:focus-venue', onFocusVenue);
+    window.dispatchEvent(new CustomEvent('zwemkaart:request-filtered'));
     return () => {
       window.removeEventListener('zwemkaart:filtered', onFiltered);
       window.removeEventListener('zwemkaart:hover-venue', onHover);
+      window.removeEventListener('zwemkaart:focus-venue', onFocusVenue);
+      if (programmaticTimeoutRef.current !== null) {
+        window.clearTimeout(programmaticTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -156,7 +214,16 @@ export default function ListingMapIsland({
       });
 
       renderMarkers(maplibregl, map, loadedVenues);
-      fitMapToVenues(maplibregl, map, loadedVenues);
+      fitMapToVenues(maplibregl, map, loadedVenues, markProgrammaticMove);
+
+      map.on('moveend', (ev) => {
+        const hasUserEvent = Boolean((ev as { originalEvent?: unknown }).originalEvent);
+        const wasProgrammatic = isProgrammaticMoveRef.current;
+        isProgrammaticMoveRef.current = false;
+        if (hasUserEvent || !wasProgrammatic) {
+          setHasPendingBoundsSearch(true);
+        }
+      });
     }
 
     initMap().catch(() => {
@@ -175,20 +242,54 @@ export default function ListingMapIsland({
       if (!mapRef.current) return;
       const maplibregl = await import('maplibre-gl');
       renderMarkers(maplibregl, mapRef.current, loadedVenues);
-      fitMapToVenues(maplibregl, mapRef.current, loadedVenues);
+      if (skipNextFitRef.current) {
+        skipNextFitRef.current = false;
+      } else {
+        fitMapToVenues(maplibregl, mapRef.current, loadedVenues, markProgrammaticMove);
+      }
     }
     syncMarkers().catch(() => {});
   }, [loadedVenues]);
 
-  // Highlight active/hovered marker classes on INNER button ONLY (never touch wrapperEl.className!)
+  // Highlight active/hovered marker classes & label on INNER button ONLY (never touch wrapperEl.className!)
   useEffect(() => {
     for (const item of markersRef.current) {
       const isSelected = selectedVenue?.id === item.id;
       const isHovered = hoveredVenueId === item.id;
       item.buttonEl.className = getMapMarkerButtonClasses(isSelected, isHovered);
+      item.buttonEl.textContent = formatMapMarkerLabel(item.venue, {
+        index: item.index,
+        expanded: isSelected || isHovered,
+      });
       item.wrapperEl.style.zIndex = isSelected || isHovered ? '35' : '10';
     }
-  }, [selectedVenue, hoveredVenueId]);
+  }, [selectedVenue, hoveredVenueId, loadedVenues]);
+
+  function selectVenueFromMap(venue: VenueRow | null) {
+    setSelectedVenue(venue);
+    window.dispatchEvent(
+      new CustomEvent('zwemkaart:map-select-venue', { detail: { venueId: venue?.id ?? null } })
+    );
+  }
+
+  function handleSearchCurrentArea() {
+    if (!mapRef.current) return;
+    try {
+      const b = mapRef.current.getBounds();
+      const bounds: MapBoundingBox = {
+        north: b.getNorth(),
+        south: b.getSouth(),
+        east: b.getEast(),
+        west: b.getWest(),
+      };
+      setHasPendingBoundsSearch(false);
+      window.dispatchEvent(
+        new CustomEvent('zwemkaart:map-bounds', { detail: { bounds } })
+      );
+    } catch {
+      // Ignore getBounds failure in headless mode
+    }
+  }
 
   function renderMarkers(maplibregl: MapLibreModule, map: MapLibreMap, list: VenueRow[]) {
     for (const old of markersRef.current) {
@@ -197,7 +298,9 @@ export default function ListingMapIsland({
     markersRef.current = [];
 
     const validList = filterValidMapVenues(list);
-    for (const venue of validList) {
+    for (let idx = 0; idx < validList.length; idx++) {
+      const venue = validList[idx];
+      const markerNumber = idx + 1;
       // Outer wrapper owned by MapLibre (.maplibregl-marker + inline transform: translate(...))
       const wrapperEl = document.createElement('div');
       wrapperEl.dataset.venueId = venue.id;
@@ -205,16 +308,31 @@ export default function ListingMapIsland({
       const isHovered = hoveredVenueId === venue.id;
       wrapperEl.style.zIndex = isSelected || isHovered ? '35' : '10';
 
-      // Inner button owned by Preact for hover/active colors
+      // Inner button owned by Preact for hover/active colors and label expansion
       const buttonEl = document.createElement('button');
       buttonEl.type = 'button';
       buttonEl.className = getMapMarkerButtonClasses(isSelected, isHovered);
-      buttonEl.textContent = formatMapMarkerLabel(venue);
-      buttonEl.setAttribute('aria-label', `${venue.name} (${formatMapMarkerLabel(venue)})`);
+      buttonEl.textContent = formatMapMarkerLabel(venue, {
+        index: markerNumber,
+        expanded: isSelected || isHovered,
+      });
+      buttonEl.setAttribute('aria-label', `#${markerNumber} ${venue.name} (${formatMapMarkerLabel(venue)})`);
 
+      buttonEl.addEventListener('mouseenter', () => {
+        setHoveredVenueId(venue.id);
+        window.dispatchEvent(
+          new CustomEvent('zwemkaart:map-hover-venue', { detail: { venueId: venue.id } })
+        );
+      });
+      buttonEl.addEventListener('mouseleave', () => {
+        setHoveredVenueId((prev) => (prev === venue.id ? null : prev));
+        window.dispatchEvent(
+          new CustomEvent('zwemkaart:map-hover-venue', { detail: { venueId: null } })
+        );
+      });
       buttonEl.addEventListener('click', (e) => {
         e.stopPropagation();
-        setSelectedVenue(venue);
+        selectVenueFromMap(venue);
       });
 
       wrapperEl.appendChild(buttonEl);
@@ -223,7 +341,14 @@ export default function ListingMapIsland({
         .setLngLat([venue.lng, venue.lat])
         .addTo(map);
 
-      markersRef.current.push({ id: venue.id, marker, wrapperEl, buttonEl });
+      markersRef.current.push({
+        id: venue.id,
+        venue,
+        index: markerNumber,
+        marker,
+        wrapperEl,
+        buttonEl,
+      });
     }
   }
 
@@ -327,18 +452,45 @@ export default function ListingMapIsland({
           <span class="text-xs font-bold text-text-charcoal">{regionLabel}</span>
         </div>
 
+        {/* Viewport Area Search Trigger ("Zoek in dit kaartgebied") */}
+        {hasPendingBoundsSearch && (
+          <div class="absolute top-4 right-4 z-20">
+            <button
+              type="button"
+              onClick={handleSearchCurrentArea}
+              class="px-3.5 py-1.5 rounded-full bg-text-charcoal hover:bg-primary text-surface-pure text-xs font-bold shadow-lg border border-surface-pure/20 transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <span>🔍</span>
+              <span>Zoek in dit kaartgebied</span>
+            </button>
+          </div>
+        )}
+
         {/* Top-Right Quick Venue Pin Selector Pills */}
         <div class="absolute top-14 left-4 right-4 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 pointer-events-auto">
-          {loadedVenues.slice(0, 6).map((v) => {
+          {loadedVenues.slice(0, 6).map((v, idx) => {
             const active = selectedVenue?.id === v.id;
             return (
               <button
                 key={v.id}
                 type="button"
+                onMouseEnter={() => {
+                  setHoveredVenueId(v.id);
+                  window.dispatchEvent(
+                    new CustomEvent('zwemkaart:map-hover-venue', { detail: { venueId: v.id } })
+                  );
+                }}
+                onMouseLeave={() => {
+                  setHoveredVenueId((prev) => (prev === v.id ? null : prev));
+                  window.dispatchEvent(
+                    new CustomEvent('zwemkaart:map-hover-venue', { detail: { venueId: null } })
+                  );
+                }}
                 onClick={() => {
-                  setSelectedVenue(v);
+                  selectVenueFromMap(v);
                   if (mapRef.current) {
                     try {
+                      markProgrammaticMove();
                       mapRef.current.flyTo({ center: [v.lng, v.lat], zoom: 13, duration: 500 });
                     } catch {
                       // Ignore flyTo in non-WebGL test env
@@ -351,7 +503,7 @@ export default function ListingMapIsland({
                     : 'bg-surface-pure/95 text-text-charcoal border-border-strong hover:bg-text-charcoal hover:text-surface-pure'
                 }`}
               >
-                {v.name.replace(/^Zwemcentrum |^Zwembad |^Sportfondsenbad /i, '').split(' - ')[0]} •{' '}
+                {idx + 1}. {v.name.replace(/^Zwemcentrum |^Zwembad |^Sportfondsenbad /i, '').split(' - ')[0]} •{' '}
                 {formatMapMarkerLabel(v)}
               </button>
             );
@@ -406,7 +558,7 @@ export default function ListingMapIsland({
                   aria-label="Sluit kaartvoorbeeld"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedVenue(null);
+                    selectVenueFromMap(null);
                   }}
                   class="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-text-charcoal/75 text-surface-pure text-xs flex items-center justify-center hover:bg-text-charcoal cursor-pointer"
                 >

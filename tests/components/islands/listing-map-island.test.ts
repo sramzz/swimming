@@ -4,6 +4,8 @@ import path from 'node:path';
 import {
   isWithinNetherlandsBounds,
   filterValidMapVenues,
+  isWithinBoundingBox,
+  filterVenuesInBoundingBox,
   formatMapMarkerLabel,
   getMapMarkerButtonClasses,
   NL_MAP_MAX_BOUNDS,
@@ -139,5 +141,68 @@ describe('Phase 1: MapLibre NL Bounds, Marker Wrapper Isolation & Loaded Venues 
     expect(content).toContain('Volgende kaartfoto');
     expect(content).toContain('map-card-prev-photo');
     expect(content).toContain('map-card-next-photo');
+  });
+
+  it('filters venues strictly inside a viewport bounding box and rejects invalid coords', () => {
+    const bounds = { north: 52.2, south: 52.08, east: 6.3, west: 6.15 };
+    const zutphenPool = makeVenue({ id: 'v-zut', lat: 52.1285, lng: 6.2153 });
+    const amsterdamPool = makeVenue({ id: 'v-ams', lat: 52.3385, lng: 4.9021 });
+    const nanPool = makeVenue({ id: 'v-nan', lat: Number.NaN, lng: 6.2 });
+
+    expect(isWithinBoundingBox(52.1285, 6.2153, bounds)).toBe(true);
+    expect(isWithinBoundingBox(52.3385, 4.9021, bounds)).toBe(false);
+    expect(isWithinBoundingBox(Number.NaN, 6.2153, bounds)).toBe(false);
+
+    const inView = filterVenuesInBoundingBox([zutphenPool, amsterdamPool, nanPool], bounds);
+    expect(inView.map((v) => v.id)).toEqual(['v-zut']);
+  });
+
+  it('formats numbered and expanded marker labels so list cards match map pins 1-to-1', () => {
+    const ijsselslag = makeVenue({
+      name: 'Zwembad IJsselslag',
+      min_single_price_cents: 750,
+    });
+    const openWater = makeVenue({
+      name: 'Bronsbergenmeer',
+      venue_type: 'OPEN_WATER_NATURAL',
+      min_single_price_cents: 0,
+      default_temp_celsius: null,
+    });
+
+    expect(formatMapMarkerLabel(ijsselslag, { index: 1 })).toBe('1 · € 7,50');
+    expect(formatMapMarkerLabel(openWater, { index: 4 })).toBe('4 · Gratis');
+    expect(formatMapMarkerLabel(ijsselslag, { index: 3, expanded: true })).toBe(
+      '3 · Zwembad IJsselslag · € 7,50'
+    );
+  });
+
+  it('wires bidirectional list-map synchronization and area search in islands and homepage', () => {
+    const mapIslandSrc = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/components/islands/ListingMapIsland.tsx'),
+      'utf-8'
+    );
+    const searchIslandSrc = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/components/islands/SearchAndFilterIsland.tsx'),
+      'utf-8'
+    );
+    const indexAstroSrc = fs.readFileSync(
+      path.resolve(process.cwd(), 'src/pages/index.astro'),
+      'utf-8'
+    );
+
+    expect(indexAstroSrc).toContain('<ListingMapIsland client:load venues={venues} />');
+    expect(mapIslandSrc).toContain('zwemkaart:map-hover-venue');
+    expect(mapIslandSrc).toContain('zwemkaart:map-select-venue');
+    expect(mapIslandSrc).toContain('zwemkaart:focus-venue');
+    expect(mapIslandSrc).toContain('zwemkaart:map-bounds');
+    expect(mapIslandSrc).toContain('zwemkaart:request-filtered');
+    expect(mapIslandSrc).toContain('Zoek in dit kaartgebied');
+
+    expect(searchIslandSrc).toContain('zwemkaart:map-hover-venue');
+    expect(searchIslandSrc).toContain('zwemkaart:map-select-venue');
+    expect(searchIslandSrc).toContain('zwemkaart:focus-venue');
+    expect(searchIslandSrc).toContain('zwemkaart:map-bounds');
+    expect(searchIslandSrc).toContain('zwemkaart:request-filtered');
+    expect(searchIslandSrc).toContain('Op kaart');
   });
 });

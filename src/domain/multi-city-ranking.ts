@@ -120,30 +120,44 @@ export function rankVenuesByUserLocation(
   });
 }
 
+const DUTCH_SEARCH_STOP_WORDS = new Set(['de', 'het', 'een']);
+
+function normalizeSearchText(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
 /**
- * Pure search matcher comparing query string against venue identity and location fields.
- * Supports lowercase, trimmed search, woonplaats, address, and whitespace-insensitive postcodes.
+ * Pure multi-token search matcher comparing query tokens against venue identity,
+ * geography, address, postcode, operator, and official website fields.
  */
 export function matchesVenueSearchQuery(venue: VenueRow, rawQuery: string): boolean {
-  const q = rawQuery.trim().toLowerCase();
-  if (q === '') return true;
+  const normalizedQuery = normalizeSearchText(rawQuery).trim();
+  if (normalizedQuery === '') return true;
 
-  const qNoSpaces = q.replace(/\s+/g, '');
+  const rawTokens = normalizedQuery.split(/\s+/).filter(Boolean);
+  const meaningfulTokens = rawTokens.filter((token) => !DUTCH_SEARCH_STOP_WORDS.has(token));
+  const tokens = meaningfulTokens.length > 0 ? meaningfulTokens : rawTokens;
 
-  if (venue.name.toLowerCase().includes(q)) return true;
-  if (venue.municipality_slug.toLowerCase().includes(q)) return true;
-  if (venue.woonplaats_name && venue.woonplaats_name.toLowerCase().includes(q)) return true;
-  if (venue.woonplaats_slug && venue.woonplaats_slug.toLowerCase().includes(q)) return true;
-  if (venue.neighborhood_name && venue.neighborhood_name.toLowerCase().includes(q)) return true;
-  if (venue.street_address && venue.street_address.toLowerCase().includes(q)) return true;
-  if (venue.postcode_pc4 && venue.postcode_pc4.toLowerCase().includes(q)) return true;
-  if (venue.postcode_pc6) {
-    const pc6Lower = venue.postcode_pc6.toLowerCase();
-    if (pc6Lower.includes(q)) return true;
-    if (qNoSpaces.length > 0 && pc6Lower.replace(/\s+/g, '').includes(qNoSpaces)) return true;
-  }
+  const pc6Compact = venue.postcode_pc6 ? venue.postcode_pc6.replace(/\s+/g, '') : '';
+  const haystack = normalizeSearchText(
+    [
+      venue.name,
+      venue.municipality_slug,
+      venue.municipality_slug.replace(/-/g, ' '),
+      venue.woonplaats_name ?? '',
+      venue.woonplaats_slug ?? '',
+      venue.woonplaats_slug ? venue.woonplaats_slug.replace(/-/g, ' ') : '',
+      venue.neighborhood_name ?? '',
+      venue.street_address ?? '',
+      venue.postcode_pc4 ?? '',
+      venue.postcode_pc6 ?? '',
+      pc6Compact,
+      venue.operator_name ?? '',
+      venue.official_website_url ?? '',
+    ].join(' ')
+  );
 
-  return false;
+  return tokens.every((token) => haystack.includes(token));
 }
 
 export function rankVenuesForSearch(venues: VenueRow[], rawQuery: string): VenueRow[] {

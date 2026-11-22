@@ -9,6 +9,7 @@ import {
   rankVenuesMultiCityRecommended,
 } from '../../domain/multi-city-ranking';
 import { haversineDistanceKm } from '../../db/geo';
+import { isWithinBoundingBox, type MapBoundingBox } from '../../domain/map-bounds';
 
 export interface SearchAndFilterIslandProps {
   venues: VenueRow[];
@@ -46,7 +47,18 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   const [onlyWheelchairAccessible, setOnlyWheelchairAccessible] = useState(false);
   const [onlyNrzLicensed, setOnlyNrzLicensed] = useState(false);
+  const [mapHoveredVenueId, setMapHoveredVenueId] = useState<string | null>(null);
+  const [mapSelectedVenueId, setMapSelectedVenueId] = useState<string | null>(null);
+  const [mapBounds, setMapBounds] = useState<MapBoundingBox | null>(null);
   const trackRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const cardRefs = useRef<Record<string, HTMLElement | null>>({});
+  const latestBroadcastRef = useRef<{
+    venues: VenueRow[];
+    totalFiltered: number;
+    query: string;
+    cityLabel: string;
+    isMapBoundsFilter: boolean;
+  } | null>(null);
 
   // Hydrate initial URL query params and localStorage favorites
   useEffect(() => {
@@ -69,6 +81,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       if (!detail) return;
       setQuery(detail.query ?? '');
       if (detail.category) setCategory(detail.category);
+      setMapBounds(null);
       setVisibleCount(24);
     }
 
@@ -83,15 +96,70 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       setIsFiltersModalOpen(true);
     }
 
+    function handleMapHover(e: Event) {
+      const detail = (e as CustomEvent<{ venueId: string | null }>).detail;
+      setMapHoveredVenueId(detail?.venueId ?? null);
+    }
+
+    function handleMapSelect(e: Event) {
+      const detail = (e as CustomEvent<{ venueId: string | null }>).detail;
+      const selectedId = detail?.venueId ?? null;
+      setMapSelectedVenueId(selectedId);
+      if (selectedId) {
+        const cardEl = cardRefs.current[selectedId];
+        if (cardEl && typeof cardEl.scrollIntoView === 'function') {
+          cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    function handleMapBounds(e: Event) {
+      const detail = (e as CustomEvent<{ bounds: MapBoundingBox | null }>).detail;
+      setMapBounds(detail?.bounds ?? null);
+      setSelectedCitySlug('ALL');
+      setVisibleCount(24);
+    }
+
+    function handleRequestFiltered() {
+      if (!latestBroadcastRef.current) return;
+      window.dispatchEvent(
+        new CustomEvent('zwemkaart:filtered', {
+          detail: latestBroadcastRef.current,
+        })
+      );
+    }
+
     window.addEventListener('zwemkaart:search', handleHeaderSearch);
     window.addEventListener('zwemkaart:set-category', handleExternalCategory);
     window.addEventListener('zwemkaart:open-filters', handleOpenFiltersModal);
+    window.addEventListener('zwemkaart:map-hover-venue', handleMapHover);
+    window.addEventListener('zwemkaart:map-select-venue', handleMapSelect);
+    window.addEventListener('zwemkaart:map-bounds', handleMapBounds);
+    window.addEventListener('zwemkaart:request-filtered', handleRequestFiltered);
     return () => {
       window.removeEventListener('zwemkaart:search', handleHeaderSearch);
       window.removeEventListener('zwemkaart:set-category', handleExternalCategory);
       window.removeEventListener('zwemkaart:open-filters', handleOpenFiltersModal);
+      window.removeEventListener('zwemkaart:map-hover-venue', handleMapHover);
+      window.removeEventListener('zwemkaart:map-select-venue', handleMapSelect);
+      window.removeEventListener('zwemkaart:map-bounds', handleMapBounds);
+      window.removeEventListener('zwemkaart:request-filtered', handleRequestFiltered);
     };
   }, []);
+
+  function resetAllFilters() {
+    setQuery('');
+    setSelectedCitySlug('ALL');
+    setCategory('ALL');
+    setSortMode('RECOMMENDED');
+    setTreatmentFilter('ALL');
+    setOnlyWheelchairAccessible(false);
+    setOnlyNrzLicensed(false);
+    setMapBounds(null);
+    setMapSelectedVenueId(null);
+    setGeoStatusNl(null);
+    setVisibleCount(24);
+  }
 
   function handleLocateMe() {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
@@ -103,6 +171,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       (pos) => {
         setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         setSelectedCitySlug('ALL');
+        setMapBounds(null);
         setSortMode('NEAREST_ME');
         setVisibleCount(24);
         setGeoStatusNl('Gesorteerd op afstand vanaf jouw locatie');
@@ -197,6 +266,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
 
     const matchesWheelchair = !onlyWheelchairAccessible || v.has_wheelchair_lift === 1;
     const matchesNrz = !onlyNrzLicensed || v.is_nrz_licensed === 1;
+    const matchesBounds = !mapBounds || isWithinBoundingBox(v.lat, v.lng, mapBounds);
 
     return (
       matchesText &&
@@ -204,7 +274,8 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       matchesTreatment &&
       matchesCategory &&
       matchesWheelchair &&
-      matchesNrz
+      matchesNrz &&
+      matchesBounds
     );
   });
 
@@ -234,13 +305,30 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
     (treatmentFilter !== 'ALL' ? 1 : 0) +
     (sortMode !== 'RECOMMENDED' ? 1 : 0) +
     (onlyWheelchairAccessible ? 1 : 0) +
-    (onlyNrzLicensed ? 1 : 0);
+    (onlyNrzLicensed ? 1 : 0) +
+    (mapBounds ? 1 : 0);
 
   const displayed = filtered.slice(0, visibleCount);
   const firstFour = displayed.slice(0, 4);
   const remainingAfterBanner = displayed.slice(4);
 
   const selectedCityObj = FEATURED_DUTCH_CITIES.find((c) => c.slug === selectedCitySlug);
+  const computedCityLabel =
+    sortMode === 'NEAREST_ME'
+      ? 'Dichtbij jouw locatie'
+      : selectedCityObj
+        ? selectedCityObj.labelNl
+        : mapBounds
+          ? 'Huidig kaartgebied'
+          : 'ALL';
+
+  latestBroadcastRef.current = {
+    venues: displayed,
+    totalFiltered: filtered.length,
+    query,
+    cityLabel: computedCityLabel,
+    isMapBoundsFilter: Boolean(mapBounds),
+  };
 
   // Broadcast ONLY the currently loaded (`displayed`) venues to ListingMapIsland
   useEffect(() => {
@@ -251,12 +339,8 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
             venues: displayed,
             totalFiltered: filtered.length,
             query,
-            cityLabel:
-              sortMode === 'NEAREST_ME'
-                ? 'Dichtbij jouw locatie'
-                : selectedCityObj
-                  ? selectedCityObj.labelNl
-                  : 'ALL',
+            cityLabel: computedCityLabel,
+            isMapBoundsFilter: Boolean(mapBounds),
           },
         })
       );
@@ -277,6 +361,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
     treatmentFilter,
     onlyWheelchairAccessible,
     onlyNrzLicensed,
+    mapBounds,
     visibleCount,
   ]);
 
@@ -307,10 +392,18 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
 
     const isOpenWater = venue.venue_type === 'OPEN_WATER_NATURAL';
     const temp = venue.default_temp_celsius;
+    const isMapSelected = mapSelectedVenueId === venue.id;
+    const isMapHovered = mapHoveredVenueId === venue.id;
+    const isMapHighlighted = isMapSelected || isMapHovered;
+    const mapPinNumber = cardIndex + 1;
 
     return (
       <article
         key={venue.id}
+        ref={(el) => {
+          cardRefs.current[venue.id] = el;
+        }}
+        data-venue-id={venue.id}
         onMouseEnter={() => {
           window.dispatchEvent(
             new CustomEvent('zwemkaart:hover-venue', { detail: { venueId: venue.id } })
@@ -321,7 +414,11 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
             new CustomEvent('zwemkaart:hover-venue', { detail: { venueId: null } })
           );
         }}
-        class="group flex flex-col transition-all"
+        class={`group flex flex-col transition-all ${
+          isMapHighlighted
+            ? 'ring-2 ring-primary bg-badge-teal-bg/20 rounded-2xl p-2 -m-2 shadow-sm'
+            : ''
+        }`}
       >
         {/* Airbnb Aspect 20/19 Image Carousel Container with Native Horizontal Scroll-Snap */}
         <div class="relative aspect-[20/19] rounded-2xl overflow-hidden bg-surface-subtle mb-3 shadow-2xs">
@@ -439,9 +536,19 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
         <div class="flex justify-between items-start gap-2">
           <a
             href={href}
-            class="text-[17px] leading-snug font-bold text-text-charcoal group-hover:text-primary-container transition-colors line-clamp-1"
+            class="flex items-center gap-1.5 min-w-0 text-[17px] leading-snug font-bold text-text-charcoal group-hover:text-primary-container transition-colors"
           >
-            {venue.name}
+            <span
+              class={`inline-flex items-center justify-center min-w-[22px] h-5 px-1.5 rounded-full text-[11px] font-extrabold shrink-0 transition-colors ${
+                isMapHighlighted
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-text-charcoal text-surface-pure group-hover:bg-primary'
+              }`}
+              aria-label={`Kaartnummer ${mapPinNumber}`}
+            >
+              {mapPinNumber}
+            </span>
+            <span class="truncate">{venue.name}</span>
           </a>
           {venue.rating_score && (
             <span class="flex items-center gap-1 text-xs font-bold text-text-charcoal shrink-0 mt-0.5">
@@ -534,9 +641,29 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
               <span class="text-sm font-bold text-text-charcoal">Prijs op aanvraag</span>
             )}
           </div>
-          <a href={href} class="text-xs font-bold text-primary hover:underline shrink-0">
-            Bekijk rooster →
-          </a>
+          <div class="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setMapSelectedVenueId(venue.id);
+                window.dispatchEvent(
+                  new CustomEvent('zwemkaart:focus-venue', { detail: { venueId: venue.id } })
+                );
+              }}
+              class={`px-2 py-1 rounded-full text-[11px] font-bold border transition-colors cursor-pointer ${
+                isMapSelected
+                  ? 'bg-primary text-on-primary border-primary'
+                  : 'bg-surface-subtle text-text-charcoal border-border-hairline hover:border-primary hover:text-primary'
+              }`}
+            >
+              📍 Op kaart
+            </button>
+            <a href={href} class="text-xs font-bold text-primary hover:underline shrink-0">
+              Bekijk rooster →
+            </a>
+          </div>
         </div>
       </article>
     );
@@ -563,11 +690,12 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
             type="button"
             onClick={() => {
               setSelectedCitySlug('ALL');
+              setMapBounds(null);
               setSortMode('RECOMMENDED');
               setVisibleCount(24);
             }}
             class={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold border transition-colors cursor-pointer ${
-              selectedCitySlug === 'ALL' && sortMode !== 'NEAREST_ME'
+              selectedCitySlug === 'ALL' && sortMode !== 'NEAREST_ME' && !mapBounds
                 ? 'bg-primary text-on-primary border-primary'
                 : 'bg-surface-pure text-text-charcoal border-border-hairline hover:border-primary'
             }`}
@@ -598,6 +726,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
                   if (e.metaKey || e.ctrlKey || e.shiftKey) return;
                   e.preventDefault();
                   setSelectedCitySlug(active ? 'ALL' : city.slug);
+                  setMapBounds(null);
                   if (sortMode === 'NEAREST_ME') setSortMode('RECOMMENDED');
                   setVisibleCount(24);
                 }}
@@ -631,24 +760,28 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
             value={query}
             onInput={(e) => {
               setQuery((e.target as HTMLInputElement).value);
+              setMapBounds(null);
               setVisibleCount(24);
             }}
             placeholder="Zoek op stad, zwembad of 4-cijferige postcode (bijv. Rotterdam, Utrecht, 1079)..."
             class="flex-1 min-w-[230px] px-4 py-2 rounded-full border border-border-strong bg-surface-pure text-xs md:text-sm focus:outline-none focus:border-primary shadow-2xs"
           />
-          {(query !== '' || activeFilterCount > 0) && (
+          {mapBounds && (
             <button
               type="button"
               onClick={() => {
-                setQuery('');
-                setSelectedCitySlug('ALL');
-                setCategory('ALL');
-                setSortMode('RECOMMENDED');
-                setTreatmentFilter('ALL');
-                setOnlyWheelchairAccessible(false);
-                setOnlyNrzLicensed(false);
-                setGeoStatusNl(null);
+                setMapBounds(null);
+                setVisibleCount(24);
               }}
+              class="px-3.5 py-2 rounded-full text-xs font-bold bg-text-charcoal text-surface-pure hover:opacity-90 cursor-pointer"
+            >
+              🗺️ Kaartgebied actief ✕
+            </button>
+          )}
+          {(query !== '' || activeFilterCount > 0) && (
+            <button
+              type="button"
+              onClick={resetAllFilters}
               class="px-3.5 py-2 rounded-full text-xs font-bold text-primary bg-badge-teal-bg hover:opacity-90 cursor-pointer"
             >
               Reset filters ✕
@@ -822,14 +955,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
           </p>
           <button
             type="button"
-            onClick={() => {
-              setQuery('');
-              setSelectedCitySlug('ALL');
-              setCategory('ALL');
-              setTreatmentFilter('ALL');
-              setOnlyWheelchairAccessible(false);
-              setOnlyNrzLicensed(false);
-            }}
+            onClick={resetAllFilters}
             class="px-5 py-2 rounded-full bg-primary text-on-primary text-xs font-bold cursor-pointer"
           >
             Toon alle {venues.length} zwemlocaties
@@ -942,13 +1068,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
             <div class="flex items-center justify-between pt-4 border-t border-border-hairline">
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedCitySlug('ALL');
-                  setCategory('ALL');
-                  setTreatmentFilter('ALL');
-                  setOnlyWheelchairAccessible(false);
-                  setOnlyNrzLicensed(false);
-                }}
+                onClick={resetAllFilters}
                 class="text-xs font-bold underline text-text-muted hover:text-text-charcoal cursor-pointer"
               >
                 Alles wissen

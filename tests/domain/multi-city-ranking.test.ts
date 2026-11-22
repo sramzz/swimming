@@ -187,4 +187,26 @@ describe('Phase 2 (Task 7.3): Multi-City Default Homepage Ranking & Geolocation 
     // Non-matching query
     expect(matchesVenueSearchQuery(sporthuis, 'Maastricht')).toBe(false);
   });
+
+  it('matches multi-word, Dutch article, city-combo, and website queries such as IJsselslag in Zutphen', () => {
+    const ijsselslag = makeVenue('zwembad-ijsselslag-zutphen', 'zutphen', 4.7, 52.1285, 6.2153, {
+      name: 'Zwembad IJsselslag',
+      woonplaats_name: 'Zutphen',
+      woonplaats_slug: 'zutphen',
+      neighborhood_name: 'Zutphen',
+      street_address: 'Laan van Eme 101',
+      postcode_pc4: '7204',
+      postcode_pc6: '7204 LZ',
+      operator_name: 'Gemeente Zutphen Sportbedrijf',
+      official_website_url: 'https://www.ijsselslag.nl/',
+    });
+
+    expect(matchesVenueSearchQuery(ijsselslag, 'ijsselslag')).toBe(true);
+    expect(matchesVenueSearchQuery(ijsselslag, 'de ijsselslag')).toBe(true);
+    expect(matchesVenueSearchQuery(ijsselslag, 'ijsselslag zutphen')).toBe(true);
+    expect(matchesVenueSearchQuery(ijsselslag, 'zwembad zutphen')).toBe(true);
+    expect(matchesVenueSearchQuery(ijsselslag, '7204lz')).toBe(true);
+    expect(matchesVenueSearchQuery(ijsselslag, 'ijsselslag.nl')).toBe(true);
+    expect(matchesVenueSearchQuery(ijsselslag, 'ijsselslag deventer')).toBe(false);
+  });
 });

@@ -18,6 +18,18 @@ export const NL_MAP_MAX_BOUNDS: [[number, number], [number, number]] = [
 export const NL_DEFAULT_CENTER: [number, number] = [5.1214, 52.15]; // Central Netherlands (Utrecht/Hilversum axis)
 export const NL_DEFAULT_ZOOM = 7.4;
 
+export interface MapBoundingBox {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}
+
+export interface MapMarkerLabelOptions {
+  index?: number;
+  expanded?: boolean;
+}
+
 export function isWithinNetherlandsBounds(lat: number, lng: number): boolean {
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
   return lat >= NL_LAT_MIN && lat <= NL_LAT_MAX && lng >= NL_LNG_MIN && lng <= NL_LNG_MAX;
@@ -27,7 +39,37 @@ export function filterValidMapVenues(venues: VenueRow[]): VenueRow[] {
   return venues.filter((v) => isWithinNetherlandsBounds(v.lat, v.lng));
 }
 
-export function formatMapMarkerLabel(venue: VenueRow): string {
+export function isWithinBoundingBox(
+  lat: number,
+  lng: number,
+  bounds: MapBoundingBox
+): boolean {
+  if (
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng) ||
+    !Number.isFinite(bounds.north) ||
+    !Number.isFinite(bounds.south) ||
+    !Number.isFinite(bounds.east) ||
+    !Number.isFinite(bounds.west)
+  ) {
+    return false;
+  }
+  return (
+    lat >= bounds.south &&
+    lat <= bounds.north &&
+    lng >= bounds.west &&
+    lng <= bounds.east
+  );
+}
+
+export function filterVenuesInBoundingBox(
+  venues: VenueRow[],
+  bounds: MapBoundingBox
+): VenueRow[] {
+  return venues.filter((v) => isWithinBoundingBox(v.lat, v.lng, bounds));
+}
+
+function formatBaseMarkerLabel(venue: VenueRow): string {
   if (venue.min_single_price_cents === 0) {
     return venue.default_temp_celsius
       ? `Natuur ${venue.default_temp_celsius.toFixed(0)}°C`
@@ -43,6 +85,23 @@ export function formatMapMarkerLabel(venue: VenueRow): string {
     return `Les ~${venue.min_waitlist_weeks}w`;
   }
   return venue.name.slice(0, 14);
+}
+
+export function formatMapMarkerLabel(
+  venue: VenueRow,
+  options?: MapMarkerLabelOptions
+): string {
+  const baseLabel = formatBaseMarkerLabel(venue);
+  if (typeof options?.index !== 'number' || !Number.isFinite(options.index)) {
+    return baseLabel;
+  }
+  if (options.expanded) {
+    const trimmedName = venue.name.trim();
+    const shortName =
+      trimmedName.length > 22 ? `${trimmedName.slice(0, 21).trimEnd()}…` : trimmedName;
+    return `${options.index} · ${shortName} · ${baseLabel}`;
+  }
+  return `${options.index} · ${baseLabel}`;
 }
 
 /**
