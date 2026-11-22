@@ -31,10 +31,27 @@
         <input
           id="header-waar-input"
           type="text"
+          autocomplete="off"
+          enterkeyhint="search"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="false"
+          aria-controls="header-search-suggestions"
           placeholder="Zoek stad of bad"
           class="w-36 bg-transparent text-xs text-text-charcoal placeholder:text-text-muted focus:outline-none truncate"
         />
       </div>
+
+      <!-- Lazy-Loaded Accessible Search Suggestions Dropdown -->
+      <div
+        id="header-search-suggestions"
+        role="listbox"
+        aria-label="Zoeksuggesties"
+        hidden
+        style="contain: layout style paint"
+        class="absolute top-full left-0 mt-2 w-[min(460px,calc(100vw-2rem))] bg-surface-pure rounded-2xl border border-border-hairline shadow-2xl py-2 z-50 max-h-[70vh] overflow-y-auto"
+      ></div>
+      <div id="header-search-status" role="status" aria-live="polite" class="sr-only"></div>
 
       <div class="h-7 w-px bg-border-hairline"></div>
 
@@ -281,11 +298,36 @@
 </dialog>
 
 <script>
+  import {
+    prepareSearchIndex,
+    getSearchSuggestions,
+    splitHighlightSegments,
+    groupSuggestionsForDisplay,
+    type CompactSearchTuple,
+    type PreparedSearchEntry,
+    type SearchSuggestion,
+  } from '../domain/search-suggestions';
+
+  let cachedSearchIndexPromise: Promise<PreparedSearchEntry[]> | null = null;
+
+  function loadHeaderSearchIndex(): Promise<PreparedSearchEntry[]> {
+    if (!cachedSearchIndexPromise) {
+      cachedSearchIndexPromise = fetch('/data/search-index.json')
+        .then((res) => (res.ok ? (res.json() as Promise<CompactSearchTuple[]>) : []))
+        .then((tuples) => prepareSearchIndex(tuples))
+        .catch(() => []);
+    }
+    return cachedSearchIndexPromise;
+  }
+
   function wireHeaderControls() {
+    const capsuleEl = document.getElementById('header-search-capsule');
     const waarInput = document.getElementById('header-waar-input') as HTMLInputElement | null;
     const watSelect = document.getElementById('header-wat-select') as HTMLSelectElement | null;
     const wieSelect = document.getElementById('header-wie-select') as HTMLSelectElement | null;
     const submitBtn = document.getElementById('header-search-submit');
+    const listboxEl = document.getElementById('header-search-suggestions') as HTMLDivElement | null;
+    const statusEl = document.getElementById('header-search-status') as HTMLDivElement | null;
 
     const globeBtn = document.getElementById('header-globe-btn');
     const globeDialog = document.getElementById('header-globe-dialog') as HTMLDialogElement | null;
@@ -352,6 +394,11 @@
     if (params.get('q')) waarInput.value = params.get('q')!;
     if (params.get('cat')) watSelect.value = params.get('cat')!;
 
+    let preparedEntries: PreparedSearchEntry[] = [];
+    let currentItems: SearchSuggestion[] = [];
+    let activeIdx = -1;
+    let suggestionOpen = false;
+
     function triggerCapsuleSearch() {
       const q = waarInput!.value.trim();
       const cat = watSelect!.value;
@@ -371,16 +418,214 @@
       }
     }
 
+    function closeSuggestions() {
+      suggestionOpen = false;
+      activeIdx = -1;
+      waarInput!.setAttribute('aria-expanded', 'false');
+      waarInput!.removeAttribute('aria-activedescendant');
+      if (listboxEl) {
+        listboxEl.hidden = true;
+      }
+    }
+
+    function applyHeaderSelection(item: SearchSuggestion) {
+      if (item.kind !== 'v' && window.location.pathname === '/') {
+        waarInput!.value = item.label;
+        closeSuggestions();
+        triggerCapsuleSearch();
+        return;
+      }
+      closeSuggestions();
+      window.location.href = item.url;
+    }
+
+    function updateOptionSelectionUi() {
+      if (!listboxEl) return;
+      const options = listboxEl.querySelectorAll<HTMLAnchorElement>('[role="option"]');
+      options.forEach((opt, idx) => {
+        const isActive = idx === activeIdx;
+        opt.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        opt.classList.toggle('bg-surface-subtle', isActive);
+        opt.classList.toggle('ring-1', isActive);
+        opt.classList.toggle('ring-primary/30', isActive);
+      });
+      if (activeIdx >= 0 && options[activeIdx]) {
+        waarInput!.setAttribute('aria-activedescendant', options[activeIdx].id);
+        options[activeIdx].scrollIntoView({ block: 'nearest' });
+      } else {
+        waarInput!.removeAttribute('aria-activedescendant');
+      }
+    }
+
+    function appendHighlightedText(parent: HTMLElement, text: string, query: string) {
+      const segments = splitHighlightSegments(text, query);
+      for (const seg of segments) {
+        if (seg.match) {
+          const mark = document.createElement('mark');
+          mark.className = 'bg-badge-teal-bg text-primary-container font-extrabold rounded-xs px-0.5';
+          mark.textContent = seg.text;
+          parent.appendChild(mark);
+        } else {
+          parent.appendChild(document.createTextNode(seg.text));
+        }
+      }
+    }
+
+    function renderSuggestions() {
+      if (!listboxEl) return;
+      const q = waarInput!.value.trim();
+      if (q === '' || preparedEntries.length === 0) {
+        currentItems = [];
+        listboxEl.replaceChildren();
+        if (statusEl) statusEl.textContent = '';
+        closeSuggestions();
+        return;
+      }
+
+      const suggestions = getSearchSuggestions(preparedEntries, q, 8);
+      if (suggestions.length === 0) {
+        currentItems = [];
+        listboxEl.replaceChildren();
+        const emptyMsg = document.createElement('p');
+        emptyMsg.className = 'px-4 py-3 text-xs text-text-muted';
+        emptyMsg.textContent = `Geen directe suggesties voor "${q}". Druk op Enter om alle baden te doorzoeken.`;
+        listboxEl.appendChild(emptyMsg);
+        listboxEl.hidden = false;
+        suggestionOpen = true;
+        activeIdx = -1;
+        waarInput!.setAttribute('aria-expanded', 'true');
+        waarInput!.removeAttribute('aria-activedescendant');
+        if (statusEl) statusEl.textContent = '0 zoeksuggesties gevonden';
+        return;
+      }
+
+      const groups = groupSuggestionsForDisplay(suggestions);
+      currentItems = groups.flatMap((g) => g.items.map((item) => item.suggestion));
+      activeIdx = activeIdx >= currentItems.length ? -1 : activeIdx;
+
+      const fragment = document.createDocumentFragment();
+      for (const group of groups) {
+        const header = document.createElement('div');
+        header.className =
+          'px-3.5 pt-2 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-text-muted';
+        header.textContent = group.title;
+        fragment.appendChild(header);
+
+        for (const { index, suggestion } of group.items) {
+          const optionLink = document.createElement('a');
+          optionLink.id = `header-suggestion-option-${index}`;
+          optionLink.href = suggestion.url;
+          optionLink.setAttribute('role', 'option');
+          optionLink.setAttribute('aria-selected', index === activeIdx ? 'true' : 'false');
+          optionLink.className =
+            'flex items-center gap-3 px-3.5 py-2.5 min-h-[44px] hover:bg-surface-subtle transition-colors cursor-pointer text-left';
+
+          const badge = document.createElement('span');
+          badge.setAttribute('aria-hidden', 'true');
+          badge.className =
+            suggestion.kind === 'v'
+              ? 'w-7 h-7 rounded-full bg-badge-teal-bg text-primary flex items-center justify-center text-xs shrink-0'
+              : 'w-7 h-7 rounded-full bg-surface-subtle text-text-charcoal flex items-center justify-center text-xs shrink-0';
+          badge.textContent = suggestion.kind === 'v' ? '🏊' : '📍';
+          optionLink.appendChild(badge);
+
+          const textWrap = document.createElement('span');
+          textWrap.className = 'min-w-0 flex-1';
+
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'block text-xs font-bold text-text-charcoal truncate';
+          appendHighlightedText(titleSpan, suggestion.label, q);
+
+          const subSpan = document.createElement('span');
+          subSpan.className = 'block text-[11px] text-text-muted truncate';
+          subSpan.textContent = suggestion.sublabel;
+
+          textWrap.appendChild(titleSpan);
+          textWrap.appendChild(subSpan);
+          optionLink.appendChild(textWrap);
+
+          const arrowSpan = document.createElement('span');
+          arrowSpan.setAttribute('aria-hidden', 'true');
+          arrowSpan.className = 'text-[11px] font-semibold text-text-muted shrink-0';
+          arrowSpan.textContent = suggestion.kind === 'v' ? 'Bekijk →' : 'Filter';
+          optionLink.appendChild(arrowSpan);
+
+          optionLink.addEventListener('click', (e) => {
+            if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+            if (suggestion.kind !== 'v' && window.location.pathname === '/') {
+              e.preventDefault();
+              applyHeaderSelection(suggestion);
+            } else {
+              closeSuggestions();
+            }
+          });
+
+          fragment.appendChild(optionLink);
+        }
+      }
+
+      listboxEl.replaceChildren(fragment);
+      listboxEl.hidden = false;
+      suggestionOpen = true;
+      waarInput!.setAttribute('aria-expanded', 'true');
+      updateOptionSelectionUi();
+      if (statusEl) {
+        statusEl.textContent = `${currentItems.length} zoeksuggesties beschikbaar`;
+      }
+    }
+
+    async function ensureIndexAndRender() {
+      if (preparedEntries.length === 0) {
+        preparedEntries = await loadHeaderSearchIndex();
+      }
+      renderSuggestions();
+    }
+
+    waarInput.addEventListener('focus', () => {
+      ensureIndexAndRender().catch(() => {});
+    });
+
     waarInput.addEventListener('input', () => {
+      activeIdx = -1;
       if (window.location.pathname === '/') {
+        triggerCapsuleSearch();
+      }
+      ensureIndexAndRender().catch(() => {});
+    });
+
+    waarInput.addEventListener('keydown', (e) => {
+      if (e.isComposing) return;
+      if (e.key === 'ArrowDown' && suggestionOpen && currentItems.length > 0) {
+        e.preventDefault();
+        activeIdx = activeIdx < currentItems.length - 1 ? activeIdx + 1 : 0;
+        updateOptionSelectionUi();
+        return;
+      }
+      if (e.key === 'ArrowUp' && suggestionOpen && currentItems.length > 0) {
+        e.preventDefault();
+        activeIdx = activeIdx > 0 ? activeIdx - 1 : currentItems.length - 1;
+        updateOptionSelectionUi();
+        return;
+      }
+      if (e.key === 'Escape' && suggestionOpen) {
+        e.preventDefault();
+        closeSuggestions();
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (suggestionOpen && activeIdx >= 0 && currentItems[activeIdx]) {
+          applyHeaderSelection(currentItems[activeIdx]);
+          return;
+        }
+        closeSuggestions();
         triggerCapsuleSearch();
       }
     });
 
-    waarInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        triggerCapsuleSearch();
+    document.addEventListener('pointerdown', (e) => {
+      if (capsuleEl && !capsuleEl.contains(e.target as Node)) {
+        closeSuggestions();
       }
     });
 
@@ -390,7 +635,10 @@
       }
     });
 
-    submitBtn.addEventListener('click', triggerCapsuleSearch);
+    submitBtn.addEventListener('click', () => {
+      closeSuggestions();
+      triggerCapsuleSearch();
+    });
   }
 
   wireHeaderControls();

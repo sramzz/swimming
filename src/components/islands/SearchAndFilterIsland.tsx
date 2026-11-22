@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { VenueRow } from '../../db/queries';
 import { formatEuroCentsNl } from '../../domain/seo-aggregator';
 import { parseVenuePhotos } from '../../domain/venue-photos';
@@ -10,6 +10,13 @@ import {
 } from '../../domain/multi-city-ranking';
 import { haversineDistanceKm } from '../../db/geo';
 import { isWithinBoundingBox, type MapBoundingBox } from '../../domain/map-bounds';
+import {
+  buildSearchEntriesFromVenues,
+  getSearchSuggestions,
+  groupSuggestionsForDisplay,
+  splitHighlightSegments,
+  type SearchSuggestion,
+} from '../../domain/search-suggestions';
 
 export interface SearchAndFilterIslandProps {
   venues: VenueRow[];
@@ -50,6 +57,9 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
   const [mapHoveredVenueId, setMapHoveredVenueId] = useState<string | null>(null);
   const [mapSelectedVenueId, setMapSelectedVenueId] = useState<string | null>(null);
   const [mapBounds, setMapBounds] = useState<MapBoundingBox | null>(null);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [activeSuggestionIdx, setActiveSuggestionIdx] = useState(-1);
+  const searchBoxRef = useRef<HTMLDivElement | null>(null);
   const trackRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const cardRefs = useRef<Record<string, HTMLElement | null>>({});
   const latestBroadcastRef = useRef<{
@@ -129,6 +139,13 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       );
     }
 
+    function handleOutsidePointerDown(e: Event) {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
+        setSuggestionsOpen(false);
+        setActiveSuggestionIdx(-1);
+      }
+    }
+
     window.addEventListener('zwemkaart:search', handleHeaderSearch);
     window.addEventListener('zwemkaart:set-category', handleExternalCategory);
     window.addEventListener('zwemkaart:open-filters', handleOpenFiltersModal);
@@ -136,6 +153,7 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
     window.addEventListener('zwemkaart:map-select-venue', handleMapSelect);
     window.addEventListener('zwemkaart:map-bounds', handleMapBounds);
     window.addEventListener('zwemkaart:request-filtered', handleRequestFiltered);
+    document.addEventListener('pointerdown', handleOutsidePointerDown);
     return () => {
       window.removeEventListener('zwemkaart:search', handleHeaderSearch);
       window.removeEventListener('zwemkaart:set-category', handleExternalCategory);
@@ -144,8 +162,36 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
       window.removeEventListener('zwemkaart:map-select-venue', handleMapSelect);
       window.removeEventListener('zwemkaart:map-bounds', handleMapBounds);
       window.removeEventListener('zwemkaart:request-filtered', handleRequestFiltered);
+      document.removeEventListener('pointerdown', handleOutsidePointerDown);
     };
   }, []);
+
+  const preparedSearchEntries = useMemo(() => buildSearchEntriesFromVenues(venues), [venues]);
+  const rawSuggestions = useMemo(
+    () => (query.trim() ? getSearchSuggestions(preparedSearchEntries, query, 8) : []),
+    [preparedSearchEntries, query]
+  );
+  const groupedSuggestions = useMemo(
+    () => groupSuggestionsForDisplay(rawSuggestions),
+    [rawSuggestions]
+  );
+  const flatOrderedSuggestions = useMemo(
+    () => groupedSuggestions.flatMap((g) => g.items.map((item) => item.suggestion)),
+    [groupedSuggestions]
+  );
+
+  function selectInlineSuggestion(suggestion: SearchSuggestion) {
+    setSuggestionsOpen(false);
+    setActiveSuggestionIdx(-1);
+    if (suggestion.kind === 'v') {
+      window.location.href = suggestion.url;
+      return;
+    }
+    setSelectedCitySlug('ALL');
+    setQuery(suggestion.label);
+    setMapBounds(null);
+    setVisibleCount(24);
+  }
 
   function resetAllFilters() {
     setQuery('');
@@ -751,21 +797,153 @@ export default function SearchAndFilterIsland({ venues }: SearchAndFilterIslandP
 
         {/* Accessible Quick Search Bar (Synced with Header 3-Segment Capsule) */}
         <div class="flex flex-wrap items-center gap-2">
-          <label htmlFor="venue-search-input" class="sr-only">
-            Zoek op stad, zwembad of postcode
-          </label>
-          <input
-            id="venue-search-input"
-            type="search"
-            value={query}
-            onInput={(e) => {
-              setQuery((e.target as HTMLInputElement).value);
-              setMapBounds(null);
-              setVisibleCount(24);
-            }}
-            placeholder="Zoek op stad, zwembad of 4-cijferige postcode (bijv. Rotterdam, Utrecht, 1079)..."
-            class="flex-1 min-w-[230px] px-4 py-2 rounded-full border border-border-strong bg-surface-pure text-xs md:text-sm focus:outline-none focus:border-primary shadow-2xs"
-          />
+          <div ref={searchBoxRef} class="relative flex-1 min-w-[230px]">
+            <label htmlFor="venue-search-input" class="sr-only">
+              Zoek op stad, zwembad of postcode
+            </label>
+            <input
+              id="venue-search-input"
+              type="search"
+              value={query}
+              autocomplete="off"
+              enterkeyhint="search"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={suggestionsOpen && query.trim() !== '' && flatOrderedSuggestions.length > 0}
+              aria-controls="venue-search-suggestions"
+              aria-activedescendant={
+                suggestionsOpen && activeSuggestionIdx >= 0
+                  ? `venue-suggestion-option-${activeSuggestionIdx}`
+                  : undefined
+              }
+              onFocus={() => {
+                if (query.trim() !== '') setSuggestionsOpen(true);
+              }}
+              onInput={(e) => {
+                setQuery((e.target as HTMLInputElement).value);
+                setSuggestionsOpen(true);
+                setActiveSuggestionIdx(-1);
+                setMapBounds(null);
+                setVisibleCount(24);
+              }}
+              onKeyDown={(e) => {
+                if ((e as KeyboardEvent).isComposing) return;
+                if (e.key === 'ArrowDown' && flatOrderedSuggestions.length > 0) {
+                  e.preventDefault();
+                  setSuggestionsOpen(true);
+                  setActiveSuggestionIdx((prev) =>
+                    prev < flatOrderedSuggestions.length - 1 ? prev + 1 : 0
+                  );
+                  return;
+                }
+                if (e.key === 'ArrowUp' && flatOrderedSuggestions.length > 0) {
+                  e.preventDefault();
+                  setSuggestionsOpen(true);
+                  setActiveSuggestionIdx((prev) =>
+                    prev > 0 ? prev - 1 : flatOrderedSuggestions.length - 1
+                  );
+                  return;
+                }
+                if (e.key === 'Escape') {
+                  setSuggestionsOpen(false);
+                  setActiveSuggestionIdx(-1);
+                  return;
+                }
+                if (
+                  e.key === 'Enter' &&
+                  suggestionsOpen &&
+                  activeSuggestionIdx >= 0 &&
+                  flatOrderedSuggestions[activeSuggestionIdx]
+                ) {
+                  e.preventDefault();
+                  selectInlineSuggestion(flatOrderedSuggestions[activeSuggestionIdx]);
+                }
+              }}
+              placeholder="Zoek op stad, zwembad of 4-cijferige postcode (bijv. Rotterdam, Utrecht, 1079)..."
+              class="w-full px-4 py-2 rounded-full border border-border-strong bg-surface-pure text-base md:text-sm focus:outline-none focus:border-primary shadow-2xs"
+            />
+            <div role="status" aria-live="polite" class="sr-only">
+              {suggestionsOpen && query.trim() !== ''
+                ? `${flatOrderedSuggestions.length} zoeksuggesties beschikbaar`
+                : ''}
+            </div>
+
+            {suggestionsOpen && query.trim() !== '' && flatOrderedSuggestions.length > 0 && (
+              <div
+                id="venue-search-suggestions"
+                role="listbox"
+                aria-label="Zoeksuggesties"
+                style={{ contain: 'layout style paint' }}
+                class="absolute top-full left-0 right-0 mt-1.5 bg-surface-pure rounded-2xl border border-border-hairline shadow-2xl py-2 z-50 max-h-[60vh] overflow-y-auto"
+              >
+                {groupedSuggestions.map((group) => (
+                  <div key={group.title}>
+                    <div class="px-3.5 pt-2 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-text-muted">
+                      {group.title}
+                    </div>
+                    {group.items.map(({ index, suggestion }) => {
+                      const isActive = index === activeSuggestionIdx;
+                      const segments = splitHighlightSegments(suggestion.label, query);
+                      return (
+                        <a
+                          key={suggestion.url}
+                          id={`venue-suggestion-option-${index}`}
+                          href={suggestion.url}
+                          role="option"
+                          aria-selected={isActive}
+                          onClick={(e) => {
+                            if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+                            if (suggestion.kind !== 'v') {
+                              e.preventDefault();
+                              selectInlineSuggestion(suggestion);
+                            } else {
+                              setSuggestionsOpen(false);
+                            }
+                          }}
+                          class={`flex items-center gap-3 px-3.5 py-2.5 min-h-[44px] hover:bg-surface-subtle transition-colors cursor-pointer ${
+                            isActive ? 'bg-surface-subtle ring-1 ring-primary/30' : ''
+                          }`}
+                        >
+                          <span
+                            aria-hidden="true"
+                            class={`w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 ${
+                              suggestion.kind === 'v'
+                                ? 'bg-badge-teal-bg text-primary'
+                                : 'bg-surface-subtle text-text-charcoal'
+                            }`}
+                          >
+                            {suggestion.kind === 'v' ? '🏊' : '📍'}
+                          </span>
+                          <span class="min-w-0 flex-1">
+                            <span class="block text-xs font-bold text-text-charcoal truncate">
+                              {segments.map((seg, segIdx) =>
+                                seg.match ? (
+                                  <mark
+                                    key={segIdx}
+                                    class="bg-badge-teal-bg text-primary-container font-extrabold rounded-xs px-0.5"
+                                  >
+                                    {seg.text}
+                                  </mark>
+                                ) : (
+                                  <span key={segIdx}>{seg.text}</span>
+                                )
+                              )}
+                            </span>
+                            <span class="block text-[11px] text-text-muted truncate">
+                              {suggestion.sublabel}
+                            </span>
+                          </span>
+                          <span aria-hidden="true" class="text-[11px] font-semibold text-text-muted shrink-0">
+                            {suggestion.kind === 'v' ? 'Bekijk →' : 'Filter'}
+                          </span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           {mapBounds && (
             <button
               type="button"

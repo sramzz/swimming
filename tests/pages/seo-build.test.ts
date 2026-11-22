@@ -461,5 +461,44 @@ describe('Static Page & Sitemap Data Generation', () => {
       expect(report.brokenInternalLinks).toEqual([]);
       expect(hasAuditFailures(report)).toBe(false);
     });
+
+    it('emits compact, zero-dead-link dist/data/search-index.json when dist is built', () => {
+      const indexPath = path.resolve(process.cwd(), 'dist', 'data', 'search-index.json');
+      if (!fs.existsSync(indexPath)) {
+        return;
+      }
+
+      const raw = fs.readFileSync(indexPath, 'utf-8');
+      expect(Buffer.byteLength(raw, 'utf-8')).toBeLessThan(350 * 1024);
+
+      const tuples = JSON.parse(raw) as Array<[string, string, string, string, string?]>;
+      expect(Array.isArray(tuples)).toBe(true);
+      expect(tuples.length).toBeGreaterThanOrEqual(2500);
+
+      expect(
+        tuples.some(
+          ([kind, label, , url]) =>
+            kind === 'm' && label === 'Zutphen' && url === '/steden/zutphen'
+        )
+      ).toBe(true);
+      expect(
+        tuples.some(
+          ([kind, label, , url]) =>
+            kind === 'v' &&
+            label === 'Zwembad IJsselslag' &&
+            url === '/zwembad/zutphen/zwembad-ijsselslag-zutphen'
+        )
+      ).toBe(true);
+
+      const distRoot = path.resolve(process.cwd(), 'dist');
+      const deadUrls = tuples
+        .map(([, , , url]) => url)
+        .filter((url) => {
+          const clean = url.replace(/^\//, '');
+          const htmlFile = path.join(distRoot, clean, 'index.html');
+          return !fs.existsSync(htmlFile);
+        });
+      expect(deadUrls).toEqual([]);
+    });
   });
 });

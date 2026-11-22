@@ -235,5 +235,32 @@ describe('Phase 2 (Tasks 7.4–7.6): Full Navigation, Header Controls, B2B Porta
 
       db.close();
     });
+
+    it('wires accessible combobox search suggestions and performance guards in Header.astro and SearchAndFilterIsland.tsx', () => {
+      const headerSrc = fs.readFileSync(
+        path.resolve(process.cwd(), 'src/components/Header.astro'),
+        'utf-8'
+      );
+      const searchTsx = fs.readFileSync(
+        path.resolve(process.cwd(), 'src/components/islands/SearchAndFilterIsland.tsx'),
+        'utf-8'
+      );
+
+      expect(headerSrc).toContain('/data/search-index.json');
+      expect(headerSrc).toContain('role="combobox"');
+      expect(headerSrc).toContain('role="listbox"');
+      expect(headerSrc).toContain('aria-activedescendant');
+      expect(headerSrc).toContain('enterkeyhint="search"');
+      expect(headerSrc).toContain('e.isComposing');
+      expect(headerSrc).toContain('contain: layout style paint');
+
+      expect(searchTsx).toContain('buildSearchEntriesFromVenues');
+      expect(searchTsx).toContain('role="combobox"');
+      expect(searchTsx).toContain('role="listbox"');
+      expect(searchTsx).toContain('aria-activedescendant');
+      expect(searchTsx).toContain('enterkeyhint="search"');
+      expect(searchTsx).toContain('isComposing');
+      expect(searchTsx).toContain("contain: 'layout style paint'");
+    });
   });
 });
